@@ -1,0 +1,42 @@
+{
+  "id": "TC-INV-001",
+  "title": "Ajuste manual de stock con razón",
+  "module": "inventario.niveles",
+  "type": "happy_path",
+  "priority": "high",
+  "estimated_minutes": 3,
+  "preconditions": [
+    "Producto físico con stock conocido (ej. 10 unidades)",
+    "Permiso 'editar' en inventario.niveles"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "En /inventario/niveles, pulsa el ícono de ajustar en la fila del producto",
+      "expected": "Modal con campos: cantidad nueva, razón (entrada/salida/ajuste/merma), nota",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Selecciona razón 'merma', cantidad nueva = 7, nota='Producto vencido'",
+      "expected": "El delta calculado se muestra (-3)",
+      "evidence_hint": "screenshot",
+      "data": { "razon": "merma", "cantidad_nueva": 7, "nota": "Producto vencido" }
+    },
+    {
+      "step": 3,
+      "action": "Confirma",
+      "expected": "Toast confirma, la tabla muestra cantidad=7",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "Existe evento 'stock.ajustado' con delta=-3 y razón='merma'",
+    "El movimiento aparece en /inventario/ajustes"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/inventario/niveles.tsx",
+    "packages/db/src/inventario-flow.ts"
+  ],
+  "tags": []
+}

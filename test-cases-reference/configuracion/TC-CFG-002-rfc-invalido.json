@@ -1,0 +1,34 @@
+{
+  "id": "TC-CFG-002",
+  "title": "Validación de formato RFC",
+  "module": "configuracion.negocio",
+  "type": "error",
+  "priority": "low",
+  "estimated_minutes": 2,
+  "preconditions": ["Vista /configuracion/negocio abierta"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Ingresa RFC inválido: 'NO-VALIDO'",
+      "expected": "Al guardar, aparece error inline 'RFC inválido'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Ingresa RFC válido moral: 'ABC850515DEF'",
+      "expected": "Sin error, guarda OK",
+      "evidence_hint": "none"
+    },
+    {
+      "step": 3,
+      "action": "Deja el RFC vacío",
+      "expected": "Sin error (es opcional)",
+      "evidence_hint": "none"
+    }
+  ],
+  "acceptance_criteria": [
+    "Vacío es válido, formatos no estándar son rechazados, formatos persona moral/física aceptados"
+  ],
+  "related_files": ["packages/db/src/business-config.ts"],
+  "tags": []
+}

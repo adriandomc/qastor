@@ -1,0 +1,28 @@
+{
+  "id": "TC-REP-006",
+  "title": "Exportar reporte a CSV",
+  "module": "reportes",
+  "type": "happy_path",
+  "priority": "medium",
+  "estimated_minutes": 2,
+  "preconditions": ["Reporte abierto con datos"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "En cualquier reporte, pulsa 'Exportar CSV'",
+      "expected": "Se descarga un archivo CSV con los headers y filas mostrados en la tabla",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Abre el CSV en una hoja de cálculo",
+      "expected": "Las columnas se separan correctamente, los números no se rompen por separador decimal/miles, no hay caracteres mojibake",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "El CSV es UTF-8 con BOM o equivalente para abrir bien en Excel/Numbers"
+  ],
+  "related_files": ["apps/desktop/src/lib/csv-export.ts"],
+  "tags": []
+}

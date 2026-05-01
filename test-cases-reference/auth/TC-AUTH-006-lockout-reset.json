@@ -1,0 +1,43 @@
+{
+  "id": "TC-AUTH-006",
+  "title": "Login exitoso resetea el contador de intentos fallidos",
+  "module": "auth.login",
+  "type": "edge_case",
+  "priority": "medium",
+  "estimated_minutes": 4,
+  "preconditions": [
+    "Usuario 'admin' con contraseña conocida",
+    "Tabla 'login_intentos' purgada para 'admin'"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Falla 4 veces el login (no el quinto)",
+      "expected": "Los 4 intentos rechazan con mensaje genérico, sin bloqueo aún",
+      "evidence_hint": "none"
+    },
+    {
+      "step": 2,
+      "action": "Loguea correctamente al 5º intento",
+      "expected": "Login exitoso, redirige al shell",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Cierra sesión y falla 4 veces más",
+      "expected": "Sin bloqueo (el contador se reseteó tras el éxito anterior)",
+      "evidence_hint": "none"
+    },
+    {
+      "step": 4,
+      "action": "Intenta una 5ª y 6ª vez con contraseña incorrecta",
+      "expected": "El 5º falla con error genérico; el 6º falla con 'cuenta bloqueada'",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "El contador cuenta sólo fallos consecutivos sin éxito intermedio"
+  ],
+  "related_files": ["packages/db/src/auth-flow.ts"],
+  "tags": ["security", "rate-limit"]
+}

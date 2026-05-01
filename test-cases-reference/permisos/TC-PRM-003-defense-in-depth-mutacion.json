@@ -1,0 +1,38 @@
+{
+  "id": "TC-PRM-003",
+  "title": "La capa de dominio rechaza la mutación si el permiso no existe (defense in depth)",
+  "module": "permisos.defense_in_depth",
+  "type": "error",
+  "priority": "critical",
+  "estimated_minutes": 5,
+  "preconditions": [
+    "Usuario 'cajero' con puede_leer=1 sobre catalogo.productos pero puede_eliminar=0",
+    "Acceso a una consola SQL/JS para invocar el dominio directamente"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Como cajero, abre la vista — confirma que el botón Eliminar NO aparece",
+      "expected": "Botón oculto",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Llama eliminarProducto() vía consola con el actor_id del cajero, ignorando la UI",
+      "expected": "Lanza PermissionDenied (o equivalente). NO se elimina el producto",
+      "evidence_hint": "log_excerpt"
+    },
+    {
+      "step": 3,
+      "action": "Verifica que el producto sigue activo en DB",
+      "expected": "eliminado_en sigue NULL",
+      "evidence_hint": "db_query"
+    }
+  ],
+  "acceptance_criteria": [
+    "La validación de permiso vive en la capa de dominio, no sólo en la UI",
+    "Es imposible burlar permisos llamando a la capa de datos directo"
+  ],
+  "related_files": ["packages/core/src/permissions/"],
+  "tags": ["security", "defense-in-depth", "release-blocker"]
+}

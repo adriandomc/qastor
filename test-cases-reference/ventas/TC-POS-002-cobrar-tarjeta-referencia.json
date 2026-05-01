@@ -1,0 +1,36 @@
+{
+  "id": "TC-POS-002",
+  "title": "Cobrar venta con tarjeta + referencia válida",
+  "module": "ventas.pos",
+  "type": "happy_path",
+  "priority": "high",
+  "estimated_minutes": 3,
+  "preconditions": ["Caja abierta", "Producto en carrito"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "En el modal de cobro, selecciona 'Tarjeta'",
+      "expected": "El campo 'Recibido' desaparece y aparece 'Referencia' como requerido",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Ingresa los últimos 4 de tarjeta (ej. '**** 1234') en Referencia",
+      "expected": "El botón 'Confirmar cobro' se habilita",
+      "evidence_hint": "none",
+      "data": { "referencia": "**** 1234" }
+    },
+    {
+      "step": 3,
+      "action": "Confirma el cobro",
+      "expected": "Venta registrada, ticket imprime con 'Tarjeta: $X.XX' y 'ref: **** 1234' debajo",
+      "evidence_hint": "printed_receipt"
+    }
+  ],
+  "acceptance_criteria": [
+    "Pago en DB tiene metodo='tarjeta' y referencia='**** 1234'",
+    "El ticket impreso muestra la referencia"
+  ],
+  "related_files": ["apps/desktop/src/routes/_app/ventas/pos.tsx"],
+  "tags": []
+}

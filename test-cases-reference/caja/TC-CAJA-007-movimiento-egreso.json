@@ -1,0 +1,29 @@
+{
+  "id": "TC-CAJA-007",
+  "title": "Registrar egreso manual ajusta el esperado",
+  "module": "cierres.caja",
+  "type": "happy_path",
+  "priority": "medium",
+  "estimated_minutes": 3,
+  "preconditions": ["Caja abierta"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Pulsa el botón rojo 'Egreso' y registra $100 con descripción 'Pago a proveedor'",
+      "expected": "Modal cierra, toast confirma",
+      "evidence_hint": "screenshot",
+      "data": { "monto": "100.00", "descripcion": "Pago a proveedor" }
+    },
+    {
+      "step": 2,
+      "action": "Verifica el resumen actualizado",
+      "expected": "Esperado bajó en $100; aparece fila bajo movimientos del turno",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "Existe fila en 'movimientos_caja' con tipo='egreso' y monto correcto"
+  ],
+  "related_files": ["packages/db/src/movimientos-caja-flow.ts"],
+  "tags": []
+}

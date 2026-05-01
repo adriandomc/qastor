@@ -1,0 +1,54 @@
+{
+  "id": "TC-AUTH-001",
+  "title": "Crear el primer usuario raíz desde el wizard de setup",
+  "module": "auth.setup",
+  "type": "happy_path",
+  "priority": "critical",
+  "estimated_minutes": 5,
+  "preconditions": [
+    "Aplicación recién instalada (DB sin usuarios)",
+    "El proceso de la app NO se ha ejecutado antes en esta máquina, o se eliminó el directorio app_data"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Lanza la aplicación VoltalfaPOS",
+      "expected": "El router redirige automáticamente a /setup (no a /login)",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Llena nombre de usuario, nombre visible y contraseña (≥8 caracteres) + confirmar",
+      "expected": "Los campos aceptan los valores y la validación de longitud no bloquea",
+      "evidence_hint": "screenshot",
+      "data": {
+        "nombre_usuario": "admin",
+        "nombre_visible": "Administrador Demo",
+        "contrasena": "demo1234"
+      }
+    },
+    {
+      "step": 3,
+      "action": "Avanza por los pasos del wizard (negocio, starter pack, impresora — pueden saltarse)",
+      "expected": "Cada paso permite continuar o saltar; el botón final 'Terminar' está habilitado",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 4,
+      "action": "Pulsa Terminar",
+      "expected": "Sesión iniciada automáticamente, redirige al shell autenticado, header muestra 'Administrador Demo'",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "El usuario creado tiene es_raiz=1 y activo=1",
+    "Existe evento tipo 'usuario.creado' con flag bootstrap=true",
+    "Se creó una sesión activa (evento 'sesion.iniciada')",
+    "Si se reinicia la app, /setup deja de ser accesible y rebota a /"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/setup.tsx",
+    "packages/db/src/auth-flow.ts"
+  ],
+  "tags": ["smoke", "first-run", "release-blocker"]
+}

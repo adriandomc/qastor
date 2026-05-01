@@ -1,0 +1,51 @@
+{
+  "id": "TC-POS-007",
+  "title": "Atajos de teclado F2/F3/F9/F10 funcionan según spec",
+  "module": "ventas.pos",
+  "type": "happy_path",
+  "priority": "medium",
+  "estimated_minutes": 4,
+  "preconditions": ["Caja abierta", "POS abierto en /ventas/pos"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Click fuera del campo de búsqueda y pulsa F2",
+      "expected": "Foco salta al campo de búsqueda y selecciona todo el contenido",
+      "evidence_hint": "screen_recording"
+    },
+    {
+      "step": 2,
+      "action": "Con un producto en el carrito, pulsa F10",
+      "expected": "Aparece confirmación 'Cancelar venta'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Cancela el diálogo y pulsa F9",
+      "expected": "Se abre el modal de cobro con método Efectivo y foco en 'Recibido'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 4,
+      "action": "Pulsa Esc",
+      "expected": "El modal se cierra (no aplica todavía si Esc no está implementado a nivel global, verificar)",
+      "evidence_hint": "screen_recording"
+    },
+    {
+      "step": 5,
+      "action": "Pulsa Ctrl+/ (o Cmd+/)",
+      "expected": "Se abre el modal 'Atajos de teclado' listando todos: F2, F3, F9, F10, métodos 1/2/3, etc.",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "F9 abre cobro sólo si hay items en carrito y caja abierta",
+    "F10 abre cancelar sólo si hay items",
+    "Ctrl+/ es accesible desde cualquier ruta autenticada"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/ventas/pos.tsx",
+    "apps/desktop/src/components/atajos-dialog.tsx"
+  ],
+  "tags": []
+}

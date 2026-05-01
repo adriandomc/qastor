@@ -1,0 +1,60 @@
+{
+  "id": "TC-BCK-003",
+  "title": "Exportar backup off-site a carpeta externa",
+  "module": "configuracion.respaldos",
+  "type": "happy_path",
+  "priority": "high",
+  "estimated_minutes": 4,
+  "preconditions": [
+    "Existe al menos 1 backup",
+    "Carpeta destino existe (ej. /tmp/exports o un USB montado)"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Crea manualmente la carpeta /tmp/voltalfa-export si no existe",
+      "expected": "Carpeta vacía",
+      "evidence_hint": "none"
+    },
+    {
+      "step": 2,
+      "action": "En la fila del backup, pulsa el ícono FolderUp (Exportar)",
+      "expected": "Modal 'Exportar backup off-site' con campo 'Carpeta destino'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Ingresa /tmp/voltalfa-export y pulsa 'Exportar'",
+      "expected": "Toast 'Backup exportado a {path completo}'",
+      "evidence_hint": "screenshot",
+      "data": { "destDir": "/tmp/voltalfa-export" }
+    },
+    {
+      "step": 4,
+      "action": "En la terminal, listar /tmp/voltalfa-export",
+      "expected": "Aparece la carpeta del backup con data.db e images/ dentro",
+      "evidence_hint": "log_excerpt"
+    },
+    {
+      "step": 5,
+      "action": "Intenta exportar el mismo backup al mismo destino otra vez",
+      "expected": "Aparece error 'Ya existe un backup con ese nombre en el destino'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 6,
+      "action": "Intenta exportar a una carpeta inexistente '/tmp/no-existe'",
+      "expected": "Error 'Destino no existe. Crea la carpeta o monta el dispositivo primero.'",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "El backup queda copiado bit-a-bit al destino",
+    "No se sobrescribe accidentalmente un backup previo"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/configuracion/respaldos.tsx",
+    "apps/desktop/src-tauri/src/lib.rs"
+  ],
+  "tags": ["off-site", "resiliencia"]
+}

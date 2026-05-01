@@ -1,0 +1,44 @@
+{
+  "id": "TC-ERR-003",
+  "title": "Integrity check post-migración detecta corrupción",
+  "module": "infra.migrations",
+  "type": "error",
+  "priority": "high",
+  "estimated_minutes": 7,
+  "preconditions": [
+    "Acceso a la DB SQLite del usuario",
+    "Posibilidad de simular corrupción (ej. truncar el archivo .db)"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Cierra la app limpiamente",
+      "expected": "Proceso terminado",
+      "evidence_hint": "none"
+    },
+    {
+      "step": 2,
+      "action": "Corrompe el archivo .db (ej. truncate o sobrescribe bytes al final). Asegúrate de que aún sea abrible",
+      "expected": "Archivo dañado pero parseable hasta cierto punto",
+      "evidence_hint": "log_excerpt"
+    },
+    {
+      "step": 3,
+      "action": "Lanza la app — si hay migraciones pendientes que correr, el runner ejecutará PRAGMA integrity_check al final",
+      "expected": "Si la corrupción es detectable, el runner lanza MigrationIntegrityError. La app no continúa con datos corruptos",
+      "evidence_hint": "log_excerpt"
+    },
+    {
+      "step": 4,
+      "action": "Restaura el último backup y vuelve a lanzar",
+      "expected": "App carga normal",
+      "evidence_hint": "none"
+    }
+  ],
+  "acceptance_criteria": [
+    "PRAGMA integrity_check se ejecuta automáticamente tras aplicar migraciones nuevas",
+    "El error es claro y accionable (apuntar al backup más reciente)"
+  ],
+  "related_files": ["packages/db/src/migrations/runner.ts"],
+  "tags": ["resiliencia"]
+}

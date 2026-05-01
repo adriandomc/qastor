@@ -1,0 +1,57 @@
+{
+  "id": "TC-POS-001",
+  "title": "Cobrar venta en efectivo con cambio",
+  "module": "ventas.pos",
+  "type": "happy_path",
+  "priority": "critical",
+  "estimated_minutes": 4,
+  "preconditions": [
+    "Caja abierta en el dispositivo",
+    "Existe al menos un producto físico con stock ≥ 2",
+    "Impresora configurada (opcional pero recomendado)"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Navega a /ventas/pos",
+      "expected": "Vista POS con grid de productos a la izquierda, carrito a la derecha vacío. Sin banner amarillo de caja cerrada",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Click en un producto para agregarlo al carrito",
+      "expected": "Aparece línea con cantidad 1, precio unitario y total. Total general se actualiza",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Pulsa F9 (o el botón 'Cobrar (F9)')",
+      "expected": "Se abre modal de cobro con método 'Efectivo' seleccionado y campo 'Recibido' enfocado",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 4,
+      "action": "Teclea o usa numpad para ingresar un monto MAYOR al total (ej. total $87 → recibe $100)",
+      "expected": "El recuadro de 'Cambio' muestra $13.00 en verde",
+      "evidence_hint": "screenshot",
+      "data": { "total_aprox": "87.00", "recibido": "100.00", "cambio_esperado": "13.00" }
+    },
+    {
+      "step": 5,
+      "action": "Pulsa 'Confirmar cobro'",
+      "expected": "Modal cierra, carrito se vacía, toast 'Venta {folio} registrada por $87.00', auto-impresión del ticket",
+      "evidence_hint": "printed_receipt"
+    }
+  ],
+  "acceptance_criteria": [
+    "La venta queda en historial con estado 'completada'",
+    "El stock del producto vendido se decrementó en 1",
+    "Se imprimió el ticket (o apareció modal de retry si la impresora falló)",
+    "El indicador de ojo y de impresora aparecen en el header del CartPanel"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/ventas/pos.tsx",
+    "packages/db/src/ventas-flow.ts"
+  ],
+  "tags": ["smoke", "release-blocker"]
+}

@@ -1,0 +1,43 @@
+{
+  "id": "TC-CAT-004",
+  "title": "Importar productos desde CSV con filas válidas e inválidas",
+  "module": "catalogo.productos",
+  "type": "edge_case",
+  "priority": "medium",
+  "estimated_minutes": 6,
+  "preconditions": [
+    "Existe categoría 'Abarrotes'",
+    "Archivo CSV preparado con encabezados correctos: nombre,categoria,precio,costo,sku,cantidad,codigo_barras"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "En /catalogo/productos pulsa 'Importar' y selecciona el CSV",
+      "expected": "Aparece preview con todas las filas y validación por fila (✓ o ✗)",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Confirma la importación",
+      "expected": "Toast con 'X exitosas, Y fallidas'. Las exitosas aparecen en la tabla",
+      "evidence_hint": "screenshot",
+      "data": { "csv_filas": 10, "esperadas_exitosas": 8, "esperadas_fallidas": 2 }
+    },
+    {
+      "step": 3,
+      "action": "Navega a /admin/importaciones",
+      "expected": "Aparece la importación con detalle de filas exitosas/fallidas y mensaje de error por fila",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "Las filas válidas se persistieron",
+    "Las filas inválidas NO se persistieron",
+    "El historial de importación es auditable"
+  ],
+  "related_files": [
+    "apps/desktop/src/components/productos-import-dialog.tsx",
+    "packages/db/src/importacion-flow.ts"
+  ],
+  "tags": []
+}

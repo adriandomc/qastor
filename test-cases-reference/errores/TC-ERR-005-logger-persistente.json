@@ -1,0 +1,38 @@
+{
+  "id": "TC-ERR-005",
+  "title": "Logger persistente escribe a app_data_dir/logs/voltalfa-{hoy}.log",
+  "module": "infra.logging",
+  "type": "happy_path",
+  "priority": "medium",
+  "estimated_minutes": 5,
+  "preconditions": ["App corriendo"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Provoca al menos 3 eventos: login fallido (warn), backup retention (puede ser silente), error en ErrorBoundary (error)",
+      "expected": "Cada uno se intenta loguear",
+      "evidence_hint": "none"
+    },
+    {
+      "step": 2,
+      "action": "Localiza el directorio app_data_dir (en macOS: ~/Library/Application Support/...). Abre logs/voltalfa-{YYYY-MM-DD}.log",
+      "expected": "Una línea JSON por evento, con campos: ts, level, msg, ctx (opcional)",
+      "evidence_hint": "log_excerpt"
+    },
+    {
+      "step": 3,
+      "action": "Cierra y relanza la app; verifica que el archivo del día siguiente cuando cambia la fecha se crea aparte",
+      "expected": "Rotación diaria por nombre de archivo",
+      "evidence_hint": "none"
+    }
+  ],
+  "acceptance_criteria": [
+    "El log persiste entre relanzamientos (no se pierde como console.log)",
+    "Es parseable (JSON-line) para análisis posterior"
+  ],
+  "related_files": [
+    "apps/desktop/src/lib/logger.ts",
+    "apps/desktop/src-tauri/src/lib.rs"
+  ],
+  "tags": []
+}

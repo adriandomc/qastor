@@ -1,0 +1,50 @@
+{
+  "id": "TC-CFG-003",
+  "title": "Configurar impresora térmica + test print",
+  "module": "configuracion.hardware",
+  "type": "happy_path",
+  "priority": "high",
+  "estimated_minutes": 5,
+  "preconditions": ["Impresora térmica TCP en la red local con IP conocida"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Navega a /configuracion/hardware",
+      "expected": "Formulario con host, puerto (default 9100), ancho (default 32), leyenda",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Llena host=192.168.1.50, puerto=9100, ancho=32, leyenda='Gracias por su compra'",
+      "expected": "Validación pasa",
+      "evidence_hint": "none",
+      "data": { "host": "192.168.1.50", "port": 9100, "ancho": 32 }
+    },
+    {
+      "step": 3,
+      "action": "Pulsa 'Probar conexión'",
+      "expected": "Indicador verde 'Conexión exitosa' o rojo 'Sin respuesta'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 4,
+      "action": "Pulsa 'Imprimir prueba'",
+      "expected": "Se imprime un ticket de prueba con nombre del negocio y fecha",
+      "evidence_hint": "printed_receipt"
+    },
+    {
+      "step": 5,
+      "action": "Ingresa ancho=10 (fuera del rango 16-96)",
+      "expected": "Aparece error en español 'El ancho debe estar entre 16 y 96 caracteres'",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "Test print funciona; el header refleja el estado online/offline de la impresora"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/configuracion/hardware.tsx",
+    "apps/desktop/src/lib/printer.ts"
+  ],
+  "tags": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "TC-REP-005",
+  "title": "Reporte de IVA desglosado (M19)",
+  "module": "reportes.iva",
+  "type": "happy_path",
+  "priority": "medium",
+  "estimated_minutes": 3,
+  "preconditions": ["Ventas con IVA aplicado en el rango"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Abre /reportes/iva, selecciona rango",
+      "expected": "Tabla con: período, base_imponible, iva_total, total. Suma de IVA a fin de mes",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "El IVA reportado coincide con la suma de impuesto_centavos en items_venta del rango"
+  ],
+  "related_files": ["packages/db/src/reportes-flow.ts"],
+  "tags": []
+}

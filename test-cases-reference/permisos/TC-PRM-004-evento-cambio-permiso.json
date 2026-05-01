@@ -1,0 +1,43 @@
+{
+  "id": "TC-PRM-004",
+  "title": "Cambiar permisos genera eventos auditables",
+  "module": "admin.usuarios",
+  "type": "happy_path",
+  "priority": "high",
+  "estimated_minutes": 4,
+  "preconditions": ["Sesión como usuario raíz"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Navega a /admin/usuarios y selecciona un usuario no raíz",
+      "expected": "Modal de edición con tab de Permisos por vista",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Marca puede_crear sobre catalogo.productos (estaba en 0) y guarda",
+      "expected": "Toast confirma",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Navega a /admin/eventos y filtra por tipo='permiso.otorgado'",
+      "expected": "Aparece el evento con detalle: usuario_id, vista_id, accion, actor_id",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 4,
+      "action": "Revoca el mismo permiso",
+      "expected": "Aparece evento 'permiso.revocado'",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "Toda alteración de permisos queda auditada"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/admin/usuarios.tsx",
+    "packages/db/src/permission-flow.ts"
+  ],
+  "tags": ["audit"]
+}

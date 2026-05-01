@@ -1,0 +1,28 @@
+{
+  "id": "TC-REP-002",
+  "title": "Reporte de ventas por método de pago",
+  "module": "reportes.metodos",
+  "type": "happy_path",
+  "priority": "medium",
+  "estimated_minutes": 3,
+  "preconditions": ["Ventas con mezcla de métodos: efectivo, tarjeta, transferencia"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Navega a /reportes/metodos",
+      "expected": "Tabla con una fila por método: método, pagos_count, total_centavos",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Verifica el desglose contra una venta mixta (ej. efectivo + tarjeta en una venta)",
+      "expected": "Cada pago contribuye a su método respectivo, no a 'mixto'",
+      "evidence_hint": "db_query"
+    }
+  ],
+  "acceptance_criteria": [
+    "Los pagos parciales se contabilizan correctamente"
+  ],
+  "related_files": ["packages/db/src/reportes-flow.ts"],
+  "tags": []
+}

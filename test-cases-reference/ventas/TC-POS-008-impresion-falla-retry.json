@@ -1,0 +1,48 @@
+{
+  "id": "TC-POS-008",
+  "title": "Si falla la impresión, modal permite reintentar o cerrar sin ticket",
+  "module": "ventas.pos",
+  "type": "error",
+  "priority": "high",
+  "estimated_minutes": 5,
+  "preconditions": [
+    "Caja abierta",
+    "Impresora configurada en hardware (con IP/host válidos pero APAGADA o desconectada)"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Apaga físicamente la impresora térmica (o desconecta el cable de red)",
+      "expected": "El indicador del header pasa a rojo 'Impresora sin conexión'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Cobra una venta normalmente",
+      "expected": "La venta se registra (toast verde 'Venta {folio} registrada'), pero acto seguido aparece modal 'No se pudo imprimir el ticket'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Reenchufa o enciende la impresora y pulsa 'Reintentar'",
+      "expected": "El ticket se imprime, el modal se cierra, toast 'Ticket impreso'",
+      "evidence_hint": "printed_receipt"
+    },
+    {
+      "step": 4,
+      "action": "Repite la falla y esta vez pulsa 'Cerrar sin ticket'",
+      "expected": "Modal se cierra. La venta sigue en historial; el cajero puede reimprimir luego desde el botón de impresora del CartPanel o desde Historial",
+      "evidence_hint": "none"
+    }
+  ],
+  "acceptance_criteria": [
+    "La venta se registra incluso si la impresora falla",
+    "El cajero entiende que la venta sí quedó pero el ticket no",
+    "Existe ruta de recuperación clara (reintentar o reimprimir más tarde)"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/ventas/pos.tsx",
+    "apps/desktop/src/lib/printer.ts"
+  ],
+  "tags": ["resiliencia"]
+}

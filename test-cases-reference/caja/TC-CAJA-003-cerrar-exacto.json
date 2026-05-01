@@ -1,0 +1,48 @@
+{
+  "id": "TC-CAJA-003",
+  "title": "Cerrar caja con conteo exacto se clasifica como 'exacto'",
+  "module": "cierres.caja",
+  "type": "happy_path",
+  "priority": "critical",
+  "estimated_minutes": 5,
+  "preconditions": [
+    "Caja abierta con fondo $500.00",
+    "Al menos 2-3 ventas en efectivo registradas durante el turno"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Navega a /cierres/caja",
+      "expected": "El resumen muestra: fondo, suma de pagos por método, esperado en efectivo",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "En 'Cerrar caja', el campo 'Contado' viene pre-llenado con el esperado",
+      "expected": "Campo editable, vista DiferenciaPreview muestra diferencia $0 estado 'exacto'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Pulsa 'Cerrar caja'",
+      "expected": "Aparece sección de cierre cerrado: estado 'exacto', botón 'Imprimir reporte'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 4,
+      "action": "Pulsa 'Imprimir reporte'",
+      "expected": "Se imprime el reporte de cierre vía impresora térmica configurada (o el modal de error si no está disponible)",
+      "evidence_hint": "printed_receipt"
+    }
+  ],
+  "acceptance_criteria": [
+    "La fila de cierres_caja tiene cerrado_en, esperado_centavos, contado_centavos, diferencia_centavos = 0",
+    "Estado del cierre = 'exacto'",
+    "Se emitió evento 'caja.cerrada'"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/cierres/caja.tsx",
+    "packages/db/src/cierres-flow.ts"
+  ],
+  "tags": ["smoke", "release-blocker"]
+}

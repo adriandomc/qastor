@@ -1,0 +1,39 @@
+{
+  "id": "TC-INV-003",
+  "title": "El header muestra indicador proactivo de stock bajo",
+  "module": "shell.header",
+  "type": "happy_path",
+  "priority": "medium",
+  "estimated_minutes": 3,
+  "preconditions": [
+    "Threshold default = 5",
+    "Al menos 1 SKU con stock ≤ 5"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Cualquier ruta autenticada — observa el header global",
+      "expected": "Aparece un pill amarillo con icono de alerta y texto '{N} en stock bajo'. Si hay SKUs con stock=0, el pill es rojo",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Click en el pill",
+      "expected": "Navega a /inventario/niveles",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Ajusta los stocks bajos por encima del threshold",
+      "expected": "Vuelve a cualquier vista — el pill desaparece del header (no más alertas)",
+      "evidence_hint": "screen_recording"
+    }
+  ],
+  "acceptance_criteria": [
+    "El indicador es proactivo: el cajero/dueño ve la alerta sin tener que ir a la vista de niveles"
+  ],
+  "related_files": [
+    "apps/desktop/src/components/status-indicators.tsx"
+  ],
+  "tags": []
+}

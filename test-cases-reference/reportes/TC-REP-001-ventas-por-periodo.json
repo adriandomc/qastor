@@ -1,0 +1,41 @@
+{
+  "id": "TC-REP-001",
+  "title": "Reporte de ventas por período (día/semana/mes)",
+  "module": "reportes.ventas",
+  "type": "happy_path",
+  "priority": "high",
+  "estimated_minutes": 4,
+  "preconditions": ["Existen ventas registradas en al menos 2 días distintos"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Navega a /reportes/ventas y selecciona granularidad 'día' con rango últimos 7 días",
+      "expected": "Tabla con una fila por día, columnas: fecha, ventas_count, total. Total general al pie",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Cambia granularidad a 'semana'",
+      "expected": "Las filas se agrupan por semana ISO",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Cambia rango a 'este mes'",
+      "expected": "Datos del mes actual",
+      "evidence_hint": "none"
+    },
+    {
+      "step": 4,
+      "action": "Verifica que ventas canceladas NO aparecen en el reporte",
+      "expected": "El total no cuenta las canceladas",
+      "evidence_hint": "db_query"
+    }
+  ],
+  "acceptance_criteria": [
+    "Los conteos cuadran con un SELECT manual",
+    "Cancelaciones se excluyen del reporte"
+  ],
+  "related_files": ["packages/db/src/reportes-flow.ts"],
+  "tags": []
+}

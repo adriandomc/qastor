@@ -1,0 +1,46 @@
+{
+  "id": "TC-CAT-002",
+  "title": "Crear producto físico simple con un único SKU",
+  "module": "catalogo.productos",
+  "type": "happy_path",
+  "priority": "critical",
+  "estimated_minutes": 4,
+  "preconditions": ["Existe al menos una categoría"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Navega a /catalogo/productos y pulsa 'Nuevo producto'",
+      "expected": "Modal con campos: categoría, nombre, precio (con IVA), costo, tasa impuesto, tipo, lista de inventarios",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Llena: Categoría=Bebidas, Nombre='Coca 600ml', Precio=$18.00, Tipo=Físico, agrega 1 inventario con SKU='COCA-600' cantidad=10",
+      "expected": "Validación pasa, botón 'Guardar' habilitado",
+      "evidence_hint": "screenshot",
+      "data": {
+        "nombre": "Coca 600ml",
+        "precio": "18.00",
+        "tasa_impuesto": 1600,
+        "sku": "COCA-600",
+        "cantidad_inicial": 10
+      }
+    },
+    {
+      "step": 3,
+      "action": "Pulsa Guardar",
+      "expected": "Modal cierra, producto aparece en tabla con stock_total=10",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "El producto persiste con tipo_item='fisico'",
+    "Existe inventario con cantidad=10",
+    "Aparece en POS como vendible"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/catalogo/productos.tsx",
+    "packages/db/src/producto-flow.ts"
+  ],
+  "tags": ["smoke", "release-blocker"]
+}

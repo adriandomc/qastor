@@ -1,0 +1,47 @@
+{
+  "id": "TC-ERR-001",
+  "title": "ErrorBoundary captura excepción no controlada y muestra pantalla de recuperación",
+  "module": "shell.error_boundary",
+  "type": "error",
+  "priority": "high",
+  "estimated_minutes": 5,
+  "preconditions": [
+    "App corriendo en modo dev (para ver el detalle técnico)",
+    "Permiso de modificar código temporalmente"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "En cualquier componente de vista, agrega temporalmente: 'throw new Error(\"crash de prueba\")' al inicio del render",
+      "expected": "Recarga: aparece la pantalla 'Algo salió mal' con icono triángulo, mensaje y botón 'Recargar aplicación'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Expande el detalle técnico (modo dev)",
+      "expected": "Muestra stack trace y component stack",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Pulsa 'Recargar aplicación'",
+      "expected": "La página se recarga; si el throw sigue, vuelve a la pantalla de error",
+      "evidence_hint": "screen_recording"
+    },
+    {
+      "step": 4,
+      "action": "Quita el throw de prueba y verifica el log",
+      "expected": "En app_data_dir/logs/voltalfa-{hoy}.log aparece línea con msg='ui.errorBoundary.caught'",
+      "evidence_hint": "log_excerpt"
+    }
+  ],
+  "acceptance_criteria": [
+    "Una excepción no capturada nunca produce pantalla blanca",
+    "El error queda registrado para debug post-mortem"
+  ],
+  "related_files": [
+    "apps/desktop/src/components/error-boundary.tsx",
+    "apps/desktop/src/lib/logger.ts"
+  ],
+  "tags": ["resiliencia", "release-blocker"]
+}

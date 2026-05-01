@@ -1,0 +1,39 @@
+{
+  "id": "TC-CAT-001",
+  "title": "Crear nueva categoría con schema de atributos",
+  "module": "catalogo.categorias",
+  "type": "happy_path",
+  "priority": "high",
+  "estimated_minutes": 3,
+  "preconditions": ["Sesión con permiso 'crear' en catalogo.categorias"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Navega a /catalogo/categorias y pulsa 'Nueva categoría'",
+      "expected": "Modal con campos nombre y editor de schema de atributos",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Ingresa 'Bebidas' como nombre y agrega atributo 'marca' (text)",
+      "expected": "El editor permite agregar el atributo, validación pasa",
+      "evidence_hint": "screenshot",
+      "data": { "nombre": "Bebidas", "atributos": [{ "key": "marca", "type": "text" }] }
+    },
+    {
+      "step": 3,
+      "action": "Pulsa 'Guardar'",
+      "expected": "Modal cierra, la categoría aparece en la tabla, toast confirma",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "La categoría se persiste con su schema_atributos",
+    "Los productos creados con esta categoría heredan el schema"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/catalogo/categorias.tsx",
+    "packages/db/src/categoria-flow.ts"
+  ],
+  "tags": ["smoke"]
+}

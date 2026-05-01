@@ -1,0 +1,44 @@
+{
+  "id": "TC-INV-002",
+  "title": "Filtrar por bajo stock respeta el threshold configurado",
+  "module": "inventario.niveles",
+  "type": "happy_path",
+  "priority": "medium",
+  "estimated_minutes": 3,
+  "preconditions": [
+    "Threshold default = 5 (configurable en negocio)",
+    "Mezcla de productos con stocks: 0, 2, 5, 10, 20"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Abre /inventario/niveles",
+      "expected": "Tabla muestra todos los SKUs. Resumen arriba: '5 SKUs activos · 2 con bajo stock · 1 agotado'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Click en el filtro 'Bajo stock'",
+      "expected": "Tabla filtra a items con cantidad > 0 AND ≤ 5 (los de 2 y 5). Cuenta del filtro se actualiza con aria-live",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Cambia el threshold a 3 en el input",
+      "expected": "El filtro recalcula: sólo items con stock entre 1 y 3 quedan visibles",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 4,
+      "action": "Cambia filtro a 'Sin stock'",
+      "expected": "Sólo aparecen items con cantidad = 0",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "Los filtros aplican sólo a productos físicos (servicios/digital se excluyen)",
+    "Los contadores se anuncian con aria-live para lectores de pantalla"
+  ],
+  "related_files": ["apps/desktop/src/routes/_app/inventario/niveles.tsx"],
+  "tags": ["a11y"]
+}

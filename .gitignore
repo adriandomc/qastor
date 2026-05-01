@@ -1,0 +1,22 @@
+.DS_Store
+
+# Frontend
+node_modules/
+dist/
+*.log
+
+# Tauri / Rust
+src-tauri/target/
+src-tauri/gen/
+
+# qastor session runs (user data, never commit)
+.qastor-runs/
+
+# Author-private artifacts (live in this repo locally, not in version control)
+MASTER-PLAN.md
+design-system/
+
+# IDE
+.vscode/
+.idea/
+*.swp

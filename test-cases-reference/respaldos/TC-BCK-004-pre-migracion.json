@@ -1,0 +1,47 @@
+{
+  "id": "TC-BCK-004",
+  "title": "Backup automático pre-migración antes de aplicar nuevas migraciones",
+  "module": "infra.migrations",
+  "type": "happy_path",
+  "priority": "critical",
+  "estimated_minutes": 6,
+  "preconditions": [
+    "DB con migraciones aplicadas hasta una versión < última disponible",
+    "Para forzarlo: editar manualmente _migraciones para 'desaplicar' la última, o usar build viejo"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Cierra la app",
+      "expected": "Proceso terminado",
+      "evidence_hint": "none"
+    },
+    {
+      "step": 2,
+      "action": "Lanza la app actualizada (con migraciones nuevas)",
+      "expected": "Antes de aplicar las migraciones, se crea un backup tipo 'pre-migracion'",
+      "evidence_hint": "log_excerpt"
+    },
+    {
+      "step": 3,
+      "action": "Una vez logueado, navega a /configuracion/respaldos",
+      "expected": "Aparece un backup nuevo con sufijo 'pre-migracion' en su nombre",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 4,
+      "action": "Inspecciona logs en app_data_dir/logs/voltalfa-{hoy}.log",
+      "expected": "Línea con msg='db.backup.preMigracion' y { from, to }",
+      "evidence_hint": "log_excerpt"
+    }
+  ],
+  "acceptance_criteria": [
+    "El backup pre-migración existe antes de tocar el schema",
+    "Si la migración falla, el operador puede restaurar este backup desde la UI"
+  ],
+  "related_files": [
+    "apps/desktop/src/lib/db.ts",
+    "packages/db/src/migrations/runner.ts"
+  ],
+  "tags": ["release-blocker", "resiliencia"]
+}

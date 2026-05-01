@@ -1,0 +1,28 @@
+{
+  "id": "TC-CAJA-002",
+  "title": "Rechaza abrir una segunda caja si ya hay una abierta",
+  "module": "cierres.caja",
+  "type": "error",
+  "priority": "high",
+  "estimated_minutes": 1,
+  "preconditions": ["Hay caja abierta en el dispositivo"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Navega a /cierres/caja",
+      "expected": "Se muestra 'Turno en curso' (no la sección de Abrir caja)",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "(Defense in depth, opcional) Ejecuta abrirCaja() vía consola/script con el mismo dispositivo_id",
+      "expected": "Lanza CajaYaAbiertaError",
+      "evidence_hint": "log_excerpt"
+    }
+  ],
+  "acceptance_criteria": [
+    "Sólo puede haber una fila en cierres_caja con cerrado_en IS NULL por dispositivo"
+  ],
+  "related_files": ["packages/db/src/cierres-flow.ts"],
+  "tags": ["defense-in-depth"]
+}

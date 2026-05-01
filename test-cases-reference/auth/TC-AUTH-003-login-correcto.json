@@ -1,0 +1,42 @@
+{
+  "id": "TC-AUTH-003",
+  "title": "Login correcto inicia sesión y persiste entre relanzamientos",
+  "module": "auth.login",
+  "type": "happy_path",
+  "priority": "critical",
+  "estimated_minutes": 3,
+  "preconditions": [
+    "Existe al menos un usuario activo",
+    "Aplicación cerrada antes de empezar"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Lanza la app",
+      "expected": "Redirige a /login (no a /setup)",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Ingresa nombre de usuario y contraseña correctos, pulsa 'Iniciar sesión'",
+      "expected": "Spinner breve, redirige al shell autenticado, header muestra el nombre visible",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Cierra completamente la app y vuelve a lanzarla",
+      "expected": "Auto-login: NO pide credenciales, va directo al shell. La sesión persistió",
+      "evidence_hint": "screen_recording"
+    }
+  ],
+  "acceptance_criteria": [
+    "Se creó una nueva fila en 'sesiones' con expira_en > now()",
+    "Existe evento 'sesion.iniciada' con timestamp coherente",
+    "Existe fila en 'login_intentos' con exitoso=1"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/login.tsx",
+    "packages/db/src/auth-flow.ts"
+  ],
+  "tags": ["smoke", "release-blocker"]
+}

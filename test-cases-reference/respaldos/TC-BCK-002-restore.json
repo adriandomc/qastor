@@ -1,0 +1,44 @@
+{
+  "id": "TC-BCK-002",
+  "title": "Restaurar backup reemplaza la DB viva",
+  "module": "configuracion.respaldos",
+  "type": "happy_path",
+  "priority": "critical",
+  "estimated_minutes": 5,
+  "preconditions": [
+    "Existe al menos 1 backup en la lista",
+    "Hay datos modificables (productos, ventas) creados DESPUÉS del backup"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Toma nota del estado actual: cuenta de productos, última venta",
+      "expected": "Estado conocido",
+      "evidence_hint": "db_query"
+    },
+    {
+      "step": 2,
+      "action": "En la fila del backup, pulsa el botón Undo (Restaurar) y confirma",
+      "expected": "App se recarga automáticamente",
+      "evidence_hint": "screen_recording"
+    },
+    {
+      "step": 3,
+      "action": "Tras la recarga, vuelve a verificar productos y ventas",
+      "expected": "El estado coincide con el del backup, no con el más reciente",
+      "evidence_hint": "db_query"
+    },
+    {
+      "step": 4,
+      "action": "Verifica las imágenes de productos",
+      "expected": "Las imágenes presentes en el backup están restauradas; las creadas después fueron eliminadas",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "El restore es completo: DB + carpeta de imágenes",
+    "La app se recarga limpiamente sin errores"
+  ],
+  "related_files": ["apps/desktop/src/lib/backup.ts"],
+  "tags": ["release-blocker", "destructivo"]
+}

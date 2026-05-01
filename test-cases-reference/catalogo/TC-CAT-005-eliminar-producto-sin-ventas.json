@@ -1,0 +1,43 @@
+{
+  "id": "TC-CAT-005",
+  "title": "Eliminar producto sin ventas asociadas (soft delete)",
+  "module": "catalogo.productos",
+  "type": "happy_path",
+  "priority": "medium",
+  "estimated_minutes": 2,
+  "preconditions": [
+    "Existe producto 'Test eliminable' sin ventas registradas",
+    "Sesión con permiso 'eliminar'"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "En la fila del producto, pulsa el ícono de basura",
+      "expected": "Confirmación destructiva 'Eliminar producto'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Confirma",
+      "expected": "El producto desaparece de la tabla, toast confirma",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Verifica el producto en DB",
+      "expected": "Existe pero con eliminado_en != NULL (soft delete)",
+      "evidence_hint": "db_query"
+    },
+    {
+      "step": 4,
+      "action": "Ventas anteriores que usaban este producto siguen mostrando snapshot del nombre",
+      "expected": "El historial de ventas no se rompe",
+      "evidence_hint": "none"
+    }
+  ],
+  "acceptance_criteria": [
+    "Soft delete: el producto queda con eliminado_en pero la auditoría se preserva"
+  ],
+  "related_files": ["packages/db/src/producto-flow.ts"],
+  "tags": []
+}

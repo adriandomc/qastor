@@ -1,0 +1,30 @@
+{
+  "id": "TC-PRM-002",
+  "title": "Sin puede_crear, los botones de creación quedan ocultos",
+  "module": "permisos",
+  "type": "error",
+  "priority": "high",
+  "estimated_minutes": 3,
+  "preconditions": [
+    "Usuario 'consultor' con puede_leer=1, puede_crear=0 sobre catalogo.productos"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Loguea como consultor y navega a /catalogo/productos",
+      "expected": "Tabla visible (puede leer), pero NO aparece el botón 'Nuevo producto' ni 'Importar'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Como admin, otorga puede_crear y vuelve a entrar como consultor",
+      "expected": "Los botones aparecen",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "Componente <Can> oculta acciones según permiso (preferencia de la spec: ocultar > deshabilitar)"
+  ],
+  "related_files": ["apps/desktop/src/components/can.tsx"],
+  "tags": ["security"]
+}

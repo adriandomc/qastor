@@ -1,0 +1,33 @@
+{
+  "id": "TC-CAJA-005",
+  "title": "Cierre con diferencia > threshold se clasifica 'inaceptable'",
+  "module": "cierres.caja",
+  "type": "error",
+  "priority": "high",
+  "estimated_minutes": 3,
+  "preconditions": [
+    "Caja abierta con ventas",
+    "Threshold de cierre $50 (default)"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "En 'Cerrar caja', resta $200 al esperado",
+      "expected": "DiferenciaPreview muestra tono destructive con estado 'inaceptable'",
+      "evidence_hint": "screenshot",
+      "data": { "delta": "-200.00" }
+    },
+    {
+      "step": 2,
+      "action": "Pulsa 'Cerrar caja' (no se bloquea, sólo se clasifica)",
+      "expected": "El cierre se registra con estado 'inaceptable'",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "Estado del cierre = 'inaceptable'",
+    "El cajero/admin queda alertado por el color del estado"
+  ],
+  "related_files": ["packages/db/src/cierres-flow.ts"],
+  "tags": []
+}

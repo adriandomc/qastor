@@ -1,0 +1,39 @@
+{
+  "id": "TC-POS-009",
+  "title": "Vista previa del ticket antes de imprimir",
+  "module": "ventas.pos",
+  "type": "happy_path",
+  "priority": "medium",
+  "estimated_minutes": 2,
+  "preconditions": [
+    "Una venta acaba de registrarse (lastVentaId presente en el cart panel)"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Pulsa el ícono de ojo en el header del cart panel",
+      "expected": "Se abre modal 'Vista previa del ticket' con texto monoespaciado mostrando exactamente lo que imprime: encabezado, items, totales, pagos, cambio, pie",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Compara el contenido del modal con el ancho configurado de papel",
+      "expected": "El alineado a la derecha (totales) es correcto al ancho. Las líneas separadoras tienen el ancho configurado",
+      "evidence_hint": "none"
+    },
+    {
+      "step": 3,
+      "action": "Pulsa 'Imprimir' desde el modal",
+      "expected": "Modal cierra, dispara impresión real",
+      "evidence_hint": "printed_receipt"
+    }
+  ],
+  "acceptance_criteria": [
+    "El preview refleja el contenido real (no atributos visuales como negrita/doble alto)"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/ventas/pos.tsx",
+    "apps/desktop/src/lib/escpos.ts"
+  ],
+  "tags": []
+}

@@ -1,0 +1,43 @@
+{
+  "id": "TC-POS-003",
+  "title": "Cobro con tarjeta o transferencia rechaza si la referencia está vacía",
+  "module": "ventas.pos",
+  "type": "error",
+  "priority": "high",
+  "estimated_minutes": 3,
+  "preconditions": ["Caja abierta", "Producto en carrito"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Selecciona 'Tarjeta' como método y deja el campo Referencia vacío",
+      "expected": "El botón 'Confirmar cobro' está deshabilitado",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Intenta enviar el formulario por Enter",
+      "expected": "Si el botón estaba deshabilitado, no se envía. Si por algún motivo se envía, aparece error inline 'La referencia es requerida para tarjeta y transferencia'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Cambia a 'Transferencia' y repite con referencia vacía",
+      "expected": "Mismo bloqueo",
+      "evidence_hint": "none"
+    },
+    {
+      "step": 4,
+      "action": "(Defense in depth) Llama a registrarVenta vía consola con un pago tarjeta + referencia null",
+      "expected": "Lanza ReferenciaRequeridaError",
+      "evidence_hint": "log_excerpt"
+    }
+  ],
+  "acceptance_criteria": [
+    "No se puede registrar pago de tarjeta/transferencia sin referencia, ni desde UI ni desde dominio"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/ventas/pos.tsx",
+    "packages/db/src/ventas-flow.ts"
+  ],
+  "tags": ["defense-in-depth", "audit"]
+}

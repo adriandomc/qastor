@@ -1,0 +1,28 @@
+{
+  "id": "TC-CFG-004",
+  "title": "Cobro funciona sin impresora configurada (toast informa)",
+  "module": "configuracion.hardware",
+  "type": "edge_case",
+  "priority": "medium",
+  "estimated_minutes": 3,
+  "preconditions": ["Impresora NO configurada (host vacío en _config)"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Verifica el header: aparece pill 'Impresora sin configurar' tono muted",
+      "expected": "Sí",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Cobra una venta normal",
+      "expected": "Venta se registra, NO se intenta imprimir, toast 'Impresora no configurada' aparece (silenciado del éxito de venta)",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "El POS funciona sin impresora; la venta no se bloquea"
+  ],
+  "related_files": ["apps/desktop/src/lib/printer.ts"],
+  "tags": []
+}

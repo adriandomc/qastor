@@ -1,0 +1,47 @@
+{
+  "id": "TC-POS-011",
+  "title": "Cancelar venta YA cobrada restaura stock",
+  "module": "ventas.historial",
+  "type": "happy_path",
+  "priority": "high",
+  "estimated_minutes": 4,
+  "preconditions": [
+    "Existe venta 'completada' en historial con al menos un producto físico",
+    "Stock actual del producto = X"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Navega a /ventas/historial",
+      "expected": "La venta aparece con estado 'completada' y botón 'Cancelar'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Pulsa el botón Cancelar y confirma",
+      "expected": "El estado cambia a 'cancelada', toast confirma",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Verifica el stock del producto vendido",
+      "expected": "Stock subió a X+1 (la cantidad que estaba en la venta)",
+      "evidence_hint": "db_query"
+    },
+    {
+      "step": 4,
+      "action": "Intenta cancelar la misma venta otra vez",
+      "expected": "El botón Cancelar ya no aparece para ventas con estado 'cancelada'",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "El stock se restaura sólo para items físicos",
+    "Se emite evento 'venta.cancelada'"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/ventas/historial.tsx",
+    "packages/db/src/ventas-flow.ts"
+  ],
+  "tags": []
+}

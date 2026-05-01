@@ -1,0 +1,155 @@
+{
+  "$schema": "./schema.json",
+  "version": "0.1.0",
+  "generated_at": "2026-05-01",
+  "summary": {
+    "total": 60,
+    "by_priority": { "critical": 12, "high": 26, "medium": 19, "low": 3 },
+    "by_type": { "happy_path": 40, "error": 17, "edge_case": 3 }
+  },
+  "modules": [
+    {
+      "module": "auth",
+      "directory": "auth/",
+      "cases": [
+        { "id": "TC-AUTH-001", "title": "Crear el primer usuario raíz desde el wizard de setup", "type": "happy_path", "priority": "critical", "file": "auth/TC-AUTH-001-bootstrap-raiz.json" },
+        { "id": "TC-AUTH-002", "title": "Bootstrap rechaza si ya existe un usuario activo", "type": "error", "priority": "high", "file": "auth/TC-AUTH-002-bootstrap-rechazo-doble.json" },
+        { "id": "TC-AUTH-003", "title": "Login correcto inicia sesión y persiste entre relanzamientos", "type": "happy_path", "priority": "critical", "file": "auth/TC-AUTH-003-login-correcto.json" },
+        { "id": "TC-AUTH-004", "title": "Login con contraseña incorrecta muestra error genérico", "type": "error", "priority": "high", "file": "auth/TC-AUTH-004-login-password-mal.json" },
+        { "id": "TC-AUTH-005", "title": "Cuenta se bloquea tras 5 intentos fallidos consecutivos", "type": "error", "priority": "high", "file": "auth/TC-AUTH-005-lockout-5-fallidos.json" },
+        { "id": "TC-AUTH-006", "title": "Login exitoso resetea el contador de intentos fallidos", "type": "edge_case", "priority": "medium", "file": "auth/TC-AUTH-006-lockout-reset.json" },
+        { "id": "TC-AUTH-007", "title": "Cambio de contraseña propia desde el header", "type": "happy_path", "priority": "high", "file": "auth/TC-AUTH-007-cambiar-password.json" },
+        { "id": "TC-AUTH-008", "title": "Cambio de contraseña rechaza si la actual es incorrecta", "type": "error", "priority": "medium", "file": "auth/TC-AUTH-008-cambiar-password-actual-mal.json" }
+      ]
+    },
+    {
+      "module": "caja",
+      "directory": "caja/",
+      "cases": [
+        { "id": "TC-CAJA-001", "title": "Abrir caja con fondo inicial", "type": "happy_path", "priority": "critical", "file": "caja/TC-CAJA-001-abrir-caja.json" },
+        { "id": "TC-CAJA-002", "title": "Rechaza abrir una segunda caja si ya hay una abierta", "type": "error", "priority": "high", "file": "caja/TC-CAJA-002-doble-apertura.json" },
+        { "id": "TC-CAJA-003", "title": "Cerrar caja con conteo exacto se clasifica como 'exacto'", "type": "happy_path", "priority": "critical", "file": "caja/TC-CAJA-003-cerrar-exacto.json" },
+        { "id": "TC-CAJA-004", "title": "Cierre con diferencia ≤ threshold se clasifica 'aceptable'", "type": "happy_path", "priority": "high", "file": "caja/TC-CAJA-004-cerrar-aceptable.json" },
+        { "id": "TC-CAJA-005", "title": "Cierre con diferencia > threshold se clasifica 'inaceptable'", "type": "error", "priority": "high", "file": "caja/TC-CAJA-005-cerrar-inaceptable.json" },
+        { "id": "TC-CAJA-006", "title": "Registrar ingreso manual ajusta el esperado", "type": "happy_path", "priority": "medium", "file": "caja/TC-CAJA-006-movimiento-ingreso.json" },
+        { "id": "TC-CAJA-007", "title": "Registrar egreso manual ajusta el esperado", "type": "happy_path", "priority": "medium", "file": "caja/TC-CAJA-007-movimiento-egreso.json" }
+      ]
+    },
+    {
+      "module": "ventas",
+      "directory": "ventas/",
+      "cases": [
+        { "id": "TC-POS-001", "title": "Cobrar venta en efectivo con cambio", "type": "happy_path", "priority": "critical", "file": "ventas/TC-POS-001-cobrar-efectivo-cambio.json" },
+        { "id": "TC-POS-002", "title": "Cobrar venta con tarjeta + referencia válida", "type": "happy_path", "priority": "high", "file": "ventas/TC-POS-002-cobrar-tarjeta-referencia.json" },
+        { "id": "TC-POS-003", "title": "Cobro con tarjeta o transferencia rechaza si la referencia está vacía", "type": "error", "priority": "high", "file": "ventas/TC-POS-003-tarjeta-sin-referencia.json" },
+        { "id": "TC-POS-004", "title": "POS bloquea cobro cuando no hay caja abierta", "type": "error", "priority": "critical", "file": "ventas/TC-POS-004-venta-sin-caja-abierta.json" },
+        { "id": "TC-POS-005", "title": "Agregar producto al carrito por escaneo de código de barras", "type": "happy_path", "priority": "high", "file": "ventas/TC-POS-005-busqueda-codigo-barras.json" },
+        { "id": "TC-POS-006", "title": "POS bloquea agregar más cantidad que el stock disponible", "type": "error", "priority": "high", "file": "ventas/TC-POS-006-stock-insuficiente.json" },
+        { "id": "TC-POS-007", "title": "Atajos de teclado F2/F3/F9/F10 funcionan según spec", "type": "happy_path", "priority": "medium", "file": "ventas/TC-POS-007-atajos-teclado.json" },
+        { "id": "TC-POS-008", "title": "Si falla la impresión, modal permite reintentar o cerrar sin ticket", "type": "error", "priority": "high", "file": "ventas/TC-POS-008-impresion-falla-retry.json" },
+        { "id": "TC-POS-009", "title": "Vista previa del ticket antes de imprimir", "type": "happy_path", "priority": "medium", "file": "ventas/TC-POS-009-vista-previa-ticket.json" },
+        { "id": "TC-POS-010", "title": "Cancelar venta en curso limpia el carrito", "type": "happy_path", "priority": "medium", "file": "ventas/TC-POS-010-cancelar-venta-carrito.json" },
+        { "id": "TC-POS-011", "title": "Cancelar venta YA cobrada restaura stock", "type": "happy_path", "priority": "high", "file": "ventas/TC-POS-011-cancelar-post-cobro.json" },
+        { "id": "TC-POS-012", "title": "Devolución parcial restaura stock proporcional", "type": "happy_path", "priority": "high", "file": "ventas/TC-POS-012-devolucion-parcial.json" }
+      ]
+    },
+    {
+      "module": "catalogo",
+      "directory": "catalogo/",
+      "cases": [
+        { "id": "TC-CAT-001", "title": "Crear nueva categoría con schema de atributos", "type": "happy_path", "priority": "high", "file": "catalogo/TC-CAT-001-crear-categoria.json" },
+        { "id": "TC-CAT-002", "title": "Crear producto físico simple con un único SKU", "type": "happy_path", "priority": "critical", "file": "catalogo/TC-CAT-002-crear-producto-simple.json" },
+        { "id": "TC-CAT-003", "title": "Crear producto con matriz de variantes (talla x color)", "type": "happy_path", "priority": "high", "file": "catalogo/TC-CAT-003-producto-con-variantes.json" },
+        { "id": "TC-CAT-004", "title": "Importar productos desde CSV con filas válidas e inválidas", "type": "edge_case", "priority": "medium", "file": "catalogo/TC-CAT-004-importacion-csv.json" },
+        { "id": "TC-CAT-005", "title": "Eliminar producto sin ventas asociadas (soft delete)", "type": "happy_path", "priority": "medium", "file": "catalogo/TC-CAT-005-eliminar-producto-sin-ventas.json" }
+      ]
+    },
+    {
+      "module": "inventario",
+      "directory": "inventario/",
+      "cases": [
+        { "id": "TC-INV-001", "title": "Ajuste manual de stock con razón", "type": "happy_path", "priority": "high", "file": "inventario/TC-INV-001-ajustar-stock.json" },
+        { "id": "TC-INV-002", "title": "Filtrar por bajo stock respeta el threshold configurado", "type": "happy_path", "priority": "medium", "file": "inventario/TC-INV-002-filtro-stock-bajo.json" },
+        { "id": "TC-INV-003", "title": "El header muestra indicador proactivo de stock bajo", "type": "happy_path", "priority": "medium", "file": "inventario/TC-INV-003-indicador-stock-bajo-header.json" },
+        { "id": "TC-INV-004", "title": "El historial de movimientos refleja ventas, ajustes y devoluciones", "type": "happy_path", "priority": "medium", "file": "inventario/TC-INV-004-historial-movimientos.json" }
+      ]
+    },
+    {
+      "module": "reportes",
+      "directory": "reportes/",
+      "cases": [
+        { "id": "TC-REP-001", "title": "Reporte de ventas por período (día/semana/mes)", "type": "happy_path", "priority": "high", "file": "reportes/TC-REP-001-ventas-por-periodo.json" },
+        { "id": "TC-REP-002", "title": "Reporte de ventas por método de pago", "type": "happy_path", "priority": "medium", "file": "reportes/TC-REP-002-por-metodo.json" },
+        { "id": "TC-REP-003", "title": "Productos más vendidos por unidades en el período", "type": "happy_path", "priority": "medium", "file": "reportes/TC-REP-003-productos-mas-vendidos.json" },
+        { "id": "TC-REP-004", "title": "Reporte de ganancia bruta y margen por período (M19)", "type": "happy_path", "priority": "high", "file": "reportes/TC-REP-004-ganancia.json" },
+        { "id": "TC-REP-005", "title": "Reporte de IVA desglosado (M19)", "type": "happy_path", "priority": "medium", "file": "reportes/TC-REP-005-iva-desglose.json" },
+        { "id": "TC-REP-006", "title": "Exportar reporte a CSV", "type": "happy_path", "priority": "medium", "file": "reportes/TC-REP-006-export-csv.json" }
+      ]
+    },
+    {
+      "module": "configuracion",
+      "directory": "configuracion/",
+      "cases": [
+        { "id": "TC-CFG-001", "title": "Configurar datos del negocio (nombre, RFC, IVA, thresholds)", "type": "happy_path", "priority": "high", "file": "configuracion/TC-CFG-001-datos-negocio.json" },
+        { "id": "TC-CFG-002", "title": "Validación de formato RFC", "type": "error", "priority": "low", "file": "configuracion/TC-CFG-002-rfc-invalido.json" },
+        { "id": "TC-CFG-003", "title": "Configurar impresora térmica + test print", "type": "happy_path", "priority": "high", "file": "configuracion/TC-CFG-003-impresora-test.json" },
+        { "id": "TC-CFG-004", "title": "Cobro funciona sin impresora configurada (toast informa)", "type": "edge_case", "priority": "medium", "file": "configuracion/TC-CFG-004-impresora-sin-config.json" }
+      ]
+    },
+    {
+      "module": "respaldos",
+      "directory": "respaldos/",
+      "cases": [
+        { "id": "TC-BCK-001", "title": "Crear backup manual desde la UI", "type": "happy_path", "priority": "critical", "file": "respaldos/TC-BCK-001-backup-manual.json" },
+        { "id": "TC-BCK-002", "title": "Restaurar backup reemplaza la DB viva", "type": "happy_path", "priority": "critical", "file": "respaldos/TC-BCK-002-restore.json" },
+        { "id": "TC-BCK-003", "title": "Exportar backup off-site a carpeta externa", "type": "happy_path", "priority": "high", "file": "respaldos/TC-BCK-003-export-off-site.json" },
+        { "id": "TC-BCK-004", "title": "Backup automático pre-migración antes de aplicar nuevas migraciones", "type": "happy_path", "priority": "critical", "file": "respaldos/TC-BCK-004-pre-migracion.json" },
+        { "id": "TC-BCK-005", "title": "Eliminar backup individual", "type": "happy_path", "priority": "low", "file": "respaldos/TC-BCK-005-eliminar-backup.json" }
+      ]
+    },
+    {
+      "module": "permisos",
+      "directory": "permisos/",
+      "cases": [
+        { "id": "TC-PRM-001", "title": "Sin puede_leer, la vista no aparece en sidebar y la URL rebota", "type": "error", "priority": "critical", "file": "permisos/TC-PRM-001-sin-leer-oculta-vista.json" },
+        { "id": "TC-PRM-002", "title": "Sin puede_crear, los botones de creación quedan ocultos", "type": "error", "priority": "high", "file": "permisos/TC-PRM-002-sin-crear-oculta-boton.json" },
+        { "id": "TC-PRM-003", "title": "La capa de dominio rechaza la mutación si el permiso no existe", "type": "error", "priority": "critical", "file": "permisos/TC-PRM-003-defense-in-depth-mutacion.json" },
+        { "id": "TC-PRM-004", "title": "Cambiar permisos genera eventos auditables", "type": "happy_path", "priority": "high", "file": "permisos/TC-PRM-004-evento-cambio-permiso.json" }
+      ]
+    },
+    {
+      "module": "errores",
+      "directory": "errores/",
+      "cases": [
+        { "id": "TC-ERR-001", "title": "ErrorBoundary captura excepción no controlada y muestra pantalla de recuperación", "type": "error", "priority": "high", "file": "errores/TC-ERR-001-error-boundary.json" },
+        { "id": "TC-ERR-002", "title": "Ruta inexistente muestra pantalla 404", "type": "error", "priority": "medium", "file": "errores/TC-ERR-002-pantalla-404.json" },
+        { "id": "TC-ERR-003", "title": "Integrity check post-migración detecta corrupción", "type": "error", "priority": "high", "file": "errores/TC-ERR-003-integrity-check.json" },
+        { "id": "TC-ERR-004", "title": "Toast de error se mantiene hasta cierre manual", "type": "happy_path", "priority": "low", "file": "errores/TC-ERR-004-toast-error-persistente.json" },
+        { "id": "TC-ERR-005", "title": "Logger persistente escribe a app_data_dir/logs/voltalfa-{hoy}.log", "type": "happy_path", "priority": "medium", "file": "errores/TC-ERR-005-logger-persistente.json" }
+      ]
+    }
+  ],
+  "suites": {
+    "smoke": [
+      "TC-AUTH-001", "TC-AUTH-003",
+      "TC-CAJA-001", "TC-CAJA-003",
+      "TC-POS-001",
+      "TC-CAT-001", "TC-CAT-002",
+      "TC-BCK-001"
+    ],
+    "release-blocker": [
+      "TC-AUTH-001", "TC-AUTH-003",
+      "TC-CAJA-001", "TC-CAJA-003",
+      "TC-POS-001", "TC-POS-004",
+      "TC-CAT-002",
+      "TC-BCK-001", "TC-BCK-002", "TC-BCK-004",
+      "TC-PRM-001", "TC-PRM-003",
+      "TC-ERR-001"
+    ],
+    "security": [
+      "TC-AUTH-002", "TC-AUTH-004", "TC-AUTH-005", "TC-AUTH-006",
+      "TC-AUTH-007", "TC-AUTH-008",
+      "TC-PRM-001", "TC-PRM-002", "TC-PRM-003"
+    ]
+  }
+}

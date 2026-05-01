@@ -1,0 +1,40 @@
+{
+  "id": "TC-PRM-001",
+  "title": "Sin puede_leer, la vista no aparece en sidebar y la URL rebota",
+  "module": "permisos",
+  "type": "error",
+  "priority": "critical",
+  "estimated_minutes": 5,
+  "preconditions": [
+    "Existe usuario 'cajero1' (no raíz)",
+    "Como admin, revoca puede_leer de 'reportes.ventas' para cajero1"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Cierra sesión, loguea como 'cajero1'",
+      "expected": "Sidebar NO muestra el item 'Ventas' bajo Reportes",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Navega manualmente escribiendo /reportes/ventas",
+      "expected": "Pantalla 'Sin permiso' con candado, mensaje y botón para volver",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Como admin, restaura puede_leer y verifica que la vista vuelve",
+      "expected": "Sidebar muestra el item; navegación funciona",
+      "evidence_hint": "none"
+    }
+  ],
+  "acceptance_criteria": [
+    "Sin puede_leer ninguna otra acción se evalúa (puede_crear/editar/eliminar quedan ocultas también)"
+  ],
+  "related_files": [
+    "apps/desktop/src/components/protected-route.tsx",
+    "apps/desktop/src/components/sidebar.tsx"
+  ],
+  "tags": ["security", "release-blocker"]
+}

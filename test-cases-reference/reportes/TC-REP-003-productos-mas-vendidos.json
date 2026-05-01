@@ -1,0 +1,29 @@
+{
+  "id": "TC-REP-003",
+  "title": "Productos más vendidos por unidades en el período",
+  "module": "reportes.productos",
+  "type": "happy_path",
+  "priority": "medium",
+  "estimated_minutes": 3,
+  "preconditions": ["Al menos 3 productos diferentes vendidos en el rango"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Abre /reportes/productos con rango 'últimos 30 días'",
+      "expected": "Top 10 productos ordenados por cantidad DESC, columnas: nombre, sku, unidades, total_centavos",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Verifica que el nombre proviene del snapshot de la venta (no del catálogo actual)",
+      "expected": "Si renombraste un producto después de venderlo, el reporte muestra el nombre histórico",
+      "evidence_hint": "db_query"
+    }
+  ],
+  "acceptance_criteria": [
+    "El reporte usa snapshot, no JOIN con productos actuales",
+    "Empate por unidades se desempata por total"
+  ],
+  "related_files": ["packages/db/src/reportes-flow.ts"],
+  "tags": []
+}

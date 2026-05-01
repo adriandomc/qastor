@@ -1,0 +1,40 @@
+{
+  "id": "TC-POS-005",
+  "title": "Agregar producto al carrito por escaneo de código de barras",
+  "module": "ventas.pos",
+  "type": "happy_path",
+  "priority": "high",
+  "estimated_minutes": 3,
+  "preconditions": [
+    "Caja abierta",
+    "Producto físico con código de barras conocido (ej. '7501055310005')"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "En la barra de búsqueda del POS, escribe o escanea el código de barras y pulsa Enter",
+      "expected": "El producto se agrega al carrito, la barra se limpia, foco vuelve a la búsqueda",
+      "evidence_hint": "screenshot",
+      "data": { "codigo": "7501055310005" }
+    },
+    {
+      "step": 2,
+      "action": "Escanea el mismo código nuevamente",
+      "expected": "La cantidad de la línea sube a 2 (deduplicación)",
+      "evidence_hint": "none"
+    },
+    {
+      "step": 3,
+      "action": "Escanea un código que NO existe (ej. '9999999999')",
+      "expected": "Aparece error 'No se encontró producto con código 9999999999' bajo la barra",
+      "evidence_hint": "screenshot",
+      "data": { "codigo_invalido": "9999999999" }
+    }
+  ],
+  "acceptance_criteria": [
+    "El escaneo respeta la búsqueda exacta por código_barras",
+    "Códigos no existentes no agregan nada al carrito"
+  ],
+  "related_files": ["apps/desktop/src/routes/_app/ventas/pos.tsx"],
+  "tags": []
+}

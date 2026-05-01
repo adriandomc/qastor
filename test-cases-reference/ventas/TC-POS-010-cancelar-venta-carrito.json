@@ -1,0 +1,35 @@
+{
+  "id": "TC-POS-010",
+  "title": "Cancelar venta en curso limpia el carrito",
+  "module": "ventas.pos",
+  "type": "happy_path",
+  "priority": "medium",
+  "estimated_minutes": 2,
+  "preconditions": ["Caja abierta", "Productos en carrito"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Pulsa F10 o el botón 'Cancelar venta'",
+      "expected": "Aparece confirmación destructiva con mensaje claro de que se descartan los items",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Confirma",
+      "expected": "Carrito vacío, total $0.00. NO se registra venta en historial (sólo era el carrito en memoria)",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Verifica que NO se decrementó stock",
+      "expected": "El stock del producto que estaba en el carrito sigue igual",
+      "evidence_hint": "db_query"
+    }
+  ],
+  "acceptance_criteria": [
+    "Cancelar pre-cobro NO afecta inventario ni historial",
+    "El cajero puede empezar una venta nueva inmediatamente"
+  ],
+  "related_files": ["apps/desktop/src/routes/_app/ventas/pos.tsx"],
+  "tags": []
+}

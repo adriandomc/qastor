@@ -1,0 +1,40 @@
+{
+  "id": "TC-CAJA-006",
+  "title": "Registrar ingreso manual ajusta el esperado",
+  "module": "cierres.caja",
+  "type": "happy_path",
+  "priority": "medium",
+  "estimated_minutes": 3,
+  "preconditions": ["Caja abierta"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "En la sección 'Turno en curso', toma nota del 'Esperado' actual",
+      "expected": "Por ejemplo $700.00",
+      "evidence_hint": "screenshot",
+      "data": { "esperado_inicial": "700.00" }
+    },
+    {
+      "step": 2,
+      "action": "Pulsa el botón verde 'Ingreso' y registra $50 con descripción 'Préstamo para cambio'",
+      "expected": "Modal cierra, toast de confirmación",
+      "evidence_hint": "screenshot",
+      "data": { "monto": "50.00", "descripcion": "Préstamo para cambio" }
+    },
+    {
+      "step": 3,
+      "action": "Mira el resumen actualizado",
+      "expected": "Esperado subió en $50 (ahora $750.00); aparece fila de movimiento bajo 'Movimientos del turno'",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "Existe fila en 'movimientos_caja' con tipo='ingreso' y monto_centavos=5000",
+    "Se emitió evento 'movimiento_caja.registrado'"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/cierres/caja.tsx",
+    "packages/db/src/movimientos-caja-flow.ts"
+  ],
+  "tags": []
+}

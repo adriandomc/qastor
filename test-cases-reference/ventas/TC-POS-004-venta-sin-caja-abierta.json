@@ -1,0 +1,50 @@
+{
+  "id": "TC-POS-004",
+  "title": "POS bloquea cobro cuando no hay caja abierta",
+  "module": "ventas.pos",
+  "type": "error",
+  "priority": "critical",
+  "estimated_minutes": 3,
+  "preconditions": ["No hay caja abierta en el dispositivo"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Navega a /ventas/pos",
+      "expected": "En la parte superior aparece banner amarillo 'No hay caja abierta. Abre el turno antes de cobrar.' con botón 'Abrir caja'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Agrega un producto al carrito",
+      "expected": "El producto se agrega normalmente, pero el botón 'Cobrar' está deshabilitado y al pasar el cursor muestra tooltip explicando",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Pulsa F9 (atajo de Cobrar)",
+      "expected": "El modal NO se abre — el atajo respeta el estado de caja cerrada",
+      "evidence_hint": "screen_recording"
+    },
+    {
+      "step": 4,
+      "action": "Pulsa el botón 'Abrir caja' del banner",
+      "expected": "Navega a /cierres/caja",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 5,
+      "action": "(Defense in depth) Llama registrarVenta vía consola/script sin caja abierta",
+      "expected": "Lanza CajaNoAbiertaError",
+      "evidence_hint": "log_excerpt"
+    }
+  ],
+  "acceptance_criteria": [
+    "Es imposible registrar una venta sin un cierre abierto asociado al dispositivo",
+    "El cajero ve claramente por qué no puede cobrar y cómo resolverlo"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/ventas/pos.tsx",
+    "packages/db/src/ventas-flow.ts"
+  ],
+  "tags": ["release-blocker", "defense-in-depth"]
+}

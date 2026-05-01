@@ -1,0 +1,37 @@
+{
+  "id": "TC-INV-004",
+  "title": "El historial de movimientos refleja ventas, ajustes y devoluciones",
+  "module": "inventario.ajustes",
+  "type": "happy_path",
+  "priority": "medium",
+  "estimated_minutes": 4,
+  "preconditions": [
+    "Producto con: 1 venta, 1 ajuste manual, 1 devolución registrados"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Navega a /inventario/ajustes",
+      "expected": "Tabla con 3 movimientos en orden cronológico descendente: cancelación_venta (delta+), stock.ajustado (delta±), venta.completada (delta-)",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Filtra por inventario_id específico",
+      "expected": "Sólo aparecen los movimientos de ese inventario",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Filtra por tipo='ajuste' o 'venta'",
+      "expected": "El filtro funciona, los conteos cuadran",
+      "evidence_hint": "none"
+    }
+  ],
+  "acceptance_criteria": [
+    "Cada operación que toca stock genera un movimiento auditable",
+    "El historial es append-only (no se editan/eliminan registros)"
+  ],
+  "related_files": ["packages/db/src/movimientos-flow.ts"],
+  "tags": ["audit"]
+}

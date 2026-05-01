@@ -1,0 +1,37 @@
+{
+  "id": "TC-BCK-001",
+  "title": "Crear backup manual desde la UI",
+  "module": "configuracion.respaldos",
+  "type": "happy_path",
+  "priority": "critical",
+  "estimated_minutes": 2,
+  "preconditions": ["Sesión con permiso 'crear' en configuracion.respaldos"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Navega a /configuracion/respaldos",
+      "expected": "Tabla de backups existentes (vacía si es primera vez) y botón 'Backup ahora'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Pulsa 'Backup ahora'",
+      "expected": "Toast 'Backup voltalfa-{timestamp}-manual creado'. Tabla se refresca con la nueva fila",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Verifica el header global",
+      "expected": "El indicador 'Backup hace X' se actualiza a 'hace 1 min'",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "Se creó la carpeta backups/voltalfa-{timestamp}-manual con data.db e images/ dentro"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/configuracion/respaldos.tsx",
+    "apps/desktop/src/lib/backup.ts"
+  ],
+  "tags": ["smoke", "release-blocker"]
+}

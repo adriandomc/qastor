@@ -1,0 +1,48 @@
+{
+  "id": "TC-CAJA-001",
+  "title": "Abrir caja con fondo inicial",
+  "module": "cierres.caja",
+  "type": "happy_path",
+  "priority": "critical",
+  "estimated_minutes": 2,
+  "preconditions": [
+    "Sesión activa con permisos sobre 'cierres.caja'",
+    "No hay caja abierta en el dispositivo"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Navega a /cierres/caja",
+      "expected": "Aparece la sección 'Abrir caja' con campo Fondo inicial y notas opcionales",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Ingresa $500.00 como fondo inicial y una nota corta",
+      "expected": "Los campos aceptan los valores",
+      "evidence_hint": "none",
+      "data": { "fondo_inicial": "500.00", "notas": "Apertura matutina" }
+    },
+    {
+      "step": 3,
+      "action": "Pulsa 'Abrir caja'",
+      "expected": "Se reemplaza la sección por 'Turno en curso' con resumen vacío y botón 'Cerrar caja'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 4,
+      "action": "Mira el header global",
+      "expected": "El indicador de caja cambia a verde 'Caja abierta'",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "Existe una fila en 'cierres_caja' con cerrado_en NULL y fondo_inicial_centavos = 50000",
+    "Se emitió evento 'caja.abierta'"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/cierres/caja.tsx",
+    "packages/db/src/cierres-flow.ts"
+  ],
+  "tags": ["smoke", "release-blocker"]
+}

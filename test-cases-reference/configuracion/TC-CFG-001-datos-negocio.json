@@ -1,0 +1,56 @@
+{
+  "id": "TC-CFG-001",
+  "title": "Configurar datos del negocio (nombre, RFC, IVA, thresholds)",
+  "module": "configuracion.negocio",
+  "type": "happy_path",
+  "priority": "high",
+  "estimated_minutes": 4,
+  "preconditions": ["Sesión con permiso 'editar' en configuracion.negocio"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Navega a /configuracion/negocio",
+      "expected": "Formulario con todos los campos del negocio + IVA default + threshold cierre + threshold stock bajo",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Modifica nombre, RFC y dirección. Cambia IVA a 8% y threshold cierre a $25",
+      "expected": "Cambios aceptados, validación de RFC permite formato válido",
+      "evidence_hint": "screenshot",
+      "data": {
+        "nombre": "Mi Tienda Demo",
+        "rfc": "DEMO850515ABC",
+        "iva_pct": 8,
+        "threshold_cierre": "25.00",
+        "stock_bajo": 3
+      }
+    },
+    {
+      "step": 3,
+      "action": "Pulsa Guardar",
+      "expected": "Toast confirma. Recarga la página y los valores persistieron",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 4,
+      "action": "Cobra una venta y verifica el ticket impreso",
+      "expected": "El ticket muestra el nombre nuevo y el RFC bajo el nombre",
+      "evidence_hint": "printed_receipt"
+    },
+    {
+      "step": 5,
+      "action": "Cierra una caja con diferencia de -$30",
+      "expected": "Como threshold = $25, la diferencia se clasifica 'inaceptable' (no 'aceptable')",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "Los thresholds configurables funcionan en cierre y stock bajo en tiempo real"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/configuracion/negocio.tsx",
+    "packages/db/src/business-config.ts"
+  ],
+  "tags": []
+}

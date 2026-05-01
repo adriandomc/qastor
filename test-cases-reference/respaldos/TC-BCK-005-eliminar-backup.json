@@ -1,0 +1,28 @@
+{
+  "id": "TC-BCK-005",
+  "title": "Eliminar backup individual",
+  "module": "configuracion.respaldos",
+  "type": "happy_path",
+  "priority": "low",
+  "estimated_minutes": 2,
+  "preconditions": ["Existe al menos 2 backups"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Pulsa el ícono de basura en una fila",
+      "expected": "Confirmación destructiva",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Confirma",
+      "expected": "Backup desaparece de la tabla, toast confirma. La carpeta físicamente se eliminó",
+      "evidence_hint": "log_excerpt"
+    }
+  ],
+  "acceptance_criteria": [
+    "La eliminación borra recursivamente data.db e images/"
+  ],
+  "related_files": ["apps/desktop/src-tauri/src/lib.rs"],
+  "tags": ["destructivo"]
+}

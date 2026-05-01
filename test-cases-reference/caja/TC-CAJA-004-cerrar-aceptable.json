@@ -1,0 +1,33 @@
+{
+  "id": "TC-CAJA-004",
+  "title": "Cierre con diferencia ≤ threshold se clasifica 'aceptable'",
+  "module": "cierres.caja",
+  "type": "happy_path",
+  "priority": "high",
+  "estimated_minutes": 3,
+  "preconditions": [
+    "Caja abierta con ventas en efectivo",
+    "Threshold de cierre configurado en $50 (default)"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "En 'Cerrar caja', resta $30 al campo 'Contado' (faltante)",
+      "expected": "DiferenciaPreview muestra '-$30.00' con tono warning, estado 'aceptable'",
+      "evidence_hint": "screenshot",
+      "data": { "delta": "-30.00" }
+    },
+    {
+      "step": 2,
+      "action": "Pulsa 'Cerrar caja'",
+      "expected": "El cierre se registra con estado 'aceptable'",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "diferencia_centavos = -3000 en la fila persistida",
+    "Estado del cierre = 'aceptable'"
+  ],
+  "related_files": ["packages/db/src/cierres-flow.ts"],
+  "tags": []
+}

@@ -1,0 +1,47 @@
+{
+  "id": "TC-POS-006",
+  "title": "POS bloquea agregar más cantidad que el stock disponible",
+  "module": "ventas.pos",
+  "type": "error",
+  "priority": "high",
+  "estimated_minutes": 3,
+  "preconditions": [
+    "Caja abierta",
+    "Producto físico con stock = 1"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Agrega el producto al carrito una vez",
+      "expected": "Línea con cantidad 1; el producto aparece deshabilitado en el grid (sin stock disponible)",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Intenta agregar el mismo producto otra vez (click o escaneo)",
+      "expected": "Aparece error 'Stock insuficiente' bajo la barra de búsqueda; el carrito no cambia",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Cobra la venta",
+      "expected": "Venta exitosa, stock queda en 0",
+      "evidence_hint": "none"
+    },
+    {
+      "step": 4,
+      "action": "Intenta agregar nuevamente el producto al carrito",
+      "expected": "Producto deshabilitado en el grid con label 'Sin stock'",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "No es posible vender más unidades de las que hay en inventario",
+    "Defense in depth: registrarVenta lanza StockInsuficienteError si la UI falla"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/ventas/pos.tsx",
+    "packages/db/src/ventas-flow.ts"
+  ],
+  "tags": ["defense-in-depth"]
+}

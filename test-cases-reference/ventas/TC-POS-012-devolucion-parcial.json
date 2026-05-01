@@ -1,0 +1,53 @@
+{
+  "id": "TC-POS-012",
+  "title": "Devolución parcial restaura stock proporcional",
+  "module": "ventas.historial",
+  "type": "happy_path",
+  "priority": "high",
+  "estimated_minutes": 5,
+  "preconditions": [
+    "Existe venta completada con un item físico de cantidad 5"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "En historial, pulsa 'Devolver' en la fila de la venta",
+      "expected": "Modal 'Registrar devolución' lista los items con columna 'A devolver' y muestra 'Total a reembolsar:'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Marca cantidad 2 a devolver del item",
+      "expected": "El refund por línea y el total a reembolsar se actualizan en tiempo real",
+      "evidence_hint": "screenshot",
+      "data": { "cantidad_a_devolver": 2 }
+    },
+    {
+      "step": 3,
+      "action": "Llena motivo opcional ('Cliente cambió de opinión') y pulsa 'Registrar devolución'",
+      "expected": "Toast confirma. La venta sigue 'completada' pero el botón Devolver muestra cantidad pendiente actualizada (3 disponibles)",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 4,
+      "action": "Verifica el stock del producto",
+      "expected": "Subió en 2",
+      "evidence_hint": "db_query"
+    },
+    {
+      "step": 5,
+      "action": "Devuelve los 3 restantes",
+      "expected": "El estado de la venta cambia a 'devuelta' (todo el contenido devuelto)",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "Refund e IVA se calculan proporcionales al total_linea_centavos del item original",
+    "Devolver más de la cantidad pendiente lanza DevolucionInvalidaError"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/_app/ventas/historial.tsx",
+    "packages/db/src/devoluciones-flow.ts"
+  ],
+  "tags": []
+}

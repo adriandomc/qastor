@@ -1,0 +1,34 @@
+{
+  "id": "TC-AUTH-002",
+  "title": "Bootstrap rechaza si ya existe un usuario activo",
+  "module": "auth.setup",
+  "type": "error",
+  "priority": "high",
+  "estimated_minutes": 3,
+  "preconditions": [
+    "Ya se completó TC-AUTH-001 al menos una vez en esta DB"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Cierra sesión y navega manualmente a /setup escribiendo la URL",
+      "expected": "El router rebota a / (o /login). /setup no se renderiza",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "(Opcional) Desde una conexión SQL externa, intenta llamar bootstrapRoot directamente",
+      "expected": "Lanza AuthError con code 'ya_existe_raiz'",
+      "evidence_hint": "log_excerpt"
+    }
+  ],
+  "acceptance_criteria": [
+    "No es posible crear un segundo usuario raíz vía /setup",
+    "La defense in depth de bootstrapRoot rechaza el segundo bootstrap incluso ignorando la UI"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/setup.tsx",
+    "packages/db/src/auth-flow.ts"
+  ],
+  "tags": ["security", "defense-in-depth"]
+}

@@ -1,0 +1,31 @@
+{
+  "id": "TC-ERR-002",
+  "title": "Ruta inexistente muestra pantalla 404",
+  "module": "shell.not_found",
+  "type": "error",
+  "priority": "medium",
+  "estimated_minutes": 1,
+  "preconditions": ["Sesión activa"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Navega a /ruta-que-no-existe",
+      "expected": "Pantalla 'Página no encontrada' con botón 'Volver al inicio'",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Pulsa 'Volver al inicio'",
+      "expected": "Redirige a /",
+      "evidence_hint": "none"
+    }
+  ],
+  "acceptance_criteria": [
+    "TanStack Router renderiza el notFoundComponent global"
+  ],
+  "related_files": [
+    "apps/desktop/src/routes/__root.tsx",
+    "apps/desktop/src/components/error-boundary.tsx"
+  ],
+  "tags": []
+}

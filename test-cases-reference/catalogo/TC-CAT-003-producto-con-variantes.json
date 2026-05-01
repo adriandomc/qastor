@@ -1,0 +1,48 @@
+{
+  "id": "TC-CAT-003",
+  "title": "Crear producto con matriz de variantes (talla x color)",
+  "module": "catalogo.productos",
+  "type": "happy_path",
+  "priority": "high",
+  "estimated_minutes": 6,
+  "preconditions": ["Categoría 'Ropa' con atributos 'talla' y 'color'"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "En el modal de nuevo producto, llena nombre 'Playera básica' y selecciona la categoría",
+      "expected": "Aparece la sección 'Matriz de variantes' con campos por dimensión",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Ingresa valores 'S, M, L' en talla y 'rojo, azul' en color, pulsa 'Generar matriz'",
+      "expected": "Se renderiza una tabla con 6 filas (3×2): cada combinación con campos de SKU, cantidad y precio override",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Llena SKUs y cantidades por fila (ej. PB-S-ROJO=5, PB-M-ROJO=8, etc.)",
+      "expected": "La tabla acepta los valores",
+      "evidence_hint": "none"
+    },
+    {
+      "step": 4,
+      "action": "Pulsa Guardar",
+      "expected": "Producto creado con 6 inventarios (uno por SKU)",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 5,
+      "action": "Si dejas un valor de dimensión vacío y pulsas 'Generar matriz'",
+      "expected": "Aparece error 'Faltan valores para la dimensión \"talla\"' (no en inglés)",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "Existen 6 filas en inventarios para este producto",
+    "Cada inventario tiene su variantes JSON snapshot",
+    "El error de validación está en español"
+  ],
+  "related_files": ["apps/desktop/src/routes/_app/catalogo/productos.tsx"],
+  "tags": []
+}

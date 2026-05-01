@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://voltalfa.local/test-case.schema.json",
+  "title": "VoltalfaPOS Test Case",
+  "description": "Caso de prueba manual estructurado para alimentar una app de gestión de QA.",
+  "type": "object",
+  "required": ["id", "title", "module", "type", "priority", "steps", "acceptance_criteria"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^TC-[A-Z]+-[0-9]{3}$",
+      "description": "Identificador único, formato TC-{MODULO}-{NUM}."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 5,
+      "description": "Una línea descriptiva del caso."
+    },
+    "module": {
+      "type": "string",
+      "description": "Módulo o vista del producto (ej. 'ventas.pos', 'auth.login')."
+    },
+    "type": {
+      "enum": ["happy_path", "error", "edge_case"],
+      "description": "Naturaleza del caso."
+    },
+    "priority": {
+      "enum": ["critical", "high", "medium", "low"],
+      "description": "Impacto operativo si el caso falla."
+    },
+    "preconditions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Estado del sistema requerido antes de ejecutar el caso."
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["step", "action", "expected"],
+        "additionalProperties": false,
+        "properties": {
+          "step": { "type": "integer", "minimum": 1 },
+          "action": {
+            "type": "string",
+            "description": "Acción concreta que debe realizar el ejecutor."
+          },
+          "expected": {
+            "type": "string",
+            "description": "Comportamiento esperado tras la acción."
+          },
+          "evidence_hint": {
+            "type": "string",
+            "enum": ["none", "screenshot", "screen_recording", "log_excerpt", "db_query", "printed_receipt"],
+            "description": "Tipo de evidencia recomendada para este paso."
+          },
+          "data": {
+            "type": "object",
+            "description": "Datos de prueba opcionales (valores a teclear, IDs esperados, etc.).",
+            "additionalProperties": true
+          }
+        }
+      }
+    },
+    "acceptance_criteria": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "type": "string" },
+      "description": "Condiciones que deben cumplirse al final para considerar el caso 'pasó'."
+    },
+    "related_files": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Rutas en el repo que implementan el comportamiento (para trazabilidad)."
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Etiquetas libres para filtrar (ej. 'smoke', 'release-blocker')."
+    },
+    "estimated_minutes": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Tiempo estimado de ejecución en minutos (para planning)."
+    }
+  }
+}

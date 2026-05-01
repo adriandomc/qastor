@@ -1,0 +1,37 @@
+{
+  "id": "TC-REP-004",
+  "title": "Reporte de ganancia bruta y margen por período (M19)",
+  "module": "reportes.ganancia",
+  "type": "happy_path",
+  "priority": "high",
+  "estimated_minutes": 4,
+  "preconditions": [
+    "Productos con costo definido (no todos en $0)",
+    "Ventas en el rango"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Abre /reportes/ganancia con granularidad 'día'",
+      "expected": "Tabla con: fecha, ingreso, costo, ganancia, margen %",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Verifica un día concreto contra cálculo manual: suma(precio_unit*cantidad) - suma(costo*cantidad)",
+      "expected": "Los números cuadran",
+      "evidence_hint": "db_query"
+    },
+    {
+      "step": 3,
+      "action": "Verifica el comportamiento con un producto sin costo definido",
+      "expected": "Se cuenta como costo=0 (margen aparente 100%); está documentado",
+      "evidence_hint": "none"
+    }
+  ],
+  "acceptance_criteria": [
+    "Margen y ganancia coherentes con definición contable básica"
+  ],
+  "related_files": ["packages/db/src/reportes-flow.ts"],
+  "tags": []
+}

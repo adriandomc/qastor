@@ -1,0 +1,41 @@
+{
+  "id": "TC-ERR-004",
+  "title": "Toast de error se mantiene hasta cierre manual",
+  "module": "shell.toast",
+  "type": "happy_path",
+  "priority": "low",
+  "estimated_minutes": 2,
+  "preconditions": ["Cualquier flujo que dispare error (ej. impresión sin config)"],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Provoca un toast de error (ej. cobra venta con impresora apagada y cierra modal)",
+      "expected": "Toast rojo aparece arriba a la derecha con título y body opcional",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Espera 30 segundos sin tocar nada",
+      "expected": "El toast sigue visible (errores son persistentes — no auto-dismiss)",
+      "evidence_hint": "screen_recording"
+    },
+    {
+      "step": 3,
+      "action": "Pulsa la X del toast",
+      "expected": "Toast desaparece",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 4,
+      "action": "Provoca un toast de éxito (ej. backup manual)",
+      "expected": "Toast verde aparece y desaparece automáticamente tras ~4 segundos",
+      "evidence_hint": "screen_recording"
+    }
+  ],
+  "acceptance_criteria": [
+    "Errores requieren cierre manual; éxito/info se auto-dismissan",
+    "aria-live='assertive' en errores para lectores de pantalla"
+  ],
+  "related_files": ["apps/desktop/src/lib/toast.tsx"],
+  "tags": ["a11y", "ux"]
+}
