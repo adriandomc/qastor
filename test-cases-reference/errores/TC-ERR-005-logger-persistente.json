@@ -17,7 +17,7 @@
       "step": 2,
       "action": "Localiza el directorio app_data_dir (en macOS: ~/Library/Application Support/...). Abre logs/voltalfa-{YYYY-MM-DD}.log",
       "expected": "Una línea JSON por evento, con campos: ts, level, msg, ctx (opcional)",
-      "evidence_hint": "log_excerpt"
+      "evidence_hint": "text_excerpt"
     },
     {
       "step": 3,

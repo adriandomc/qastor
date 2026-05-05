@@ -17,16 +17,17 @@
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "useDefineForClassFields": true,
-    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@adc-ui/*": ["./design-system/adc-ui/*"]
+      "@adc-ui/*": ["./design-system/adc-ui/*"],
+      "@schema/*": ["./schema/*"]
     }
   },
   "include": [
     "src",
     "design-system/adc-ui/**/*.ts",
     "design-system/adc-ui/**/*.tsx",
+    "schema/**/*.json",
     "vite.config.ts"
   ],
   "exclude": [

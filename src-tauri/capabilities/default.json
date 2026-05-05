@@ -1,11 +1,16 @@
 {
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
-  "description": "enables the default permissions",
-  "windows": [
-    "main"
-  ],
+  "description": "Permissions for qastor desktop app",
+  "windows": ["main"],
   "permissions": [
-    "core:default"
+    "core:default",
+    "store:default",
+    "dialog:default",
+    "global-shortcut:default",
+    "clipboard-manager:default",
+    "core:tray:default",
+    "core:menu:default",
+    "shell:allow-open"
   ]
 }

@@ -20,13 +20,13 @@
       "step": 2,
       "action": "Corrompe el archivo .db (ej. truncate o sobrescribe bytes al final). Asegúrate de que aún sea abrible",
       "expected": "Archivo dañado pero parseable hasta cierto punto",
-      "evidence_hint": "log_excerpt"
+      "evidence_hint": "text_excerpt"
     },
     {
       "step": 3,
       "action": "Lanza la app — si hay migraciones pendientes que correr, el runner ejecutará PRAGMA integrity_check al final",
       "expected": "Si la corrupción es detectable, el runner lanza MigrationIntegrityError. La app no continúa con datos corruptos",
-      "evidence_hint": "log_excerpt"
+      "evidence_hint": "text_excerpt"
     },
     {
       "step": 4,

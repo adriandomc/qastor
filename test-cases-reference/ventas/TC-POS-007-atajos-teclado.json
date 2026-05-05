@@ -11,7 +11,7 @@
       "step": 1,
       "action": "Click fuera del campo de búsqueda y pulsa F2",
       "expected": "Foco salta al campo de búsqueda y selecciona todo el contenido",
-      "evidence_hint": "screen_recording"
+      "evidence_hint": "screenshot"
     },
     {
       "step": 2,
@@ -29,7 +29,7 @@
       "step": 4,
       "action": "Pulsa Esc",
       "expected": "El modal se cierra (no aplica todavía si Esc no está implementado a nivel global, verificar)",
-      "evidence_hint": "screen_recording"
+      "evidence_hint": "screenshot"
     },
     {
       "step": 5,

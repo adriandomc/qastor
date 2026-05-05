@@ -27,7 +27,7 @@
       "step": 3,
       "action": "(Opcional, validación rápida) Avanza el reloj del sistema 16 minutos o purga 'login_intentos' del usuario y vuelve a intentar con contraseña correcta",
       "expected": "Login exitoso. El contador se resetea a 0 fallos",
-      "evidence_hint": "log_excerpt"
+      "evidence_hint": "text_excerpt"
     }
   ],
   "acceptance_criteria": [

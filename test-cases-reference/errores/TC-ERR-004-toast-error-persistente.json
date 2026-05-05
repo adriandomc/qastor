@@ -17,7 +17,7 @@
       "step": 2,
       "action": "Espera 30 segundos sin tocar nada",
       "expected": "El toast sigue visible (errores son persistentes — no auto-dismiss)",
-      "evidence_hint": "screen_recording"
+      "evidence_hint": "screenshot"
     },
     {
       "step": 3,
@@ -29,7 +29,7 @@
       "step": 4,
       "action": "Provoca un toast de éxito (ej. backup manual)",
       "expected": "Toast verde aparece y desaparece automáticamente tras ~4 segundos",
-      "evidence_hint": "screen_recording"
+      "evidence_hint": "screenshot"
     }
   ],
   "acceptance_criteria": [

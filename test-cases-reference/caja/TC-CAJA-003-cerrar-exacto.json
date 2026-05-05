@@ -32,7 +32,7 @@
       "step": 4,
       "action": "Pulsa 'Imprimir reporte'",
       "expected": "Se imprime el reporte de cierre vía impresora térmica configurada (o el modal de error si no está disponible)",
-      "evidence_hint": "printed_receipt"
+      "evidence_hint": "file_attachment"
     }
   ],
   "acceptance_criteria": [

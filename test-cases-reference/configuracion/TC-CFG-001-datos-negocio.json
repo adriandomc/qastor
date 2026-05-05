@@ -36,7 +36,7 @@
       "step": 4,
       "action": "Cobra una venta y verifica el ticket impreso",
       "expected": "El ticket muestra el nombre nuevo y el RFC bajo el nombre",
-      "evidence_hint": "printed_receipt"
+      "evidence_hint": "file_attachment"
     },
     {
       "step": 5,

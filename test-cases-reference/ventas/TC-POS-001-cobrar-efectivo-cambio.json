@@ -40,7 +40,7 @@
       "step": 5,
       "action": "Pulsa 'Confirmar cobro'",
       "expected": "Modal cierra, carrito se vacía, toast 'Venta {folio} registrada por $87.00', auto-impresión del ticket",
-      "evidence_hint": "printed_receipt"
+      "evidence_hint": "file_attachment"
     }
   ],
   "acceptance_criteria": [

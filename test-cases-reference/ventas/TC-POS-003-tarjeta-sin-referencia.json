@@ -29,7 +29,7 @@
       "step": 4,
       "action": "(Defense in depth) Llama a registrarVenta vía consola con un pago tarjeta + referencia null",
       "expected": "Lanza ReferenciaRequeridaError",
-      "evidence_hint": "log_excerpt"
+      "evidence_hint": "text_excerpt"
     }
   ],
   "acceptance_criteria": [

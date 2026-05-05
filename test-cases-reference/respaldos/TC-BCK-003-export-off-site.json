@@ -33,7 +33,7 @@
       "step": 4,
       "action": "En la terminal, listar /tmp/voltalfa-export",
       "expected": "Aparece la carpeta del backup con data.db e images/ dentro",
-      "evidence_hint": "log_excerpt"
+      "evidence_hint": "text_excerpt"
     },
     {
       "step": 5,

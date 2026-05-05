@@ -4,23 +4,26 @@
     "npm:@tauri-apps/api@^2.11.0": "2.11.0",
     "npm:@tauri-apps/cli@*": "2.11.0",
     "npm:@tauri-apps/cli@^2.11.0": "2.11.0",
+    "npm:@tauri-apps/plugin-clipboard-manager@^2.3.2": "2.3.2",
     "npm:@tauri-apps/plugin-dialog@^2.7.0": "2.7.0",
     "npm:@tauri-apps/plugin-fs@^2.5.0": "2.5.0",
     "npm:@tauri-apps/plugin-global-shortcut@^2.3.1": "2.3.1",
     "npm:@tauri-apps/plugin-shell@^2.3.5": "2.3.5",
     "npm:@tauri-apps/plugin-store@^2.4.2": "2.4.2",
+    "npm:@types/node@^25.6.0": "25.6.0",
     "npm:@types/react-dom@^19.2.3": "19.2.3_@types+react@19.2.14",
     "npm:@types/react@^19.2.14": "19.2.14",
-    "npm:@vitejs/plugin-react@^6.0.1": "6.0.1_vite@8.0.10",
+    "npm:@vitejs/plugin-react@^6.0.1": "6.0.1_vite@8.0.10__@types+node@25.6.0_@types+node@25.6.0",
     "npm:ajv-formats@^3.0.1": "3.0.1_ajv@8.20.0",
     "npm:ajv@^8.20.0": "8.20.0",
     "npm:lucide-react@^1.14.0": "1.14.0_react@19.2.5",
     "npm:react-dom@^19.2.5": "19.2.5_react@19.2.5",
     "npm:react-router-dom@^7.14.2": "7.14.2_react@19.2.5_react-dom@19.2.5__react@19.2.5",
     "npm:react@^19.2.5": "19.2.5",
+    "npm:typescript@*": "6.0.3",
     "npm:typescript@^6.0.3": "6.0.3",
-    "npm:vite@*": "8.0.10",
-    "npm:vite@^8.0.10": "8.0.10",
+    "npm:vite@*": "8.0.10_@types+node@25.6.0",
+    "npm:vite@^8.0.10": "8.0.10_@types+node@25.6.0",
     "npm:zustand@^5.0.12": "5.0.12_@types+react@19.2.14_react@19.2.5"
   },
   "npm": {
@@ -214,6 +217,12 @@
       ],
       "bin": true
     },
+    "@tauri-apps/plugin-clipboard-manager@2.3.2": {
+      "integrity": "sha512-CUlb5Hqi2oZbcZf4VUyUH53XWPPdtpw43EUpCza5HWZJwxEoDowFzNUDt1tRUXA8Uq+XPn17Ysfptip33sG4eQ==",
+      "dependencies": [
+        "@tauri-apps/api"
+      ]
+    },
     "@tauri-apps/plugin-dialog@2.7.0": {
       "integrity": "sha512-4nS/hfGMGCXiAS3LtVjH9AgsSAPJeG/7R+q8agTFqytjnMa4Zq95Bq8WzVDkckpanX+yyRHXnRtrKXkANKDHvw==",
       "dependencies": [
@@ -250,6 +259,12 @@
         "tslib"
       ]
     },
+    "@types/node@25.6.0": {
+      "integrity": "sha512-+qIYRKdNYJwY3vRCZMdJbPLJAtGjQBudzZzdzwQYkEPQd+PJGixUL5QfvCLDaULoLv+RhT3LDkwEfKaAkgSmNQ==",
+      "dependencies": [
+        "undici-types"
+      ]
+    },
     "@types/react-dom@19.2.3_@types+react@19.2.14": {
       "integrity": "sha512-jp2L/eY6fn+KgVVQAOqYItbF0VY/YApe5Mz2F0aykSO8gx31bYCZyvSeYxCHKvzHG5eZjc+zyaS5BrBWya2+kQ==",
       "dependencies": [
@@ -262,7 +277,7 @@
         "csstype"
       ]
     },
-    "@vitejs/plugin-react@6.0.1_vite@8.0.10": {
+    "@vitejs/plugin-react@6.0.1_vite@8.0.10__@types+node@25.6.0_@types+node@25.6.0": {
       "integrity": "sha512-l9X/E3cDb+xY3SWzlG1MOGt2usfEHGMNIaegaUGFsLkb3RCn/k8/TOXBcab+OndDI4TBtktT8/9BwwW8Vi9KUQ==",
       "dependencies": [
         "@rolldown/pluginutils@1.0.0-rc.7",
@@ -498,9 +513,13 @@
       "integrity": "sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==",
       "bin": true
     },
-    "vite@8.0.10": {
+    "undici-types@7.19.2": {
+      "integrity": "sha512-qYVnV5OEm2AW8cJMCpdV20CDyaN3g0AjDlOGf1OW4iaDEx8MwdtChUp4zu4H0VP3nDRF/8RKWH+IPp9uW0YGZg=="
+    },
+    "vite@8.0.10_@types+node@25.6.0": {
       "integrity": "sha512-rZuUu9j6J5uotLDs+cAA4O5H4K1SfPliUlQwqa6YEwSrWDZzP4rhm00oJR5snMewjxF5V/K3D4kctsUTsIU9Mw==",
       "dependencies": [
+        "@types/node",
         "lightningcss",
         "picomatch",
         "postcss",
@@ -509,6 +528,9 @@
       ],
       "optionalDependencies": [
         "fsevents"
+      ],
+      "optionalPeers": [
+        "@types/node"
       ],
       "bin": true
     },
@@ -529,11 +551,13 @@
       "dependencies": [
         "npm:@tauri-apps/api@^2.11.0",
         "npm:@tauri-apps/cli@^2.11.0",
+        "npm:@tauri-apps/plugin-clipboard-manager@^2.3.2",
         "npm:@tauri-apps/plugin-dialog@^2.7.0",
         "npm:@tauri-apps/plugin-fs@^2.5.0",
         "npm:@tauri-apps/plugin-global-shortcut@^2.3.1",
         "npm:@tauri-apps/plugin-shell@^2.3.5",
         "npm:@tauri-apps/plugin-store@^2.4.2",
+        "npm:@types/node@^25.6.0",
         "npm:@types/react-dom@^19.2.3",
         "npm:@types/react@^19.2.14",
         "npm:@vitejs/plugin-react@^6.0.1",

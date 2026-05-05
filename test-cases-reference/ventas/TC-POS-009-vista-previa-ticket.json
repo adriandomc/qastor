@@ -25,7 +25,7 @@
       "step": 3,
       "action": "Pulsa 'Imprimir' desde el modal",
       "expected": "Modal cierra, dispara impresión real",
-      "evidence_hint": "printed_receipt"
+      "evidence_hint": "file_attachment"
     }
   ],
   "acceptance_criteria": [

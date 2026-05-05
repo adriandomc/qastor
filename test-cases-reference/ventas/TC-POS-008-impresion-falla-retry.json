@@ -26,7 +26,7 @@
       "step": 3,
       "action": "Reenchufa o enciende la impresora y pulsa 'Reintentar'",
       "expected": "El ticket se imprime, el modal se cierra, toast 'Ticket impreso'",
-      "evidence_hint": "printed_receipt"
+      "evidence_hint": "file_attachment"
     },
     {
       "step": 4,

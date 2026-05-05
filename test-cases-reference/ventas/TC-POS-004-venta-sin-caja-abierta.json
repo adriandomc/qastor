@@ -23,7 +23,7 @@
       "step": 3,
       "action": "Pulsa F9 (atajo de Cobrar)",
       "expected": "El modal NO se abre — el atajo respeta el estado de caja cerrada",
-      "evidence_hint": "screen_recording"
+      "evidence_hint": "screenshot"
     },
     {
       "step": 4,
@@ -35,7 +35,7 @@
       "step": 5,
       "action": "(Defense in depth) Llama registrarVenta vía consola/script sin caja abierta",
       "expected": "Lanza CajaNoAbiertaError",
-      "evidence_hint": "log_excerpt"
+      "evidence_hint": "text_excerpt"
     }
   ],
   "acceptance_criteria": [

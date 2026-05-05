@@ -17,7 +17,7 @@
       "step": 2,
       "action": "Confirma",
       "expected": "Backup desaparece de la tabla, toast confirma. La carpeta físicamente se eliminó",
-      "evidence_hint": "log_excerpt"
+      "evidence_hint": "text_excerpt"
     }
   ],
   "acceptance_criteria": [

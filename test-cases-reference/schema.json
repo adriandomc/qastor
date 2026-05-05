@@ -53,7 +53,7 @@
           },
           "evidence_hint": {
             "type": "string",
-            "enum": ["none", "screenshot", "screen_recording", "log_excerpt", "db_query", "printed_receipt"],
+            "enum": ["none", "screenshot", "text_excerpt", "db_query", "file_attachment"],
             "description": "Tipo de evidencia recomendada para este paso."
           },
           "data": {

@@ -26,7 +26,7 @@
       "step": 3,
       "action": "Ajusta los stocks bajos por encima del threshold",
       "expected": "Vuelve a cualquier vista — el pill desaparece del header (no más alertas)",
-      "evidence_hint": "screen_recording"
+      "evidence_hint": "screenshot"
     }
   ],
   "acceptance_criteria": [

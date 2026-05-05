@@ -26,7 +26,7 @@
       "step": 3,
       "action": "Cierra completamente la app y vuelve a lanzarla",
       "expected": "Auto-login: NO pide credenciales, va directo al shell. La sesión persistió",
-      "evidence_hint": "screen_recording"
+      "evidence_hint": "screenshot"
     }
   ],
   "acceptance_criteria": [

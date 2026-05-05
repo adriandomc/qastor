@@ -26,13 +26,13 @@
       "step": 3,
       "action": "Pulsa 'Recargar aplicación'",
       "expected": "La página se recarga; si el throw sigue, vuelve a la pantalla de error",
-      "evidence_hint": "screen_recording"
+      "evidence_hint": "screenshot"
     },
     {
       "step": 4,
       "action": "Quita el throw de prueba y verifica el log",
       "expected": "En app_data_dir/logs/voltalfa-{hoy}.log aparece línea con msg='ui.errorBoundary.caught'",
-      "evidence_hint": "log_excerpt"
+      "evidence_hint": "text_excerpt"
     }
   ],
   "acceptance_criteria": [

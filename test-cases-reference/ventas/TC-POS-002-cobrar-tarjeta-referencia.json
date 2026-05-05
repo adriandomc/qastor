@@ -24,7 +24,7 @@
       "step": 3,
       "action": "Confirma el cobro",
       "expected": "Venta registrada, ticket imprime con 'Tarjeta: $X.XX' y 'ref: **** 1234' debajo",
-      "evidence_hint": "printed_receipt"
+      "evidence_hint": "file_attachment"
     }
   ],
   "acceptance_criteria": [

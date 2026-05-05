@@ -20,7 +20,7 @@
       "step": 2,
       "action": "En la fila del backup, pulsa el botón Undo (Restaurar) y confirma",
       "expected": "App se recarga automáticamente",
-      "evidence_hint": "screen_recording"
+      "evidence_hint": "screenshot"
     },
     {
       "step": 3,

@@ -1,0 +1,37 @@
+{
+  "id": "TC-EJEMPLO-001",
+  "title": "Mi primer caso de prueba — verificar que la app arranca",
+  "module": "ejemplo.bienvenida",
+  "type": "happy_path",
+  "priority": "low",
+  "preconditions": [
+    "qastor está instalado y corriendo",
+    "Has abierto este proyecto desde la pantalla de bienvenida"
+  ],
+  "steps": [
+    {
+      "step": 1,
+      "action": "Observa la sidebar de qastor.",
+      "expected": "Aparecen las secciones Casos, Sesiones y Settings.",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 2,
+      "action": "Haz click en Casos.",
+      "expected": "La tabla muestra al menos este caso (TC-EJEMPLO-001).",
+      "evidence_hint": "screenshot"
+    },
+    {
+      "step": 3,
+      "action": "Selecciona este caso y presiona 'Iniciar sesión'.",
+      "expected": "La ventana se compacta y muestra el primer paso.",
+      "evidence_hint": "screenshot"
+    }
+  ],
+  "acceptance_criteria": [
+    "La sesión inicia sin errores y los pasos se navegan en orden.",
+    "Capturar evidencia con el hotkey global guarda el screenshot en evidence/."
+  ],
+  "tags": ["onboarding", "smoke"],
+  "estimated_minutes": 3
+}

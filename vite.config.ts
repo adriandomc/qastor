@@ -7,12 +7,13 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 
 const host = process.env.TAURI_DEV_HOST;
 
-export default defineConfig(async () => ({
+export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
       "@": resolve(__dirname, "./src"),
       "@adc-ui": resolve(__dirname, "./design-system/adc-ui"),
+      "@schema": resolve(__dirname, "./schema"),
     },
   },
   clearScreen: false,
@@ -37,4 +38,4 @@ export default defineConfig(async () => ({
     minify: !process.env.TAURI_ENV_DEBUG ? "esbuild" : false,
     sourcemap: !!process.env.TAURI_ENV_DEBUG,
   },
-}));
+});

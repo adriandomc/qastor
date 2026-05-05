@@ -22,7 +22,18 @@
       }
     ],
     "security": {
-      "csp": null
+      "csp": null,
+      "assetProtocol": {
+        "enable": true,
+        "scope": [
+          "$HOME/**",
+          "$HOME/**/.qastor-runs/**",
+          "/Users/**",
+          "/var/folders/**",
+          "/private/var/folders/**",
+          "/tmp/**"
+        ]
+      }
     }
   },
   "bundle": {

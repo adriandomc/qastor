@@ -20,7 +20,7 @@
       "step": 2,
       "action": "Lanza la app actualizada (con migraciones nuevas)",
       "expected": "Antes de aplicar las migraciones, se crea un backup tipo 'pre-migracion'",
-      "evidence_hint": "log_excerpt"
+      "evidence_hint": "text_excerpt"
     },
     {
       "step": 3,
@@ -32,7 +32,7 @@
       "step": 4,
       "action": "Inspecciona logs en app_data_dir/logs/voltalfa-{hoy}.log",
       "expected": "Línea con msg='db.backup.preMigracion' y { from, to }",
-      "evidence_hint": "log_excerpt"
+      "evidence_hint": "text_excerpt"
     }
   ],
   "acceptance_criteria": [

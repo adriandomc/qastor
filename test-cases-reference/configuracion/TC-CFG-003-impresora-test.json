@@ -30,7 +30,7 @@
       "step": 4,
       "action": "Pulsa 'Imprimir prueba'",
       "expected": "Se imprime un ticket de prueba con nombre del negocio y fecha",
-      "evidence_hint": "printed_receipt"
+      "evidence_hint": "file_attachment"
     },
     {
       "step": 5,
