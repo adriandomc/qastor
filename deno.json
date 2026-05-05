@@ -7,7 +7,7 @@
     "tauri": "deno run -A npm:@tauri-apps/cli"
   },
   "fmt": {
-    "lineWidth": 100,
+    "lineWidth": 101,
     "indentWidth": 2,
     "useTabs": false,
     "singleQuote": false,
