@@ -77,7 +77,7 @@ jobs:
         run: deno install --frozen=true --allow-scripts=npm:esbuild,npm:@tauri-apps/cli
 
       - name: Build and upload Tauri bundles
-        uses: tauri-apps/tauri-action@v1
+        uses: tauri-apps/tauri-action@v0.6.2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
