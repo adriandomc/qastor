@@ -1,1 +1,4 @@
-This is Qastor, a software tool that allows to keep track of your manual testing process.
+# Qastor: the tool designed to get those troubling manual tests to their rest!
+
+![Qastor Logo](src-tauri/icons/64x64.png)
+
