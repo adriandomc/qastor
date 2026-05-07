@@ -7,6 +7,7 @@ use crate::util::paths::config_path;
 use chrono::DateTime;
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
+use std::cmp::Reverse;
 use std::collections::{HashMap, HashSet};
 use std::path::{Path, PathBuf};
 use tauri::State;
@@ -266,7 +267,7 @@ pub fn list_sessions(project_root: String) -> CmdResult<Vec<SessionRef>> {
             blocked,
         });
     }
-    out.sort_by(|a, b| b.started_at.cmp(&a.started_at));
+    out.sort_by_key(|s| Reverse(s.started_at));
     Ok(out)
 }
 
@@ -397,7 +398,7 @@ pub fn list_case_evidence(
             steps,
         });
     }
-    results.sort_by(|a, b| b.started_at.cmp(&a.started_at));
+    results.sort_by_key(|s| Reverse(s.started_at));
     Ok(results)
 }
 

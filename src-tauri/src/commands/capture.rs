@@ -4,6 +4,7 @@ use crate::util::atomic_write::atomic_write;
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use std::path::{Path, PathBuf};
+#[cfg(target_os = "macos")]
 use std::process::Command;
 use std::time::{SystemTime, UNIX_EPOCH};
 use tauri::{AppHandle, Runtime, State};
@@ -11,6 +12,7 @@ use tauri_plugin_clipboard_manager::ClipboardExt;
 
 type CmdResult<T> = Result<T, String>;
 
+#[cfg(target_os = "macos")]
 #[derive(Debug)]
 pub enum CaptureFailure {
     UserCancelled,
@@ -18,6 +20,7 @@ pub enum CaptureFailure {
     Other(String),
 }
 
+#[cfg(target_os = "macos")]
 impl std::fmt::Display for CaptureFailure {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
