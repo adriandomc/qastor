@@ -151,7 +151,7 @@ export default function SessionsHistory() {
       >
         <h2 style={{ margin: 0, fontSize: "var(--adc-fs-2xl)" }}>Sesiones</h2>
         <span style={{ fontSize: "var(--adc-fs-sm)", color: "var(--adc-fg-muted-strong)" }}>
-          {loading ? "cargando…" : `${sessions.length} sesión${sessions.length === 1 ? "" : "es"}`}
+          {loading ? "cargando…" : `${sessions.length} ${sessions.length === 1 ? "sesión" : "sesiones"}`}
         </span>
       </header>
 
