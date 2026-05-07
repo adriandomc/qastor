@@ -1,11 +1,10 @@
 use crate::domain::{
-    CaseResult, CaseStatus, EvidenceItem, ProjectConfig, Session, StepResult, StepStatus,
-    TestCase,
+    CaseResult, CaseStatus, EvidenceItem, ProjectConfig, Session, StepResult, StepStatus, TestCase,
 };
-use chrono::DateTime;
 use crate::services::session_state::{ActiveSession, ActiveSessionState};
 use crate::util::atomic_write::atomic_write;
 use crate::util::paths::config_path;
+use chrono::DateTime;
 use chrono::Utc;
 use serde::{Deserialize, Serialize};
 use std::collections::{HashMap, HashSet};
@@ -34,7 +33,10 @@ pub fn start_session(
     }
     let root = PathBuf::from(&project_root);
     if !root.is_dir() {
-        return Err(format!("project root no es un directorio: {}", root.display()));
+        return Err(format!(
+            "project root no es un directorio: {}",
+            root.display()
+        ));
     }
 
     // Read project config for default_session_dir
@@ -86,8 +88,7 @@ pub fn start_session(
     // Create session dir: <root>/<default_session_dir>/<timestamp>/
     let dir_name = now.format("%Y-%m-%dT%H-%M-%SZ").to_string();
     let session_dir = root.join(&config.default_session_dir).join(&dir_name);
-    std::fs::create_dir_all(&session_dir)
-        .map_err(|e| format!("create session dir: {e}"))?;
+    std::fs::create_dir_all(&session_dir).map_err(|e| format!("create session dir: {e}"))?;
     std::fs::create_dir_all(session_dir.join("evidence"))
         .map_err(|e| format!("create evidence dir: {e}"))?;
 
@@ -97,7 +98,6 @@ pub fn start_session(
     *state.0.lock().map_err(|e| e.to_string())? = Some(ActiveSessionState {
         session: session.clone(),
         session_dir,
-        project_root: root,
     });
 
     Ok(ActiveSessionInfo {
@@ -107,9 +107,7 @@ pub fn start_session(
 }
 
 #[tauri::command]
-pub fn get_active_session(
-    state: State<'_, ActiveSession>,
-) -> CmdResult<Option<ActiveSessionInfo>> {
+pub fn get_active_session(state: State<'_, ActiveSession>) -> CmdResult<Option<ActiveSessionInfo>> {
     let guard = state.0.lock().map_err(|e| e.to_string())?;
     Ok(guard.as_ref().map(|s| ActiveSessionInfo {
         session: s.session.clone(),
@@ -153,18 +151,9 @@ pub fn mark_step(
     }
 
     // Update overall case status: if any failed/blocked → that wins; else if all passed → passed; else running.
-    let all_done = case
-        .steps
-        .iter()
-        .all(|s| s.status != StepStatus::Pending);
-    let any_failed = case
-        .steps
-        .iter()
-        .any(|s| s.status == StepStatus::Failed);
-    let any_blocked = case
-        .steps
-        .iter()
-        .any(|s| s.status == StepStatus::Blocked);
+    let all_done = case.steps.iter().all(|s| s.status != StepStatus::Pending);
+    let any_failed = case.steps.iter().any(|s| s.status == StepStatus::Failed);
+    let any_blocked = case.steps.iter().any(|s| s.status == StepStatus::Blocked);
 
     case.status = if all_done {
         if any_failed {
@@ -178,8 +167,10 @@ pub fn mark_step(
         CaseStatus::Running
     };
 
-    if matches!(case.status, CaseStatus::Passed | CaseStatus::Failed | CaseStatus::Blocked)
-        && case.ended_at.is_none()
+    if matches!(
+        case.status,
+        CaseStatus::Passed | CaseStatus::Failed | CaseStatus::Blocked
+    ) && case.ended_at.is_none()
     {
         case.ended_at = Some(Utc::now());
     }
@@ -229,7 +220,10 @@ pub fn list_sessions(project_root: String) -> CmdResult<Vec<SessionRef>> {
         return Ok(vec![]);
     }
     let mut out: Vec<SessionRef> = Vec::new();
-    for entry in std::fs::read_dir(&runs_dir).map_err(|e| e.to_string())?.flatten() {
+    for entry in std::fs::read_dir(&runs_dir)
+        .map_err(|e| e.to_string())?
+        .flatten()
+    {
         let p = entry.path();
         if !p.is_dir() {
             continue;
@@ -476,10 +470,7 @@ fn write_session(session_dir: &Path, session: &Session) -> CmdResult<()> {
     Ok(())
 }
 
-fn collect_cases_by_id(
-    root: &Path,
-    ids: &[String],
-) -> Result<HashMap<String, TestCase>, String> {
+fn collect_cases_by_id(root: &Path, ids: &[String]) -> Result<HashMap<String, TestCase>, String> {
     let want: HashSet<&str> = ids.iter().map(String::as_str).collect();
     let mut out: HashMap<String, TestCase> = HashMap::new();
 

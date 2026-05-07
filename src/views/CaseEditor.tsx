@@ -1,30 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Alert, Button, Card, Modal, Tabs } from "@adc-ui/components";
-import {
-  ChevronDown,
-  ChevronLeft,
-  ChevronUp,
-  Plus,
-  Save,
-  Trash2,
-  X,
-} from "lucide-react";
+import { ChevronDown, ChevronLeft, ChevronUp, Plus, Save, Trash2, X } from "lucide-react";
 import { useCasesStore, useProjectStore } from "@/lib/store";
 import { api } from "@/lib/tauri";
 import { validateCase } from "@/lib/schema";
-import {
-  EVIDENCE_HINT_LABEL,
-  PRIORITY_LABEL,
-  TYPE_LABEL,
-} from "@/lib/labels";
-import type {
-  EvidenceHint,
-  Priority,
-  TestCase,
-  TestStep,
-  TestType,
-} from "@/lib/types";
+import { EVIDENCE_HINT_LABEL, PRIORITY_LABEL, TYPE_LABEL } from "@/lib/labels";
+import type { EvidenceHint, Priority, TestCase, TestStep, TestType } from "@/lib/types";
 
 type TabKey = "Form" | "JSON";
 
@@ -143,7 +125,9 @@ export default function CaseEditor() {
     const v = validateCase(toSave);
     if (!v.ok) {
       setActionError(
-        `El caso no valida contra el schema (${v.errors.length} error${v.errors.length === 1 ? "" : "es"}).`,
+        `El caso no valida contra el schema (${v.errors.length} error${
+          v.errors.length === 1 ? "" : "es"
+        }).`,
       );
       return;
     }
@@ -186,7 +170,8 @@ export default function CaseEditor() {
     >
       <Button
         variant="ghost"
-        onClick={() => navigate(isEdit ? `/project/cases/${encodeURIComponent(decoded)}` : "/project/cases")}
+        onClick={() =>
+          navigate(isEdit ? `/project/cases/${encodeURIComponent(decoded)}` : "/project/cases")}
         style={{ alignSelf: "flex-start", display: "flex", alignItems: "center", gap: 4 }}
       >
         <ChevronLeft size={14} /> {isEdit ? "Volver al caso" : "Casos"}
@@ -270,8 +255,8 @@ export default function CaseEditor() {
         }
       >
         <p>
-          Vas a borrar <code>{draft.id}</code> del disco. Esta acción no se puede deshacer desde la
-          app.
+          Vas a borrar <code>{draft.id}</code>{" "}
+          del disco. Esta acción no se puede deshacer desde la app.
         </p>
       </Modal>
     </main>
@@ -358,9 +343,7 @@ function FormView({
               placeholder="ej. ventas.pos"
             />
             <datalist id="known-modules">
-              {knownModules.map((m) => (
-                <option key={m} value={m} />
-              ))}
+              {knownModules.map((m) => <option key={m} value={m} />)}
             </datalist>
           </Field>
         </div>
@@ -415,8 +398,7 @@ function FormView({
                 patch(
                   "estimated_minutes",
                   e.target.value === "" ? undefined : Number(e.target.value),
-                )
-              }
+                )}
             />
           </Field>
         </div>
@@ -484,7 +466,13 @@ function FormView({
                     rows={2}
                   />
                 </Field>
-                <div style={{ display: "grid", gridTemplateColumns: "240px 1fr", gap: "var(--adc-space-3)" }}>
+                <div
+                  style={{
+                    display: "grid",
+                    gridTemplateColumns: "240px 1fr",
+                    gap: "var(--adc-space-3)",
+                  }}
+                >
                   <Field label="Evidencia sugerida">
                     <select
                       className="adc-select"
@@ -492,8 +480,7 @@ function FormView({
                       onChange={(e) =>
                         patchStep(idx, {
                           evidence_hint: e.target.value as EvidenceHint,
-                        })
-                      }
+                        })}
                     >
                       {EVIDENCE_HINTS.map((h) => (
                         <option key={h} value={h}>
@@ -511,7 +498,11 @@ function FormView({
                 </div>
               </div>
               <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-                <IconButton onClick={() => moveStep(idx, -1)} disabled={idx === 0} aria-label="Subir">
+                <IconButton
+                  onClick={() => moveStep(idx, -1)}
+                  disabled={idx === 0}
+                  aria-label="Subir"
+                >
                   <ChevronUp size={14} />
                 </IconButton>
                 <IconButton
@@ -580,26 +571,30 @@ function JSONView({
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "var(--adc-space-3)" }}>
-      {parseError ? (
-        <Alert tone="error" title="JSON inválido">
-          {parseError}
-        </Alert>
-      ) : schemaErrors.length === 0 ? (
-        <Alert tone="success" title="OK">
-          El JSON valida contra el schema.
-        </Alert>
-      ) : (
-        <Alert tone="warn" title={`${schemaErrors.length} problema(s) de schema`}>
-          <ul style={{ margin: 0, paddingLeft: 18, fontSize: "var(--adc-fs-xs)" }}>
-            {schemaErrors.slice(0, 8).map((e, i) => (
-              <li key={i}>
-                <code>{e.path}</code>: {e.message}
-              </li>
-            ))}
-            {schemaErrors.length > 8 && <li>… y {schemaErrors.length - 8} más</li>}
-          </ul>
-        </Alert>
-      )}
+      {parseError
+        ? (
+          <Alert tone="error" title="JSON inválido">
+            {parseError}
+          </Alert>
+        )
+        : schemaErrors.length === 0
+        ? (
+          <Alert tone="success" title="OK">
+            El JSON valida contra el schema.
+          </Alert>
+        )
+        : (
+          <Alert tone="warn" title={`${schemaErrors.length} problema(s) de schema`}>
+            <ul style={{ margin: 0, paddingLeft: 18, fontSize: "var(--adc-fs-xs)" }}>
+              {schemaErrors.slice(0, 8).map((e, i) => (
+                <li key={i}>
+                  <code>{e.path}</code>: {e.message}
+                </li>
+              ))}
+              {schemaErrors.length > 8 && <li>… y {schemaErrors.length - 8} más</li>}
+            </ul>
+          </Alert>
+        )}
       <textarea
         className="adc-textarea"
         value={text}
@@ -632,7 +627,14 @@ function Section({ title, children }: { title: string; children: React.ReactNode
       >
         {title}
       </h3>
-      <Card style={{ padding: "var(--adc-space-4)", display: "flex", flexDirection: "column", gap: "var(--adc-space-3)" }}>
+      <Card
+        style={{
+          padding: "var(--adc-space-4)",
+          display: "flex",
+          flexDirection: "column",
+          gap: "var(--adc-space-3)",
+        }}
+      >
         {children}
       </Card>
     </section>
@@ -710,6 +712,7 @@ function ChipInput({
         <span key={i} className="adc-chip">
           {v}
           <button
+            type="button"
             className="adc-chip__x"
             onClick={() => setValues(values.filter((_, j) => j !== i))}
             aria-label={`Quitar ${v}`}
@@ -784,19 +787,20 @@ function DataField({
         onBlur={commit}
         placeholder='{"recibido":"100.00"}'
       />
-      {err && (
-        <span style={{ fontSize: "var(--adc-fs-xs)", color: "var(--adc-error)" }}>{err}</span>
-      )}
+      {err && <span style={{ fontSize: "var(--adc-fs-xs)", color: "var(--adc-error)" }}>{err}
+      </span>}
     </div>
   );
 }
 
 function IconButton({
   children,
+  type = "button",
   ...rest
 }: React.ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
     <button
+      type={type}
       {...rest}
       style={{
         height: "var(--adc-h-icon)",
@@ -817,4 +821,3 @@ function IconButton({
     </button>
   );
 }
-

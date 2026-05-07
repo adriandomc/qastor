@@ -18,16 +18,13 @@ export const api = {
   // Project lifecycle
   createProject: (parentDir: string, name: string) =>
     invoke<ProjectConfig>("create_project", { parentDir, name }),
-  openProject: (dir: string) =>
-    invoke<ProjectConfig>("open_project", { dir }),
-  validateProject: (dir: string) =>
-    invoke<ValidationResult>("validate_project", { dir }),
+  openProject: (dir: string) => invoke<ProjectConfig>("open_project", { dir }),
+  validateProject: (dir: string) => invoke<ValidationResult>("validate_project", { dir }),
   initializeExistingFolder: (dir: string) =>
     invoke<ProjectConfig>("initialize_existing_folder", { dir }),
 
   // Recent projects
-  getRecentProjects: () =>
-    invoke<ProjectRef[]>("get_recent_projects"),
+  getRecentProjects: () => invoke<ProjectRef[]>("get_recent_projects"),
   recordRecentProject: (projectPath: string, projectName: string) =>
     invoke<void>("record_recent_project", { projectPath, projectName }),
   forgetRecentProject: (projectPath: string) =>
@@ -38,10 +35,8 @@ export const api = {
     invoke<void>("update_project_config", { projectRoot, config }),
 
   // Cases
-  listCases: (projectRoot: string) =>
-    invoke<ListCasesResult>("list_cases", { projectRoot }),
-  loadCase: (path: string) =>
-    invoke<TestCase>("load_case", { path }),
+  listCases: (projectRoot: string) => invoke<ListCasesResult>("list_cases", { projectRoot }),
+  loadCase: (path: string) => invoke<TestCase>("load_case", { path }),
   saveCase: (
     projectRoot: string,
     testCase: TestCase,
@@ -54,8 +49,7 @@ export const api = {
     }),
   deleteCase: (projectRoot: string, path: string) =>
     invoke<void>("delete_case", { projectRoot, path }),
-  regenerateIndex: (projectRoot: string) =>
-    invoke<string>("regenerate_index", { projectRoot }),
+  regenerateIndex: (projectRoot: string) => invoke<string>("regenerate_index", { projectRoot }),
 
   // Capture
   captureRegion: () => invoke<string>("capture_region"),
@@ -103,8 +97,7 @@ export const api = {
   // Sessions
   startSession: (projectRoot: string, caseIds: string[]) =>
     invoke<ActiveSessionInfo>("start_session", { projectRoot, caseIds }),
-  getActiveSession: () =>
-    invoke<ActiveSessionInfo | null>("get_active_session"),
+  getActiveSession: () => invoke<ActiveSessionInfo | null>("get_active_session"),
   markStep: (
     caseId: string,
     step: number,
@@ -118,8 +111,7 @@ export const api = {
       notes: notes ?? null,
     }),
   endSession: () => invoke<Session>("end_session"),
-  listSessions: (projectRoot: string) =>
-    invoke<SessionRef[]>("list_sessions", { projectRoot }),
+  listSessions: (projectRoot: string) => invoke<SessionRef[]>("list_sessions", { projectRoot }),
   listCaseEvidence: (projectRoot: string, caseId: string) =>
     invoke<CaseEvidenceFromSession[]>("list_case_evidence", {
       projectRoot,
@@ -127,20 +119,16 @@ export const api = {
     }),
 
   // Watcher
-  startWatch: (projectRoot: string) =>
-    invoke<void>("start_watch", { projectRoot }),
-  stopWatch: () =>
-    invoke<void>("stop_watch"),
+  startWatch: (projectRoot: string) => invoke<void>("start_watch", { projectRoot }),
+  stopWatch: () => invoke<void>("stop_watch"),
 
   // Tray
-  setTrayStatus: (text: string | null) =>
-    invoke<void>("set_tray_status", { text }),
+  setTrayStatus: (text: string | null) => invoke<void>("set_tray_status", { text }),
 
   // Report
   exportReport: (projectRoot: string, sessionDir: string) =>
     invoke<string>("export_html_report", { projectRoot, sessionDir }),
 
   // System
-  openPath: (path: string) =>
-    invoke<void>("open_path", { path }),
+  openPath: (path: string) => invoke<void>("open_path", { path }),
 };

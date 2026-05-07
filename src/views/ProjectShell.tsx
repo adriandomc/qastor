@@ -84,9 +84,7 @@ export default function ProjectShell() {
             <NavLink
               key={item.to}
               to={item.to}
-              className={({ isActive }) =>
-                `adc-nav__item ${isActive ? "is-active" : ""}`
-              }
+              className={({ isActive }) => `adc-nav__item ${isActive ? "is-active" : ""}`}
               style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 8 }}
             >
               {item.icon}

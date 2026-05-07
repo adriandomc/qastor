@@ -1,8 +1,6 @@
 use crate::domain::{ProjectConfig, ProjectRef, ValidationResult};
 use crate::util::atomic_write::atomic_write;
-use crate::util::paths::{
-    config_path, index_path, readme_path, schema_path, QASTOR_INDEX_FILE,
-};
+use crate::util::paths::{config_path, index_path, readme_path, schema_path, QASTOR_INDEX_FILE};
 use chrono::Utc;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
@@ -10,8 +8,7 @@ use tauri::{AppHandle, Runtime};
 use tauri_plugin_store::StoreExt;
 
 const SCHEMA_JSON: &str = include_str!("../../../schema/test-case.schema.json");
-const SAMPLE_CASE_JSON: &str =
-    include_str!("../../templates/TC-EJEMPLO-001-mi-primer-caso.json");
+const SAMPLE_CASE_JSON: &str = include_str!("../../templates/TC-EJEMPLO-001-mi-primer-caso.json");
 const PROJECT_README: &str = include_str!("../../templates/PROJECT_README.md");
 
 const SETTINGS_STORE: &str = "settings.json";
@@ -33,10 +30,7 @@ pub fn create_project(parent_dir: String, name: String) -> CmdResult<ProjectConf
     }
     let project_root = parent.join(&name);
     if project_root.exists() {
-        return Err(format!(
-            "path already exists: {}",
-            project_root.display()
-        ));
+        return Err(format!("path already exists: {}", project_root.display()));
     }
     std::fs::create_dir_all(&project_root).map_err(|e| e.to_string())?;
 
@@ -55,10 +49,7 @@ pub fn open_project(dir: String) -> CmdResult<ProjectConfig> {
     let root = PathBuf::from(dir);
     let cfg_path = config_path(&root);
     if !cfg_path.is_file() {
-        return Err(format!(
-            "no qastor.json found at {}",
-            root.display()
-        ));
+        return Err(format!("no qastor.json found at {}", root.display()));
     }
     let bytes = std::fs::read(&cfg_path).map_err(|e| e.to_string())?;
     let config: ProjectConfig =
@@ -199,10 +190,7 @@ pub async fn record_recent_project<R: Runtime>(
 }
 
 #[tauri::command]
-pub fn update_project_config(
-    project_root: String,
-    config: ProjectConfig,
-) -> CmdResult<()> {
+pub fn update_project_config(project_root: String, config: ProjectConfig) -> CmdResult<()> {
     let root = PathBuf::from(&project_root);
     if !root.is_dir() {
         return Err(format!("not a directory: {}", root.display()));
@@ -242,8 +230,7 @@ fn write_project_files(
     atomic_write(&config_path(project_root), &cfg_bytes).map_err(|e| e.to_string())?;
 
     // schema.json (always written; overwrite is safe — schema shouldn't drift).
-    atomic_write(&schema_path(project_root), SCHEMA_JSON.as_bytes())
-        .map_err(|e| e.to_string())?;
+    atomic_write(&schema_path(project_root), SCHEMA_JSON.as_bytes()).map_err(|e| e.to_string())?;
 
     // README.md only if missing — don't clobber user notes.
     let readme = readme_path(project_root);
@@ -256,8 +243,7 @@ fn write_project_files(
         std::fs::create_dir_all(&ejemplo_dir).map_err(|e| e.to_string())?;
         let sample_path = ejemplo_dir.join("TC-EJEMPLO-001-mi-primer-caso.json");
         if !sample_path.is_file() {
-            atomic_write(&sample_path, SAMPLE_CASE_JSON.as_bytes())
-                .map_err(|e| e.to_string())?;
+            atomic_write(&sample_path, SAMPLE_CASE_JSON.as_bytes()).map_err(|e| e.to_string())?;
         }
     }
 

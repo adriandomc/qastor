@@ -12,20 +12,24 @@ pub fn setup_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
     let fail = MenuItem::with_id(app, "tray-fail", "Fail", true, None::<&str>)?;
     let blocked = MenuItem::with_id(app, "tray-blocked", "Blocked", true, None::<&str>)?;
     let sep1 = PredefinedMenuItem::separator(app)?;
-    let end_session = MenuItem::with_id(
-        app,
-        "tray-end",
-        "Finalizar sesión",
-        true,
-        None::<&str>,
-    )?;
+    let end_session = MenuItem::with_id(app, "tray-end", "Finalizar sesión", true, None::<&str>)?;
     let sep2 = PredefinedMenuItem::separator(app)?;
     let open = MenuItem::with_id(app, "tray-open", "Abrir qastor", true, None::<&str>)?;
     let quit = MenuItem::with_id(app, "tray-quit", "Quit", true, None::<&str>)?;
 
     let menu = Menu::with_items(
         app,
-        &[&capture, &pass, &fail, &blocked, &sep1, &end_session, &sep2, &open, &quit],
+        &[
+            &capture,
+            &pass,
+            &fail,
+            &blocked,
+            &sep1,
+            &end_session,
+            &sep2,
+            &open,
+            &quit,
+        ],
     )?;
 
     let icon = app
@@ -70,14 +74,12 @@ pub fn setup_tray<R: Runtime>(app: &AppHandle<R>) -> tauri::Result<()> {
 }
 
 #[tauri::command]
-pub fn set_tray_status<R: Runtime>(
-    app: AppHandle<R>,
-    text: Option<String>,
-) -> Result<(), String> {
+pub fn set_tray_status<R: Runtime>(app: AppHandle<R>, text: Option<String>) -> Result<(), String> {
     let Some(tray) = app.tray_by_id(TRAY_ID) else {
         return Err("tray not initialized".to_string());
     };
     tray.set_title(text.as_deref()).map_err(|e| e.to_string())?;
-    tray.set_tooltip(text.as_deref()).map_err(|e| e.to_string())?;
+    tray.set_tooltip(text.as_deref())
+        .map_err(|e| e.to_string())?;
     Ok(())
 }

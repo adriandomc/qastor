@@ -1,11 +1,4 @@
-import type {
-  CaseStatus,
-  EvidenceHint,
-  Priority,
-  SessionRef,
-  StepStatus,
-  TestType,
-} from "./types";
+import type { CaseStatus, EvidenceHint, Priority, SessionRef, StepStatus, TestType } from "./types";
 
 export const PRIORITY_LABEL: Record<Priority, string> = {
   critical: "Crítica",

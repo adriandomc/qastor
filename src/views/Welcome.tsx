@@ -138,14 +138,22 @@ export default function Welcome() {
         paddingBottom: "var(--adc-space-9)",
       }}
     >
-      <div style={{ width: 720, display: "flex", flexDirection: "column", gap: "var(--adc-space-7)" }}>
+      <div
+        style={{ width: 720, display: "flex", flexDirection: "column", gap: "var(--adc-space-7)" }}
+      >
         <header style={{ display: "flex", alignItems: "center", gap: "var(--adc-space-5)" }}>
           <ADCMark size={56} label="Q" />
           <div>
             <h1 style={{ margin: 0, fontSize: "var(--adc-fs-3xl)", letterSpacing: "-0.01em" }}>
               qastor
             </h1>
-            <p style={{ margin: 0, color: "var(--adc-fg-muted-strong)", fontSize: "var(--adc-fs-sm)" }}>
+            <p
+              style={{
+                margin: 0,
+                color: "var(--adc-fg-muted-strong)",
+                fontSize: "var(--adc-fs-sm)",
+              }}
+            >
               Gestor de casos de prueba manuales con captura de evidencia.
             </p>
           </div>
@@ -161,7 +169,13 @@ export default function Welcome() {
               setError(null);
               setCreateModal({ open: true, name: "" });
             }}
-            style={{ flex: 1, justifyContent: "center", display: "flex", alignItems: "center", gap: 8 }}
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+            }}
           >
             <FolderPlus size={16} /> Crear nuevo proyecto
           </Button>
@@ -169,7 +183,13 @@ export default function Welcome() {
             variant="secondary"
             disabled={busy}
             onClick={handleOpenExisting}
-            style={{ flex: 1, justifyContent: "center", display: "flex", alignItems: "center", gap: 8 }}
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+            }}
           >
             <FolderOpen size={16} /> Abrir proyecto existente
           </Button>
@@ -190,64 +210,69 @@ export default function Welcome() {
           >
             <History size={14} /> Recientes
           </h2>
-          {recent.length === 0 ? (
-            <EmptyState
-              glyph="∅"
-              title="Sin proyectos recientes"
-              description="Cuando crees o abras un proyecto, aparecerá aquí."
-            />
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: "var(--adc-space-2)" }}>
-              {recent.map((p) => (
-                <Card
-                  key={p.path}
-                  onClick={() => handleRecentClick(p)}
-                  style={{
-                    cursor: busy ? "wait" : "pointer",
-                    padding: "var(--adc-space-4)",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                    gap: "var(--adc-space-4)",
-                  }}
-                >
-                  <div style={{ minWidth: 0, flex: 1 }}>
-                    <div style={{ fontWeight: "var(--adc-fw-bold)", fontSize: "var(--adc-fs-md)" }}>
-                      {p.project_name}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: "var(--adc-fs-xs)",
-                        color: "var(--adc-fg-muted-strong)",
-                        whiteSpace: "nowrap",
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                      }}
-                    >
-                      {p.path}
-                    </div>
-                  </div>
-                  <button
-                    onClick={(ev) => handleForget(p, ev)}
-                    aria-label="Olvidar proyecto"
+          {recent.length === 0
+            ? (
+              <EmptyState
+                glyph="∅"
+                title="Sin proyectos recientes"
+                description="Cuando crees o abras un proyecto, aparecerá aquí."
+              />
+            )
+            : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "var(--adc-space-2)" }}>
+                {recent.map((p) => (
+                  <Card
+                    key={p.path}
+                    onClick={() => handleRecentClick(p)}
                     style={{
-                      background: "transparent",
-                      border: 0,
-                      cursor: "pointer",
-                      color: "var(--adc-fg-muted-strong)",
+                      cursor: busy ? "wait" : "pointer",
+                      padding: "var(--adc-space-4)",
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "center",
-                      width: 28,
-                      height: 28,
+                      justifyContent: "space-between",
+                      gap: "var(--adc-space-4)",
                     }}
                   >
-                    <X size={16} />
-                  </button>
-                </Card>
-              ))}
-            </div>
-          )}
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <div
+                        style={{ fontWeight: "var(--adc-fw-bold)", fontSize: "var(--adc-fs-md)" }}
+                      >
+                        {p.project_name}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: "var(--adc-fs-xs)",
+                          color: "var(--adc-fg-muted-strong)",
+                          whiteSpace: "nowrap",
+                          overflow: "hidden",
+                          textOverflow: "ellipsis",
+                        }}
+                      >
+                        {p.path}
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={(ev) => handleForget(p, ev)}
+                      aria-label="Olvidar proyecto"
+                      style={{
+                        background: "transparent",
+                        border: 0,
+                        cursor: "pointer",
+                        color: "var(--adc-fg-muted-strong)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: 28,
+                        height: 28,
+                      }}
+                    >
+                      <X size={16} />
+                    </button>
+                  </Card>
+                ))}
+              </div>
+            )}
         </section>
       </div>
 
@@ -267,7 +292,9 @@ export default function Welcome() {
         }
       >
         <div style={{ display: "flex", flexDirection: "column", gap: "var(--adc-space-4)" }}>
-          <p style={{ margin: 0, fontSize: "var(--adc-fs-sm)", color: "var(--adc-fg-muted-strong)" }}>
+          <p
+            style={{ margin: 0, fontSize: "var(--adc-fs-sm)", color: "var(--adc-fg-muted-strong)" }}
+          >
             Después de elegir nombre, te pediré una carpeta padre donde crear el proyecto.
           </p>
           <div className="adc-field">
@@ -307,11 +334,13 @@ export default function Welcome() {
               Esta carpeta tiene casos de prueba pero no es un proyecto qastor todavía. Voy a crear
               <code style={{ marginLeft: 4, marginRight: 4 }}>qastor.json</code> aquí
               {!initModal.detectedModules.length ? "" : " con los módulos detectados"}
-              {initModal.hasIndexJson ? " y a importar las suites de index.json" : ""}.
-              No toco tus archivos existentes.
+              {initModal.hasIndexJson ? " y a importar las suites de index.json" : ""}. No toco tus
+              archivos existentes.
             </p>
             <ul style={{ margin: 0, paddingLeft: 18, fontSize: "var(--adc-fs-sm)" }}>
-              <li>Carpeta: <code>{initModal.dir}</code></li>
+              <li>
+                Carpeta: <code>{initModal.dir}</code>
+              </li>
               <li>Casos detectados: {initModal.caseCount}</li>
               {initModal.detectedModules.length > 0 && (
                 <li>Módulos: {initModal.detectedModules.join(", ")}</li>

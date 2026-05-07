@@ -21,10 +21,7 @@ pub enum CaptureFailure {
 impl std::fmt::Display for CaptureFailure {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Self::UserCancelled => write!(
-                f,
-                "captura cancelada (cerraste la selección con Esc)"
-            ),
+            Self::UserCancelled => write!(f, "captura cancelada (cerraste la selección con Esc)"),
             Self::PermissionLikelyDenied => write!(
                 f,
                 "macOS no le dio permiso de Screen Recording a qastor. \
@@ -77,8 +74,7 @@ pub fn capture_step(
         .ok_or_else(|| "no hay sesión activa".to_string())?;
 
     let evidence_dir = active.session_dir.join("evidence").join(&case_id);
-    std::fs::create_dir_all(&evidence_dir)
-        .map_err(|e| format!("create evidence dir: {e}"))?;
+    std::fs::create_dir_all(&evidence_dir).map_err(|e| format!("create evidence dir: {e}"))?;
 
     // Allow multiple captures per step: step-N.png, step-N-2.png, …
     let case = active
@@ -215,8 +211,7 @@ pub fn attach_step_file(
         .ok_or_else(|| "no hay sesión activa".to_string())?;
 
     let evidence_dir = active.session_dir.join("evidence").join(&case_id);
-    std::fs::create_dir_all(&evidence_dir)
-        .map_err(|e| format!("create evidence dir: {e}"))?;
+    std::fs::create_dir_all(&evidence_dir).map_err(|e| format!("create evidence dir: {e}"))?;
 
     let original_name = source
         .file_name()
@@ -228,8 +223,7 @@ pub fn attach_step_file(
     // -3 if a file with the same basename already exists for this step).
     let dest_name = unique_dest_name(&evidence_dir, step, &original_name);
     let dest_path = evidence_dir.join(&dest_name);
-    std::fs::copy(&source, &dest_path)
-        .map_err(|e| format!("copy file: {e}"))?;
+    std::fs::copy(&source, &dest_path).map_err(|e| format!("copy file: {e}"))?;
 
     let size_bytes = std::fs::metadata(&dest_path).ok().map(|m| m.len());
     let mime = detect_mime(&dest_path);
@@ -316,7 +310,9 @@ pub fn update_step_text_evidence(
                 }
             }
         }
-        Err(format!("evidencia de texto con timestamp {captured_at} no encontrada"))
+        Err(format!(
+            "evidencia de texto con timestamp {captured_at} no encontrada"
+        ))
     })
 }
 
@@ -347,7 +343,9 @@ fn delete_one(
         EvidenceMatchKey::Text { captured_at } => {
             let before = sr.evidence_items.len();
             sr.evidence_items.retain(|it| match it {
-                EvidenceItem::Text { captured_at: ts, .. } => ts.to_rfc3339() != *captured_at,
+                EvidenceItem::Text {
+                    captured_at: ts, ..
+                } => ts.to_rfc3339() != *captured_at,
                 _ => true,
             });
             if sr.evidence_items.len() == before {
@@ -374,8 +372,7 @@ where
     F: FnOnce(&mut crate::domain::StepResult) -> CmdResult<()>,
 {
     let session_path = std::path::PathBuf::from(session_dir).join("session.json");
-    let bytes = std::fs::read(&session_path)
-        .map_err(|e| format!("read session.json: {e}"))?;
+    let bytes = std::fs::read(&session_path).map_err(|e| format!("read session.json: {e}"))?;
     let mut session: Session =
         serde_json::from_slice(&bytes).map_err(|e| format!("parse session.json: {e}"))?;
 
@@ -439,7 +436,10 @@ fn detect_mime(path: &Path) -> Option<String> {
         return Some(kind.mime_type().to_string());
     }
     // Fallback by extension for text-like files (infer often can't detect them).
-    let ext = path.extension().and_then(|e| e.to_str())?.to_ascii_lowercase();
+    let ext = path
+        .extension()
+        .and_then(|e| e.to_str())?
+        .to_ascii_lowercase();
     let mime = match ext.as_str() {
         "txt" | "log" => "text/plain",
         "md" => "text/markdown",
@@ -480,8 +480,14 @@ fn run_screencapture(args: &[&str], path: &PathBuf) -> CmdResult<String> {
         }
         return Err(CaptureFailure::Other(format!(
             "screencapture exit {} — stderr: {}",
-            exit_code.map(|c| c.to_string()).unwrap_or_else(|| "?".into()),
-            if stderr.is_empty() { "(vacío)" } else { stderr.as_str() }
+            exit_code
+                .map(|c| c.to_string())
+                .unwrap_or_else(|| "?".into()),
+            if stderr.is_empty() {
+                "(vacío)"
+            } else {
+                stderr.as_str()
+            }
         ))
         .to_string());
     }

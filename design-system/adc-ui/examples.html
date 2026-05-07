@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ADC handoff — examples</title>
+    <link rel="stylesheet" href="tokens.css">
+    <link rel="stylesheet" href="components.css">
+    <style>
+      body {
+        margin: 0;
+        padding: 32px;
+      }
+      .wrap {
+        max-width: 980px;
+        margin: 0 auto;
+      }
+      section {
+        margin-bottom: 48px;
+      }
+      section h2 {
+        font-size: 22px;
+        margin-bottom: 6px;
+      }
+      section .sub {
+        color: var(--adc-accent-1);
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        margin-bottom: 16px;
+        text-transform: uppercase;
+        font-weight: 700;
+      }
+      .row {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        align-items: center;
+      }
+      .stack {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 24px;
+      }
+      .num {
+        font-variant-numeric: tabular-nums;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header style="margin-bottom: 48px">
+        <h1 style="font-size: 32px; letter-spacing: -0.01em">ADC HANDOFF · COMPONENT EXAMPLES</h1>
+        <p style="margin-top: 6px; color: var(--adc-accent-1)">
+          Drop <code>tokens.css</code> + <code>components.css</code> in your root layout, then use
+          these classes (or the React components in <code>components.tsx</code>).
+        </p>
+      </header>
+
+      <section>
+        <h2>Buttons</h2>
+        <div class="sub">.adc-btn / .adc-btn--secondary / .adc-btn--ghost / .adc-btn--danger</div>
+        <div class="row">
+          <button class="adc-btn">Primary</button>
+          <button class="adc-btn adc-btn--secondary">Secondary</button>
+          <button class="adc-btn adc-btn--ghost">Ghost</button>
+          <button class="adc-btn adc-btn--danger">Delete</button>
+          <button class="adc-btn" disabled>Disabled</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Pills &amp; Badges</h2>
+        <div class="sub">.adc-pill / --ok --warn --err --muted --count</div>
+        <div class="row">
+          <span class="adc-pill">Default</span>
+          <span class="adc-pill adc-pill--ok">Live</span>
+          <span class="adc-pill adc-pill--warn">Beta</span>
+          <span class="adc-pill adc-pill--err">Archived</span>
+          <span class="adc-pill adc-pill--muted">Draft</span>
+          <span class="adc-pill adc-pill--count">12</span>
+          <span class="adc-pill adc-pill--count">99+</span>
+        </div>
+      </section>
+
+      <section>
+        <h2>Alerts</h2>
+        <div class="sub">.adc-alert / --info --success --warn --error</div>
+        <div class="stack" style="max-width: 560px">
+          <div class="adc-alert adc-alert--info">
+            <span class="adc-alert__icon">i</span><div>
+              <strong class="adc-alert__title">Heads up</strong>This is the small note tone.
+            </div>
+          </div>
+          <div class="adc-alert adc-alert--success">
+            <span class="adc-alert__icon">✓</span><div>
+              <strong class="adc-alert__title">Saved</strong>Your changes were committed.
+            </div>
+          </div>
+          <div class="adc-alert adc-alert--warn">
+            <span class="adc-alert__icon">!</span><div>
+              <strong class="adc-alert__title">Review me</strong>Two of your fields look unusual.
+            </div>
+          </div>
+          <div class="adc-alert adc-alert--error">
+            <span class="adc-alert__icon">×</span><div>
+              <strong class="adc-alert__title">Couldn't connect</strong>We tried for 30 seconds.
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Table</h2>
+        <div class="sub">.adc-table</div>
+        <table class="adc-table">
+          <thead>
+            <tr>
+              <th>Project</th>
+              <th>Stack</th>
+              <th>Status</th>
+              <th class="adc-num">Stars</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>VoltAlfa</td>
+              <td>TypeScript · Astro</td>
+              <td><span class="adc-pill adc-pill--ok">Live</span></td>
+              <td class="adc-num">128</td>
+            </tr>
+            <tr>
+              <td>Zapa POS</td>
+              <td>Meteor · MongoDB</td>
+              <td><span class="adc-pill adc-pill--ok">Live</span></td>
+              <td class="adc-num">42</td>
+            </tr>
+            <tr>
+              <td>Dinotext</td>
+              <td>PHP</td>
+              <td><span class="adc-pill adc-pill--warn">Beta</span></td>
+              <td class="adc-num">7</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>Tabs</h2>
+        <div class="sub">.adc-tabs / .adc-tab.is-active — hover bars grow inward</div>
+        <div class="adc-tabs">
+          <div class="adc-tab is-active"><span>Overview</span></div>
+          <div class="adc-tab"><span>Code</span></div>
+          <div class="adc-tab"><span>Issues</span></div>
+          <div class="adc-tab"><span>Releases</span></div>
+        </div>
+      </section>
+
+      <section>
+        <h2>Pagination · Breadcrumbs</h2>
+        <div class="sub">.adc-pager / .adc-crumbs</div>
+        <div class="grid-2">
+          <div class="adc-pager">
+            <button class="adc-pg">←</button>
+            <button class="adc-pg">1</button>
+            <button class="adc-pg is-current">2</button>
+            <button class="adc-pg">3</button>
+            <span
+              class="adc-pg"
+              style="border: 0; background: transparent; color: var(--adc-accent-1)"
+            >…</span>
+            <button class="adc-pg">12</button>
+            <button class="adc-pg">→</button>
+          </div>
+          <nav class="adc-crumbs">
+            <a href="#">Home</a><span class="adc-crumbs__sep">/</span>
+            <a href="#">Projects</a><span class="adc-crumbs__sep">/</span>
+            <span class="adc-crumbs__cur">VoltAlfa</span>
+          </nav>
+        </div>
+      </section>
+
+      <section>
+        <h2>Form</h2>
+        <div class="sub">.adc-field / .adc-label / .adc-input / .adc-textarea</div>
+        <form class="stack" style="max-width: 480px">
+          <label class="adc-field"><span class="adc-label">NAME</span><input
+              class="adc-input"
+              placeholder="Your name"
+            ></label>
+          <label class="adc-field"><span class="adc-label">EMAIL</span><input
+              class="adc-input"
+              placeholder="hi@you.com"
+            ></label>
+          <label class="adc-field"><span class="adc-label">MESSAGE</span><textarea
+              class="adc-textarea"
+              placeholder="What's up?"
+            ></textarea></label>
+          <div class="row"><button class="adc-btn" type="button">Send</button></div>
+        </form>
+      </section>
+
+      <section>
+        <h2>Empty state</h2>
+        <div class="sub">.adc-empty</div>
+        <div class="adc-empty" style="max-width: 600px">
+          <div class="adc-empty__glyph">∅</div>
+          <h4 style="margin: 0 0 6px">NO POSTS YET</h4>
+          <p style="margin: 0 0 14px; font-size: 13px; color: var(--adc-accent-1)">
+            Write your first one — the world is waiting.
+          </p>
+          <button class="adc-btn">+ New post</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Code block</h2>
+        <div class="sub">.adc-code (+ optional .adc-code__toolbar)</div>
+        <div class="adc-code__toolbar">
+          <span>app.tsx</span><button
+            style="background: transparent; border: 0; color: #fff; font: inherit; cursor: pointer; letter-spacing: 0.06em"
+          >
+            Copy
+          </button>
+        </div>
+        <pre
+          class="adc-code"
+        ><code>// adriandomc components
+import { Button, Pill } from "@adc/ui";
+
+export function Hello() {
+  return &lt;Button variant="primary"&gt;Ship it&lt;/Button&gt;;
+}</code></pre>
+      </section>
+    </div>
+  </body>
+</html>

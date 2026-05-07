@@ -1,12 +1,6 @@
 import { create } from "zustand";
 import { api } from "./tauri";
-import type {
-  CaseLoadError,
-  LoadedCase,
-  ProjectConfig,
-  ProjectRef,
-  Session,
-} from "./types";
+import type { CaseLoadError, LoadedCase, ProjectConfig, ProjectRef, Session } from "./types";
 
 // --- Project store ----------------------------------------------------------
 
@@ -79,6 +73,5 @@ export const useSessionStore = create<SessionStateSlice>((set) => ({
   setActiveSession: (s, dir) => set({ session: s, sessionDir: dir }),
   patchSession: (s) => set({ session: s }),
   setCursor: (caseId, step) => set({ cursorCaseId: caseId, cursorStep: step }),
-  clearCursor: () =>
-    set({ cursorCaseId: null, cursorStep: null }),
+  clearCursor: () => set({ cursorCaseId: null, cursorStep: null }),
 }));

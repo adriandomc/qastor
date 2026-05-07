@@ -1,15 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { convertFileSrc } from "@tauri-apps/api/core";
-import {
-  Alert,
-  Button,
-  Card,
-  EmptyState,
-  Modal,
-  Pill,
-  StatusIndicator,
-} from "@adc-ui/components";
+import { Alert, Button, Card, EmptyState, Modal, Pill, StatusIndicator } from "@adc-ui/components";
 import {
   Camera,
   ChevronLeft,
@@ -29,11 +21,7 @@ import {
   STEP_STATUS_VARIANT,
   TYPE_LABEL,
 } from "@/lib/labels";
-import type {
-  CaseEvidenceFromSession,
-  ResolvedEvidence,
-  StepStatus,
-} from "@/lib/types";
+import type { CaseEvidenceFromSession, ResolvedEvidence, StepStatus } from "@/lib/types";
 
 interface EvidenceWithContext {
   item: ResolvedEvidence;
@@ -74,30 +62,33 @@ export default function CaseDetail() {
   const [provisional, setProvisional] = useState<Record<number, string[]>>({});
   const [captureError, setCaptureError] = useState<string | null>(null);
   const [capturing, setCapturing] = useState<number | null>(null);
-  const [confirmDelete, setConfirmDelete] = useState<{
-    sessionDir: string;
-    caseId: string;
-    step: number;
-    label: string;
-    matchKey:
-      | { kind: "path"; path: string }
-      | { kind: "text"; captured_at: string };
-  } | null>(null);
-  const [editText, setEditText] = useState<{
-    sessionDir: string;
-    caseId: string;
-    step: number;
-    capturedAt: string;
-    content: string;
-  } | null>(null);
+  const [confirmDelete, setConfirmDelete] = useState<
+    {
+      sessionDir: string;
+      caseId: string;
+      step: number;
+      label: string;
+      matchKey:
+        | { kind: "path"; path: string }
+        | { kind: "text"; captured_at: string };
+    } | null
+  >(null);
+  const [editText, setEditText] = useState<
+    {
+      sessionDir: string;
+      caseId: string;
+      step: number;
+      capturedAt: string;
+      content: string;
+    } | null
+  >(null);
   const [busyEvidence, setBusyEvidence] = useState(false);
   const [evidenceBySession, setEvidenceBySession] = useState<
     CaseEvidenceFromSession[]
   >([]);
   const [lightbox, setLightbox] = useState<LightboxState | null>(null);
 
-  const sessionHasThisCase =
-    !!session && session.case_results.some((c) => c.case_id === decoded);
+  const sessionHasThisCase = !!session && session.case_results.some((c) => c.case_id === decoded);
 
   const refreshEvidence = useCallback(async () => {
     if (!projectPath || !decoded) return;
@@ -165,9 +156,7 @@ export default function CaseDetail() {
       }
     }
     for (const k of Object.keys(out)) {
-      out[Number(k)].sort((a, b) =>
-        b.sessionStartedAt.localeCompare(a.sessionStartedAt),
-      );
+      out[Number(k)].sort((a, b) => b.sessionStartedAt.localeCompare(a.sessionStartedAt));
     }
     return out;
   }, [evidenceBySession]);
@@ -251,7 +240,12 @@ export default function CaseDetail() {
         <Button
           variant="ghost"
           onClick={() => navigate("/project/cases")}
-          style={{ marginBottom: "var(--adc-space-4)", display: "flex", alignItems: "center", gap: 4 }}
+          style={{
+            marginBottom: "var(--adc-space-4)",
+            display: "flex",
+            alignItems: "center",
+            gap: 4,
+          }}
         >
           <ChevronLeft size={14} /> Casos
         </Button>
@@ -267,9 +261,21 @@ export default function CaseDetail() {
   const c = found.case;
 
   return (
-    <main style={{ padding: "var(--adc-space-6)", display: "flex", flexDirection: "column", gap: "var(--adc-space-5)", maxWidth: 880 }}>
+    <main
+      style={{
+        padding: "var(--adc-space-6)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--adc-space-5)",
+        maxWidth: 880,
+      }}
+    >
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Button variant="ghost" onClick={() => navigate("/project/cases")} style={{ display: "flex", alignItems: "center", gap: 4 }}>
+        <Button
+          variant="ghost"
+          onClick={() => navigate("/project/cases")}
+          style={{ display: "flex", alignItems: "center", gap: 4 }}
+        >
           <ChevronLeft size={14} /> Casos
         </Button>
         <Button
@@ -282,7 +288,9 @@ export default function CaseDetail() {
       </div>
 
       <header style={{ display: "flex", flexDirection: "column", gap: "var(--adc-space-3)" }}>
-        <code style={{ fontSize: "var(--adc-fs-xs)", color: "var(--adc-fg-muted-strong)" }}>{c.id}</code>
+        <code style={{ fontSize: "var(--adc-fs-xs)", color: "var(--adc-fg-muted-strong)" }}>
+          {c.id}
+        </code>
         <h2
           style={{
             margin: 0,
@@ -317,10 +325,16 @@ export default function CaseDetail() {
         <section>
           <SectionTitle>Precondiciones</SectionTitle>
           <Card style={{ padding: "var(--adc-space-4)" }}>
-            <ul style={{ margin: 0, paddingLeft: 20, display: "flex", flexDirection: "column", gap: "var(--adc-space-2)" }}>
-              {c.preconditions.map((p, i) => (
-                <li key={i}>{p}</li>
-              ))}
+            <ul
+              style={{
+                margin: 0,
+                paddingLeft: 20,
+                display: "flex",
+                flexDirection: "column",
+                gap: "var(--adc-space-2)",
+              }}
+            >
+              {c.preconditions.map((p, i) => <li key={i}>{p}</li>)}
             </ul>
           </Card>
         </section>
@@ -338,11 +352,34 @@ export default function CaseDetail() {
             const stepEvidence = evidenceByStep[step.step] ?? [];
             const stepProvisional = provisional[step.step] ?? [];
             return (
-              <Card key={step.step} style={{ padding: "var(--adc-space-4)", display: "flex", gap: "var(--adc-space-4)", alignItems: "flex-start" }}>
-                <div className="adc-num" style={{ minWidth: 28, fontWeight: "var(--adc-fw-bold)", fontSize: "var(--adc-fs-md)", color: "var(--adc-accent-1)" }}>
+              <Card
+                key={step.step}
+                style={{
+                  padding: "var(--adc-space-4)",
+                  display: "flex",
+                  gap: "var(--adc-space-4)",
+                  alignItems: "flex-start",
+                }}
+              >
+                <div
+                  className="adc-num"
+                  style={{
+                    minWidth: 28,
+                    fontWeight: "var(--adc-fw-bold)",
+                    fontSize: "var(--adc-fs-md)",
+                    color: "var(--adc-accent-1)",
+                  }}
+                >
                   {step.step}
                 </div>
-                <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: "var(--adc-space-2)" }}>
+                <div
+                  style={{
+                    flex: 1,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "var(--adc-space-2)",
+                  }}
+                >
                   <div>
                     <div style={{ fontWeight: "var(--adc-fw-bold)", fontSize: "var(--adc-fs-sm)" }}>
                       Acción
@@ -353,23 +390,41 @@ export default function CaseDetail() {
                     <div style={{ fontWeight: "var(--adc-fw-bold)", fontSize: "var(--adc-fs-sm)" }}>
                       Esperado
                     </div>
-                    <div style={{ fontSize: "var(--adc-fs-sm)", color: "var(--adc-fg-muted-strong)" }}>
+                    <div
+                      style={{ fontSize: "var(--adc-fs-sm)", color: "var(--adc-fg-muted-strong)" }}
+                    >
                       {step.expected}
                     </div>
                   </div>
                   {step.data && (
                     <details>
-                      <summary style={{ fontSize: "var(--adc-fs-xs)", color: "var(--adc-fg-muted-strong)", cursor: "pointer" }}>
+                      <summary
+                        style={{
+                          fontSize: "var(--adc-fs-xs)",
+                          color: "var(--adc-fg-muted-strong)",
+                          cursor: "pointer",
+                        }}
+                      >
                         Datos
                       </summary>
-                      <pre className="adc-code" style={{ marginTop: 6, padding: 10, fontSize: "var(--adc-fs-xs)" }}>
+                      <pre
+                        className="adc-code"
+                        style={{ marginTop: 6, padding: 10, fontSize: "var(--adc-fs-xs)" }}
+                      >
                         {JSON.stringify(step.data, null, 2)}
                       </pre>
                     </details>
                   )}
 
                   {(stepEvidence.length > 0 || stepProvisional.length > 0) && (
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--adc-space-3)", marginTop: "var(--adc-space-2)" }}>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexWrap: "wrap",
+                        gap: "var(--adc-space-3)",
+                        marginTop: "var(--adc-space-2)",
+                      }}
+                    >
                       {stepEvidence.map((ev) => {
                         const matchKeyForItem = matchKeyOf(ev.item);
                         const itemLabel = labelOf(ev.item);
@@ -377,9 +432,11 @@ export default function CaseDetail() {
                           <EvidenceCard
                             key={`${ev.sessionId}-${ev.index}`}
                             ev={ev}
-                            caption={`${c.id} · paso ${step.step} · ${formatDateTime(
-                              ev.item.captured_at ?? ev.sessionStartedAt,
-                            )}`}
+                            caption={`${c.id} · paso ${step.step} · ${
+                              formatDateTime(
+                                ev.item.captured_at ?? ev.sessionStartedAt,
+                              )
+                            }`}
                             openLightbox={setLightbox}
                             onDelete={() =>
                               setConfirmDelete({
@@ -388,23 +445,17 @@ export default function CaseDetail() {
                                 step: step.step,
                                 label: itemLabel,
                                 matchKey: matchKeyForItem,
-                              })
-                            }
-                            onEdit={
-                              ev.item.kind === "text"
-                                ? () =>
-                                    setEditText({
-                                      sessionDir: ev.sessionDir,
-                                      caseId: c.id,
-                                      step: step.step,
-                                      capturedAt: ev.item.captured_at,
-                                      content:
-                                        ev.item.kind === "text"
-                                          ? ev.item.content
-                                          : "",
-                                    })
-                                : undefined
-                            }
+                              })}
+                            onEdit={ev.item.kind === "text"
+                              ? () =>
+                                setEditText({
+                                  sessionDir: ev.sessionDir,
+                                  caseId: c.id,
+                                  step: step.step,
+                                  capturedAt: ev.item.captured_at,
+                                  content: ev.item.kind === "text" ? ev.item.content : "",
+                                })
+                              : undefined}
                           />
                         );
                       })}
@@ -421,7 +472,14 @@ export default function CaseDetail() {
                     </div>
                   )}
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", gap: 6, alignItems: "flex-end" }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 6,
+                    alignItems: "flex-end",
+                  }}
+                >
                   <Pill tone="muted">
                     {EVIDENCE_HINT_LABEL[step.evidence_hint ?? "none"]}
                   </Pill>
@@ -439,7 +497,13 @@ export default function CaseDetail() {
             );
           })}
         </div>
-        <p style={{ fontSize: "var(--adc-fs-xs)", color: "var(--adc-fg-muted-strong)", margin: "var(--adc-space-3) 0 0" }}>
+        <p
+          style={{
+            fontSize: "var(--adc-fs-xs)",
+            color: "var(--adc-fg-muted-strong)",
+            margin: "var(--adc-space-3) 0 0",
+          }}
+        >
           {sessionHasThisCase
             ? "Hay una sesión activa con este caso — capturar aquí persiste en .qastor-runs/."
             : "Sin sesión activa, las capturas son provisionales (tempdir). Inicia una sesión desde Casos para persistirlas."}
@@ -449,10 +513,16 @@ export default function CaseDetail() {
       <section>
         <SectionTitle>Acceptance criteria</SectionTitle>
         <Card style={{ padding: "var(--adc-space-4)" }}>
-          <ul style={{ margin: 0, paddingLeft: 20, display: "flex", flexDirection: "column", gap: "var(--adc-space-2)" }}>
-            {c.acceptance_criteria.map((p, i) => (
-              <li key={i}>{p}</li>
-            ))}
+          <ul
+            style={{
+              margin: 0,
+              paddingLeft: 20,
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--adc-space-2)",
+            }}
+          >
+            {c.acceptance_criteria.map((p, i) => <li key={i}>{p}</li>)}
           </ul>
         </Card>
       </section>
@@ -461,7 +531,16 @@ export default function CaseDetail() {
         <section>
           <SectionTitle>Archivos relacionados</SectionTitle>
           <Card style={{ padding: "var(--adc-space-4)" }}>
-            <ul style={{ margin: 0, paddingLeft: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 4 }}>
+            <ul
+              style={{
+                margin: 0,
+                paddingLeft: 0,
+                listStyle: "none",
+                display: "flex",
+                flexDirection: "column",
+                gap: 4,
+              }}
+            >
               {c.related_files!.map((p) => (
                 <li key={p}>
                   <code style={{ fontSize: "var(--adc-fs-xs)" }}>{p}</code>
@@ -522,11 +601,13 @@ export default function CaseDetail() {
           <textarea
             className="adc-textarea"
             value={editText.content}
-            onChange={(e) =>
-              setEditText({ ...editText, content: e.target.value })
-            }
+            onChange={(e) => setEditText({ ...editText, content: e.target.value })}
             rows={10}
-            style={{ width: "100%", fontFamily: "var(--adc-font-mono)", fontSize: "var(--adc-fs-sm)" }}
+            style={{
+              width: "100%",
+              fontFamily: "var(--adc-font-mono)",
+              fontSize: "var(--adc-fs-sm)",
+            }}
             autoFocus
           />
         )}
@@ -594,8 +675,7 @@ function EvidenceCard({
               kind: "text",
               content: ev.item.kind === "text" ? ev.item.content : "",
               caption,
-            })
-          }
+            })}
           icon={<FileTextIcon size={16} />}
           onDelete={onDelete}
           onEdit={onEdit}
@@ -630,7 +710,13 @@ function EvidenceCard({
           icon={<Paperclip size={16} />}
           onDelete={onDelete}
         >
-          <div style={{ padding: "8px 10px", fontSize: "var(--adc-fs-xs)", color: "var(--adc-fg-muted-strong)" }}>
+          <div
+            style={{
+              padding: "8px 10px",
+              fontSize: "var(--adc-fs-xs)",
+              color: "var(--adc-fg-muted-strong)",
+            }}
+          >
             {ev.item.mime ?? "archivo"}
             {ev.item.size_bytes ? ` · ${humanBytes(ev.item.size_bytes)}` : ""}
           </div>
@@ -744,7 +830,9 @@ function ThumbFrame({
           gap: 6,
         }}
       >
-        <span style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", flex: 1 }}>
+        <span
+          style={{ overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis", flex: 1 }}
+        >
           {captionTop}
         </span>
         <StatusIndicator variant={STEP_STATUS_VARIANT[status]}>
@@ -753,6 +841,7 @@ function ThumbFrame({
       </div>
       {(onRemove || onDelete) && (
         <button
+          type="button"
           onClick={(e) => {
             e.stopPropagation();
             (onRemove ?? onDelete)?.();
@@ -836,6 +925,7 @@ function CardFrame({
         </StatusIndicator>
       </div>
       <button
+        type="button"
         onClick={onClick}
         style={{
           flex: 1,
@@ -865,6 +955,7 @@ function CardFrame({
         >
           {onEdit && (
             <button
+              type="button"
               onClick={onEdit}
               aria-label="Editar"
               className="adc-btn adc-btn--ghost"
@@ -875,6 +966,7 @@ function CardFrame({
           )}
           {onDelete && (
             <button
+              type="button"
               onClick={onDelete}
               aria-label="Quitar"
               className="adc-btn adc-btn--ghost"
@@ -921,6 +1013,7 @@ function Lightbox({
       }}
     >
       <button
+        type="button"
         onClick={(e) => {
           e.stopPropagation();
           onClose();
@@ -938,67 +1031,70 @@ function Lightbox({
         <X size={14} />
       </button>
 
-      {state.kind === "image" ? (
-        <img
-          src={state.src}
-          alt={state.caption}
-          onClick={(e) => e.stopPropagation()}
-          style={{
-            maxWidth: "100%",
-            maxHeight: "calc(100vh - 160px)",
-            objectFit: "contain",
-            border: "var(--adc-border-1)",
-            borderRadius: "var(--adc-radius-md)",
-            background: "var(--adc-bg-surface)",
-            cursor: "default",
-          }}
-        />
-      ) : (
-        <div
-          onClick={(e) => e.stopPropagation()}
-          style={{
-            background: "var(--adc-bg-surface)",
-            border: "var(--adc-border-1)",
-            borderRadius: "var(--adc-radius-md)",
-            padding: "var(--adc-space-5)",
-            maxWidth: "min(900px, 100%)",
-            maxHeight: "calc(100vh - 220px)",
-            overflow: "auto",
-            position: "relative",
-            cursor: "default",
-          }}
-        >
-          <button
-            onClick={() => {
-              navigator.clipboard.writeText(state.content).catch(() => {});
-            }}
-            className="adc-btn adc-btn--ghost"
+      {state.kind === "image"
+        ? (
+          <img
+            src={state.src}
+            alt={state.caption}
+            onClick={(e) => e.stopPropagation()}
             style={{
-              position: "sticky",
-              top: 0,
-              float: "right",
-              display: "inline-flex",
-              alignItems: "center",
-              gap: 6,
-              marginLeft: 8,
+              maxWidth: "100%",
+              maxHeight: "calc(100vh - 160px)",
+              objectFit: "contain",
+              border: "var(--adc-border-1)",
+              borderRadius: "var(--adc-radius-md)",
+              background: "var(--adc-bg-surface)",
+              cursor: "default",
+            }}
+          />
+        )
+        : (
+          <div
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              background: "var(--adc-bg-surface)",
+              border: "var(--adc-border-1)",
+              borderRadius: "var(--adc-radius-md)",
+              padding: "var(--adc-space-5)",
+              maxWidth: "min(900px, 100%)",
+              maxHeight: "calc(100vh - 220px)",
+              overflow: "auto",
+              position: "relative",
+              cursor: "default",
             }}
           >
-            <ClipboardCopy size={14} /> Copiar
-          </button>
-          <pre
-            style={{
-              margin: 0,
-              fontFamily: "var(--adc-font-mono)",
-              fontSize: "var(--adc-fs-sm)",
-              whiteSpace: "pre-wrap",
-              wordBreak: "break-word",
-              color: "var(--adc-fg)",
-            }}
-          >
+            <button
+              type="button"
+              onClick={() => {
+                navigator.clipboard.writeText(state.content).catch(() => {});
+              }}
+              className="adc-btn adc-btn--ghost"
+              style={{
+                position: "sticky",
+                top: 0,
+                float: "right",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+                marginLeft: 8,
+              }}
+            >
+              <ClipboardCopy size={14} /> Copiar
+            </button>
+            <pre
+              style={{
+                margin: 0,
+                fontFamily: "var(--adc-font-mono)",
+                fontSize: "var(--adc-fs-sm)",
+                whiteSpace: "pre-wrap",
+                wordBreak: "break-word",
+                color: "var(--adc-fg)",
+              }}
+            >
             {state.content}
-          </pre>
-        </div>
-      )}
+            </pre>
+          </div>
+        )}
 
       <div
         style={{

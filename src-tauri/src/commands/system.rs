@@ -12,7 +12,7 @@ pub fn open_path(path: String) -> CmdResult<()> {
             .arg(&path)
             .spawn()
             .map_err(|e| format!("open failed: {e}"))?;
-        return Ok(());
+        Ok(())
     }
     #[cfg(target_os = "linux")]
     {
@@ -20,7 +20,7 @@ pub fn open_path(path: String) -> CmdResult<()> {
             .arg(&path)
             .spawn()
             .map_err(|e| format!("xdg-open failed: {e}"))?;
-        return Ok(());
+        Ok(())
     }
     #[cfg(target_os = "windows")]
     {
@@ -28,7 +28,7 @@ pub fn open_path(path: String) -> CmdResult<()> {
             .args(["/C", "start", "", &path])
             .spawn()
             .map_err(|e| format!("start failed: {e}"))?;
-        return Ok(());
+        Ok(())
     }
     #[cfg(not(any(target_os = "macos", target_os = "linux", target_os = "windows")))]
     Err("unsupported platform".to_string())

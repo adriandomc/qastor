@@ -19,19 +19,19 @@ export type EvidenceHint =
 export type EvidenceItem =
   | { kind: "screenshot"; path: string; captured_at: string }
   | {
-      kind: "text";
-      content: string;
-      captured_at: string;
-      label?: string;
-    }
+    kind: "text";
+    content: string;
+    captured_at: string;
+    label?: string;
+  }
   | {
-      kind: "file";
-      path: string;
-      filename: string;
-      mime?: string;
-      size_bytes?: number;
-      captured_at: string;
-    };
+    kind: "file";
+    path: string;
+    filename: string;
+    mime?: string;
+    size_bytes?: number;
+    captured_at: string;
+  };
 
 /**
  * Same shape as `EvidenceItem` but with absolute paths (ready for
@@ -40,26 +40,26 @@ export type EvidenceItem =
  */
 export type ResolvedEvidence =
   | {
-      kind: "screenshot";
-      path: string;
-      relative_path: string;
-      captured_at: string;
-    }
+    kind: "screenshot";
+    path: string;
+    relative_path: string;
+    captured_at: string;
+  }
   | {
-      kind: "text";
-      content: string;
-      captured_at: string;
-      label?: string;
-    }
+    kind: "text";
+    content: string;
+    captured_at: string;
+    label?: string;
+  }
   | {
-      kind: "file";
-      path: string;
-      relative_path: string;
-      filename: string;
-      mime?: string;
-      size_bytes?: number;
-      captured_at: string;
-    };
+    kind: "file";
+    path: string;
+    relative_path: string;
+    filename: string;
+    mime?: string;
+    size_bytes?: number;
+    captured_at: string;
+  };
 
 export interface TestStep {
   step: number;
@@ -134,11 +134,11 @@ export interface ProjectRef {
 export type ValidationResult =
   | { kind: "valid"; config: ProjectConfig }
   | {
-      kind: "initializable_existing";
-      case_count: number;
-      detected_modules: string[];
-      has_index_json: boolean;
-    }
+    kind: "initializable_existing";
+    case_count: number;
+    detected_modules: string[];
+    has_index_json: boolean;
+  }
   | { kind: "not_a_project"; reason: string }
   | { kind: "invalid"; error: string };
 

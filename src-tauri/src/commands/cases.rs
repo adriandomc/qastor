@@ -109,8 +109,7 @@ pub fn save_case(
     }
 
     let cfg_path = config_path(&root);
-    let cfg_bytes =
-        std::fs::read(&cfg_path).map_err(|e| format!("read qastor.json: {e}"))?;
+    let cfg_bytes = std::fs::read(&cfg_path).map_err(|e| format!("read qastor.json: {e}"))?;
     let mut config: ProjectConfig =
         serde_json::from_slice(&cfg_bytes).map_err(|e| format!("parse qastor.json: {e}"))?;
 
@@ -134,7 +133,9 @@ pub fn save_case(
     // Register new prefix if not seen before.
     let mut config_changed = false;
     if !config.module_folders.contains_key(&id_prefix) {
-        config.module_folders.insert(id_prefix.clone(), folder.clone());
+        config
+            .module_folders
+            .insert(id_prefix.clone(), folder.clone());
         config_changed = true;
     }
 
@@ -159,7 +160,8 @@ pub fn save_case(
     if let Some(prev) = previous_path {
         if !prev.is_empty() {
             let prev_path = PathBuf::from(prev);
-            if prev_path.is_file() && prev_path.canonicalize().ok() != target_path.canonicalize().ok()
+            if prev_path.is_file()
+                && prev_path.canonicalize().ok() != target_path.canonicalize().ok()
             {
                 let _ = std::fs::remove_file(&prev_path);
             }
@@ -167,8 +169,7 @@ pub fn save_case(
     }
 
     if config_changed {
-        let new_cfg_bytes =
-            serde_json::to_vec_pretty(&config).map_err(|e| e.to_string())?;
+        let new_cfg_bytes = serde_json::to_vec_pretty(&config).map_err(|e| e.to_string())?;
         atomic_write(&cfg_path, &new_cfg_bytes).map_err(|e| e.to_string())?;
     }
 
@@ -226,7 +227,9 @@ fn regenerate_index_inner(root: &Path, config: &ProjectConfig) -> CmdResult<Stri
         by_type.insert(k, 0);
     }
     for lc in &cases {
-        *by_priority.entry(priority_key(&lc.case.priority)).or_default() += 1;
+        *by_priority
+            .entry(priority_key(&lc.case.priority))
+            .or_default() += 1;
         *by_type.entry(type_key(&lc.case.case_type)).or_default() += 1;
     }
 
@@ -255,12 +258,20 @@ fn regenerate_index_inner(root: &Path, config: &ProjectConfig) -> CmdResult<Stri
         .map(|(folder, cs)| {
             let mut sorted = cs.clone();
             sorted.sort_by(|a, b| a.case.id.cmp(&b.case.id));
-            let directory = if folder == "_root" { "./".into() } else { format!("{folder}/") };
+            let directory = if folder == "_root" {
+                "./".into()
+            } else {
+                format!("{folder}/")
+            };
             let entries: Vec<serde_json::Value> = sorted
                 .iter()
                 .map(|lc| {
                     let p = Path::new(&lc.path);
-                    let rel = p.strip_prefix(root).unwrap_or(p).to_string_lossy().to_string();
+                    let rel = p
+                        .strip_prefix(root)
+                        .unwrap_or(p)
+                        .to_string_lossy()
+                        .to_string();
                     json!({
                         "id": lc.case.id,
                         "title": lc.case.title,

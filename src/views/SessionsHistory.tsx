@@ -1,19 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
-import {
-  Alert,
-  Button,
-  Card,
-  EmptyState,
-  StatusIndicator,
-} from "@adc-ui/components";
+import { Alert, Button, Card, EmptyState, StatusIndicator } from "@adc-ui/components";
 import { FileText, Folder } from "lucide-react";
 import { useProjectStore } from "@/lib/store";
 import { api } from "@/lib/tauri";
-import {
-  formatPercent,
-  sessionOutcome,
-  type SessionOverall,
-} from "@/lib/labels";
+import { formatPercent, sessionOutcome, type SessionOverall } from "@/lib/labels";
 import type { SessionRef } from "@/lib/types";
 
 function formatDateTime(iso: string): string {
@@ -37,8 +27,7 @@ function formatTime(iso: string): string {
 
 function formatDuration(startIso: string, endIso: string): string {
   try {
-    const ms =
-      new Date(endIso).getTime() - new Date(startIso).getTime();
+    const ms = new Date(endIso).getTime() - new Date(startIso).getTime();
     if (ms < 0 || !Number.isFinite(ms)) return "";
     const sec = Math.round(ms / 1000);
     if (sec < 60) return `${sec}s`;
@@ -162,9 +151,7 @@ export default function SessionsHistory() {
       >
         <h2 style={{ margin: 0, fontSize: "var(--adc-fs-2xl)" }}>Sesiones</h2>
         <span style={{ fontSize: "var(--adc-fs-sm)", color: "var(--adc-fg-muted-strong)" }}>
-          {loading
-            ? "cargando…"
-            : `${sessions.length} sesión${sessions.length === 1 ? "" : "es"}`}
+          {loading ? "cargando…" : `${sessions.length} sesión${sessions.length === 1 ? "" : "es"}`}
         </span>
       </header>
 
@@ -215,226 +202,230 @@ export default function SessionsHistory() {
         </Alert>
       )}
 
-      {!loading && sessions.length === 0 ? (
-        <EmptyState
-          glyph="∅"
-          title="Sin sesiones todavía"
-          description="Cuando ejecutes una sesión, aparecerá aquí con su reporte y evidencia."
-        />
-      ) : (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            gap: "var(--adc-space-3)",
-          }}
-        >
-          {sessions.map((sess) => {
-            const outcome = sessionOutcome(sess);
-            const total = sess.case_count;
-            const pending = total - sess.passed - sess.failed - sess.blocked;
-            return (
-              <Card
-                key={sess.session_id}
-                style={{
-                  padding: "var(--adc-space-5)",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "var(--adc-space-4)",
-                  borderLeft: `4px solid ${statusBorderColor(outcome.overall)}`,
-                }}
-              >
-                <div
+      {!loading && sessions.length === 0
+        ? (
+          <EmptyState
+            glyph="∅"
+            title="Sin sesiones todavía"
+            description="Cuando ejecutes una sesión, aparecerá aquí con su reporte y evidencia."
+          />
+        )
+        : (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "var(--adc-space-3)",
+            }}
+          >
+            {sessions.map((sess) => {
+              const outcome = sessionOutcome(sess);
+              const total = sess.case_count;
+              const pending = total - sess.passed - sess.failed - sess.blocked;
+              return (
+                <Card
+                  key={sess.session_id}
                   style={{
+                    padding: "var(--adc-space-5)",
                     display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "flex-start",
+                    flexDirection: "column",
                     gap: "var(--adc-space-4)",
-                    flexWrap: "wrap",
+                    borderLeft: `4px solid ${statusBorderColor(outcome.overall)}`,
                   }}
                 >
-                  <div style={{ minWidth: 0, flex: 1 }}>
-                    <div
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "var(--adc-space-3)",
-                        marginBottom: 4,
-                        flexWrap: "wrap",
-                      }}
-                    >
-                      <StatusIndicator variant={outcome.variant}>
-                        {outcome.label}
-                      </StatusIndicator>
-                      <span
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "flex-start",
+                      gap: "var(--adc-space-4)",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <div style={{ minWidth: 0, flex: 1 }}>
+                      <div
                         style={{
-                          fontSize: "var(--adc-fs-md)",
-                          fontWeight: "var(--adc-fw-bold)",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "var(--adc-space-3)",
+                          marginBottom: 4,
+                          flexWrap: "wrap",
                         }}
                       >
-                        {formatDateTime(sess.started_at)}
-                      </span>
+                        <StatusIndicator variant={outcome.variant}>
+                          {outcome.label}
+                        </StatusIndicator>
+                        <span
+                          style={{
+                            fontSize: "var(--adc-fs-md)",
+                            fontWeight: "var(--adc-fw-bold)",
+                          }}
+                        >
+                          {formatDateTime(sess.started_at)}
+                        </span>
+                      </div>
+                      <div
+                        style={{
+                          fontSize: "var(--adc-fs-sm)",
+                          color: "var(--adc-fg-muted-strong)",
+                          display: "flex",
+                          flexWrap: "wrap",
+                          gap: "var(--adc-space-3)",
+                          alignItems: "center",
+                        }}
+                      >
+                        {sess.ended_at
+                          ? (
+                            <>
+                              <span>
+                                <span style={{ opacity: 0.7 }}>terminó</span>{" "}
+                                {formatTime(sess.ended_at)}
+                              </span>
+                              <span style={{ opacity: 0.45 }}>·</span>
+                              <span>
+                                <span style={{ opacity: 0.7 }}>duró</span>{" "}
+                                {formatDuration(sess.started_at, sess.ended_at) || "—"}
+                              </span>
+                            </>
+                          )
+                          : (
+                            <span>
+                              <span style={{ opacity: 0.7 }}>iniciada</span>{" "}
+                              {formatRelative(sess.started_at)}
+                            </span>
+                          )}
+                      </div>
+                    </div>
+                    <div style={{ textAlign: "right" }}>
+                      <div
+                        style={{
+                          fontSize: "var(--adc-fs-xl)",
+                          fontWeight: "var(--adc-fw-extrabold)",
+                          color: "var(--adc-text)",
+                          lineHeight: 1,
+                        }}
+                      >
+                        {formatPercent(outcome.passRate)}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: "var(--adc-fs-sm)",
+                          color: "var(--adc-fg-muted-strong)",
+                          marginTop: 2,
+                        }}
+                      >
+                        pasaron
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Stacked progress bar: pass / fail / blocked / pending */}
+                  <div>
+                    <div
+                      className="adc-bar"
+                      style={{
+                        display: "flex",
+                        overflow: "hidden",
+                        background: "rgba(95,112,84,0.18)",
+                        height: 10,
+                      }}
+                    >
+                      {sess.passed > 0 && (
+                        <span
+                          style={{
+                            width: `${(sess.passed / total) * 100}%`,
+                            background: "var(--adc-accent-2)",
+                            boxShadow: "inset 0 0 0 1px var(--adc-surface)",
+                          }}
+                        />
+                      )}
+                      {sess.failed > 0 && (
+                        <span
+                          style={{
+                            width: `${(sess.failed / total) * 100}%`,
+                            background: "var(--adc-error)",
+                            boxShadow: "inset 0 0 0 1px var(--adc-surface)",
+                          }}
+                        />
+                      )}
+                      {sess.blocked > 0 && (
+                        <span
+                          style={{
+                            width: `${(sess.blocked / total) * 100}%`,
+                            background: "var(--adc-warning)",
+                            boxShadow: "inset 0 0 0 1px var(--adc-surface)",
+                          }}
+                        />
+                      )}
                     </div>
                     <div
                       style={{
-                        fontSize: "var(--adc-fs-sm)",
-                        color: "var(--adc-fg-muted-strong)",
                         display: "flex",
                         flexWrap: "wrap",
-                        gap: "var(--adc-space-3)",
+                        gap: "var(--adc-space-4)",
+                        marginTop: 10,
+                        fontSize: "var(--adc-fs-sm)",
+                        color: "var(--adc-fg)",
                         alignItems: "center",
                       }}
                     >
-                      {sess.ended_at ? (
-                        <>
-                          <span>
-                            <span style={{ opacity: 0.7 }}>terminó</span>{" "}
-                            {formatTime(sess.ended_at)}
-                          </span>
-                          <span style={{ opacity: 0.45 }}>·</span>
-                          <span>
-                            <span style={{ opacity: 0.7 }}>duró</span>{" "}
-                            {formatDuration(sess.started_at, sess.ended_at) || "—"}
-                          </span>
-                        </>
-                      ) : (
-                        <span>
-                          <span style={{ opacity: 0.7 }}>iniciada</span>{" "}
-                          {formatRelative(sess.started_at)}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  <div style={{ textAlign: "right" }}>
-                    <div
-                      style={{
-                        fontSize: "var(--adc-fs-xl)",
-                        fontWeight: "var(--adc-fw-extrabold)",
-                        color: "var(--adc-text)",
-                        lineHeight: 1,
-                      }}
-                    >
-                      {formatPercent(outcome.passRate)}
-                    </div>
-                    <div
-                      style={{
-                        fontSize: "var(--adc-fs-sm)",
-                        color: "var(--adc-fg-muted-strong)",
-                        marginTop: 2,
-                      }}
-                    >
-                      pasaron
-                    </div>
-                  </div>
-                </div>
-
-                {/* Stacked progress bar: pass / fail / blocked / pending */}
-                <div>
-                  <div
-                    className="adc-bar"
-                    style={{
-                      display: "flex",
-                      overflow: "hidden",
-                      background: "rgba(95,112,84,0.18)",
-                      height: 10,
-                    }}
-                  >
-                    {sess.passed > 0 && (
-                      <span
-                        style={{
-                          width: `${(sess.passed / total) * 100}%`,
-                          background: "var(--adc-accent-2)",
-                          boxShadow: "inset 0 0 0 1px var(--adc-surface)",
-                        }}
-                      />
-                    )}
-                    {sess.failed > 0 && (
-                      <span
-                        style={{
-                          width: `${(sess.failed / total) * 100}%`,
-                          background: "var(--adc-error)",
-                          boxShadow: "inset 0 0 0 1px var(--adc-surface)",
-                        }}
-                      />
-                    )}
-                    {sess.blocked > 0 && (
-                      <span
-                        style={{
-                          width: `${(sess.blocked / total) * 100}%`,
-                          background: "var(--adc-warning)",
-                          boxShadow: "inset 0 0 0 1px var(--adc-surface)",
-                        }}
-                      />
-                    )}
-                  </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      gap: "var(--adc-space-4)",
-                      marginTop: 10,
-                      fontSize: "var(--adc-fs-sm)",
-                      color: "var(--adc-fg)",
-                      alignItems: "center",
-                    }}
-                  >
-                    <StatusIndicator variant="passed">
-                      {sess.passed} pasaron
-                    </StatusIndicator>
-                    <StatusIndicator variant="failed">
-                      {sess.failed} fallaron
-                    </StatusIndicator>
-                    <StatusIndicator variant="blocked">
-                      {sess.blocked} bloqueados
-                    </StatusIndicator>
-                    {pending > 0 && (
-                      <StatusIndicator variant="pending">
-                        {pending} pendientes
+                      <StatusIndicator variant="passed">
+                        {sess.passed} pasaron
                       </StatusIndicator>
-                    )}
-                    <span
-                      style={{
-                        marginLeft: "auto",
-                        color: "var(--adc-fg-muted-strong)",
-                      }}
-                    >
-                      {total} caso{total === 1 ? "" : "s"} · completado{" "}
-                      {formatPercent(outcome.completion)}
-                    </span>
+                      <StatusIndicator variant="failed">
+                        {sess.failed} fallaron
+                      </StatusIndicator>
+                      <StatusIndicator variant="blocked">
+                        {sess.blocked} bloqueados
+                      </StatusIndicator>
+                      {pending > 0 && (
+                        <StatusIndicator variant="pending">
+                          {pending} pendientes
+                        </StatusIndicator>
+                      )}
+                      <span
+                        style={{
+                          marginLeft: "auto",
+                          color: "var(--adc-fg-muted-strong)",
+                        }}
+                      >
+                        {total} caso{total === 1 ? "" : "s"} · completado{" "}
+                        {formatPercent(outcome.completion)}
+                      </span>
+                    </div>
                   </div>
-                </div>
 
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    flexWrap: "wrap",
-                    gap: "var(--adc-space-2)",
-                  }}
-                >
-                  <Button
-                    variant="ghost"
-                    onClick={() => openSessionDir(sess)}
-                    disabled={busyId === sess.session_id}
-                    style={{ display: "flex", alignItems: "center", gap: 6 }}
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      flexWrap: "wrap",
+                      gap: "var(--adc-space-2)",
+                    }}
                   >
-                    <Folder size={14} /> Abrir carpeta
-                  </Button>
-                  <Button
-                    variant="primary"
-                    onClick={() => openReport(sess)}
-                    disabled={busyId === sess.session_id}
-                    style={{ display: "flex", alignItems: "center", gap: 6 }}
-                  >
-                    <FileText size={14} />
-                    {busyId === sess.session_id ? "Generando…" : "Ver reporte"}
-                  </Button>
-                </div>
-              </Card>
-            );
-          })}
-        </div>
-      )}
+                    <Button
+                      variant="ghost"
+                      onClick={() => openSessionDir(sess)}
+                      disabled={busyId === sess.session_id}
+                      style={{ display: "flex", alignItems: "center", gap: 6 }}
+                    >
+                      <Folder size={14} /> Abrir carpeta
+                    </Button>
+                    <Button
+                      variant="primary"
+                      onClick={() => openReport(sess)}
+                      disabled={busyId === sess.session_id}
+                      style={{ display: "flex", alignItems: "center", gap: 6 }}
+                    >
+                      <FileText size={14} />
+                      {busyId === sess.session_id ? "Generando…" : "Ver reporte"}
+                    </Button>
+                  </div>
+                </Card>
+              );
+            })}
+          </div>
+        )}
     </main>
   );
 }

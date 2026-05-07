@@ -12,7 +12,6 @@ pub struct ActiveSession(pub Mutex<Option<ActiveSessionState>>);
 pub struct ActiveSessionState {
     pub session: Session,
     pub session_dir: PathBuf,
-    pub project_root: PathBuf,
 }
 
 impl ActiveSession {

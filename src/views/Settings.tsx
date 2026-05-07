@@ -104,7 +104,15 @@ export default function Settings() {
   const suiteEntries = Object.entries(project.suites);
 
   return (
-    <main style={{ padding: "var(--adc-space-6)", display: "flex", flexDirection: "column", gap: "var(--adc-space-5)", maxWidth: 880 }}>
+    <main
+      style={{
+        padding: "var(--adc-space-6)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--adc-space-5)",
+        maxWidth: 880,
+      }}
+    >
       <h2 style={{ margin: 0, fontSize: "var(--adc-fs-2xl)" }}>Settings</h2>
 
       {error && <Alert tone="error" title="Error">{error}</Alert>}
@@ -114,61 +122,89 @@ export default function Settings() {
         <SectionHeader
           title="Suites"
           right={
-            <Button variant="primary" onClick={openCreate} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <Button
+              variant="primary"
+              onClick={openCreate}
+              style={{ display: "flex", alignItems: "center", gap: 6 }}
+            >
               <Plus size={14} /> Nueva suite
             </Button>
           }
         />
-        {suiteEntries.length === 0 ? (
-          <Card style={{ padding: "var(--adc-space-4)", color: "var(--adc-fg-muted-strong)" }}>
-            Sin suites todavía. Crea una para agrupar casos y ejecutarlos juntos desde la pestaña Casos.
-          </Card>
-        ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: "var(--adc-space-3)" }}>
-            {suiteEntries.map(([name, ids]) => (
-              <Card key={name} style={{ padding: "var(--adc-space-4)", display: "flex", justifyContent: "space-between", alignItems: "center", gap: "var(--adc-space-3)" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "var(--adc-space-3)" }}>
-                  <Pill tone="ok">{name}</Pill>
-                  <span style={{ fontSize: "var(--adc-fs-xs)", color: "var(--adc-fg-muted-strong)" }}>
-                    {ids.length} caso{ids.length === 1 ? "" : "s"}
-                  </span>
-                </div>
-                <div style={{ display: "flex", gap: "var(--adc-space-2)" }}>
-                  <Button variant="ghost" onClick={() => openEdit(name)} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                    <Pencil size={14} /> Editar
-                  </Button>
-                  <Button variant="danger" onClick={() => setConfirmDelete(name)} style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                    <Trash2 size={14} /> Borrar
-                  </Button>
-                </div>
-              </Card>
-            ))}
-          </div>
-        )}
+        {suiteEntries.length === 0
+          ? (
+            <Card style={{ padding: "var(--adc-space-4)", color: "var(--adc-fg-muted-strong)" }}>
+              Sin suites todavía. Crea una para agrupar casos y ejecutarlos juntos desde la pestaña
+              Casos.
+            </Card>
+          )
+          : (
+            <div style={{ display: "flex", flexDirection: "column", gap: "var(--adc-space-3)" }}>
+              {suiteEntries.map(([name, ids]) => (
+                <Card
+                  key={name}
+                  style={{
+                    padding: "var(--adc-space-4)",
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    gap: "var(--adc-space-3)",
+                  }}
+                >
+                  <div style={{ display: "flex", alignItems: "center", gap: "var(--adc-space-3)" }}>
+                    <Pill tone="ok">{name}</Pill>
+                    <span
+                      style={{ fontSize: "var(--adc-fs-xs)", color: "var(--adc-fg-muted-strong)" }}
+                    >
+                      {ids.length} caso{ids.length === 1 ? "" : "s"}
+                    </span>
+                  </div>
+                  <div style={{ display: "flex", gap: "var(--adc-space-2)" }}>
+                    <Button
+                      variant="ghost"
+                      onClick={() => openEdit(name)}
+                      style={{ display: "flex", alignItems: "center", gap: 6 }}
+                    >
+                      <Pencil size={14} /> Editar
+                    </Button>
+                    <Button
+                      variant="danger"
+                      onClick={() => setConfirmDelete(name)}
+                      style={{ display: "flex", alignItems: "center", gap: 6 }}
+                    >
+                      <Trash2 size={14} /> Borrar
+                    </Button>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          )}
       </section>
 
       <section>
         <SectionHeader title="Mapping ID prefix → carpeta" />
         <Card style={{ padding: "var(--adc-space-4)" }}>
-          {Object.keys(project.module_folders).length > 0 ? (
-            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "var(--adc-fs-sm)" }}>
-              <tbody>
-                {Object.entries(project.module_folders).map(([prefix, folder]) => (
-                  <tr key={prefix}>
-                    <td style={{ padding: "4px 8px 4px 0", fontWeight: "var(--adc-fw-bold)" }}>
-                      <code>{prefix}</code>
-                    </td>
-                    <td style={{ padding: "4px 0", color: "var(--adc-fg-muted-strong)" }}>→</td>
-                    <td style={{ padding: "4px 0 4px 8px" }}>
-                      <code>{folder}/</code>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <span style={{ color: "var(--adc-fg-muted-strong)" }}>(vacío)</span>
-          )}
+          {Object.keys(project.module_folders).length > 0
+            ? (
+              <table
+                style={{ width: "100%", borderCollapse: "collapse", fontSize: "var(--adc-fs-sm)" }}
+              >
+                <tbody>
+                  {Object.entries(project.module_folders).map(([prefix, folder]) => (
+                    <tr key={prefix}>
+                      <td style={{ padding: "4px 8px 4px 0", fontWeight: "var(--adc-fw-bold)" }}>
+                        <code>{prefix}</code>
+                      </td>
+                      <td style={{ padding: "4px 0", color: "var(--adc-fg-muted-strong)" }}>→</td>
+                      <td style={{ padding: "4px 0 4px 8px" }}>
+                        <code>{folder}/</code>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )
+            : <span style={{ color: "var(--adc-fg-muted-strong)" }}>(vacío)</span>}
         </Card>
         <p
           style={{
@@ -185,7 +221,12 @@ export default function Settings() {
         <SectionHeader
           title="Index"
           right={
-            <Button variant="secondary" onClick={handleReindex} disabled={busy} style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <Button
+              variant="secondary"
+              onClick={handleReindex}
+              disabled={busy}
+              style={{ display: "flex", alignItems: "center", gap: 6 }}
+            >
               <RefreshCw size={14} /> Regenerar index.json
             </Button>
           }
@@ -198,8 +239,9 @@ export default function Settings() {
             lineHeight: "var(--adc-lh-body)",
           }}
         >
-          <code>index.json</code> se regenera automáticamente al crear, editar o borrar casos.
-          Útil para CI/scripts externos. Click en "Regenerar" si lo editaste a mano.
+          <code>index.json</code>{" "}
+          se regenera automáticamente al crear, editar o borrar casos. Útil para CI/scripts
+          externos. Click en "Regenerar" si lo editaste a mano.
         </Card>
       </section>
 
@@ -221,7 +263,8 @@ export default function Settings() {
               <input
                 className="adc-input"
                 value={editor.name}
-                onChange={(e) => setEditor({ ...editor, name: e.target.value })}
+                onChange={(e) =>
+                  setEditor({ ...editor, name: e.target.value })}
                 placeholder="ej. smoke"
                 autoFocus
               />
@@ -267,7 +310,14 @@ function SectionHeader({
   right?: React.ReactNode;
 }) {
   return (
-    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "var(--adc-space-3)" }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        marginBottom: "var(--adc-space-3)",
+      }}
+    >
       <h3
         style={{
           margin: 0,
@@ -330,40 +380,60 @@ function SuiteCaseSelector({
           background: "var(--adc-bg-surface)",
         }}
       >
-        {filtered.length === 0 ? (
-          <div style={{ padding: 12, fontSize: "var(--adc-fs-xs)", color: "var(--adc-fg-muted-strong)" }}>
-            Sin coincidencias.
-          </div>
-        ) : (
-          filtered.map((lc) => (
-            <label
-              key={lc.case.id}
-              className="adc-check-row"
+        {filtered.length === 0
+          ? (
+            <div
               style={{
-                display: "flex",
-                width: "100%",
-                padding: "6px 8px",
-                fontSize: "var(--adc-fs-sm)",
+                padding: 12,
+                fontSize: "var(--adc-fs-xs)",
+                color: "var(--adc-fg-muted-strong)",
               }}
             >
-              <Checkbox
-                checked={selected.has(lc.case.id)}
-                onChange={() => toggle(lc.case.id)}
-              />
-              <code style={{ fontSize: "var(--adc-fs-xs)" }}>{lc.case.id}</code>
-              <span style={{ flex: 1, overflow: "hidden", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
-                {lc.case.title}
-              </span>
-            </label>
-          ))
-        )}
+              Sin coincidencias.
+            </div>
+          )
+          : (
+            filtered.map((lc) => (
+              <label
+                key={lc.case.id}
+                className="adc-check-row"
+                style={{
+                  display: "flex",
+                  width: "100%",
+                  padding: "6px 8px",
+                  fontSize: "var(--adc-fs-sm)",
+                }}
+              >
+                <Checkbox
+                  checked={selected.has(lc.case.id)}
+                  onChange={() => toggle(lc.case.id)}
+                />
+                <code style={{ fontSize: "var(--adc-fs-xs)" }}>{lc.case.id}</code>
+                <span
+                  style={{
+                    flex: 1,
+                    overflow: "hidden",
+                    whiteSpace: "nowrap",
+                    textOverflow: "ellipsis",
+                  }}
+                >
+                  {lc.case.title}
+                </span>
+              </label>
+            ))
+          )}
       </div>
       {selected.size > 0 && (
         <div style={{ display: "flex", flexWrap: "wrap", gap: 4, marginTop: 6 }}>
           {Array.from(selected).map((id) => (
             <span key={id} className="adc-chip">
               <code style={{ fontSize: "var(--adc-fs-xs)" }}>{id}</code>
-              <button className="adc-chip__x" onClick={() => toggle(id)} aria-label={`Quitar ${id}`}>
+              <button
+                type="button"
+                className="adc-chip__x"
+                onClick={() => toggle(id)}
+                aria-label={`Quitar ${id}`}
+              >
                 <X size={10} />
               </button>
             </span>

@@ -1,0 +1,163 @@
+/* ============================================================
+   ADC Design System — tokens
+   Drop this in your project and import once at the root.
+   ============================================================ */
+
+:root {
+  /* Palette */
+  --adc-primary: #9cc69b;
+  --adc-secondary: #bde4a8;
+  --adc-tertiary: #d7f2ba;
+  --adc-accent-1: #5f7054; /* deep moss */
+  --adc-accent-2: #79b4a9; /* sea foam */
+  --adc-error: #ca5e5e;
+  --adc-warning: #dbc665;
+  --adc-text: #253207;
+  --adc-link: #4e5e26;
+  --adc-white: #f3fadf; /* off-white green — system "white" surface */
+  --adc-surface: #f3fadf; /* alias of --adc-white */
+
+  /* Surfaces (semantic — prefer these in components) */
+  --adc-bg-app: var(--adc-tertiary);
+  --adc-bg-card: var(--adc-primary);
+  --adc-bg-surface: var(--adc-surface);
+  --adc-bg-bar: var(--adc-accent-1);
+  --adc-bg-pill: var(--adc-accent-2);
+  --adc-fg: var(--adc-text);
+  --adc-fg-muted: var(--adc-accent-1);
+  /* Stronger muted for metadata that sits on top of `--adc-bg-card` (sage).
+     The plain `--adc-fg-muted` (deep moss) doesn't pull enough contrast off
+     the sage card surface for comfortable reading; this variant pushes the
+     hue 65 % toward `--adc-text` (very dark moss) using `color-mix` so it
+     stays in the same family but reads cleanly. Keeps the original muted
+     untouched — use this where contrast suffers. */
+  --adc-fg-muted-strong: color-mix(in srgb, var(--adc-accent-1) 35%, var(--adc-text) 65%);
+  --adc-fg-on-bar: var(--adc-surface);
+  --adc-border: var(--adc-accent-1);
+
+  /* Type */
+  --adc-font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --adc-font-ui: "Inter", system-ui, -apple-system, sans-serif;
+
+  --adc-fs-xs: 0.75rem;
+  --adc-fs-sm: 0.875rem;
+  --adc-fs-md: 1rem;
+  --adc-fs-lg: 1.125rem;
+  --adc-fs-xl: 1.25rem;
+  --adc-fs-2xl: 1.5rem;
+  --adc-fs-3xl: 2rem;
+  --adc-fs-4xl: 2.5rem;
+
+  --adc-fw-regular: 400;
+  --adc-fw-bold: 700;
+  --adc-fw-extrabold: 800;
+
+  --adc-lh-tight: 1.0;
+  --adc-lh-snug: 1.3;
+  --adc-lh-body: 1.6;
+
+  /* Control sizes — buttons & inputs share heights so they line up in a row */
+  --adc-h-sm: 28px;
+  --adc-h-md: 34px; /* default for Button, Input, Select */
+  --adc-h-lg: 42px;
+  --adc-h-icon: 32px; /* square icon-only buttons */
+
+  /* Spacing */
+  --adc-space-1: 4px;
+  --adc-space-2: 8px;
+  --adc-space-3: 10px;
+  --adc-space-4: 12px;
+  --adc-space-5: 15px;
+  --adc-space-6: 20px;
+  --adc-space-7: 24px;
+  --adc-space-8: 32px;
+  --adc-space-9: 48px;
+
+  /* Radii */
+  --adc-radius-sm: 5px;
+  --adc-radius-md: 6px;
+  --adc-radius-pill: 999px;
+
+  /* Borders — single 1px outline. The system uses borders, not shadows. */
+  --adc-border-1: 1px solid var(--adc-border);
+  --adc-border-2: 2px solid var(--adc-border);
+
+  /* Motion */
+  --adc-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --adc-dur-fast: 120ms;
+  --adc-dur: 200ms;
+  --adc-dur-slow: 300ms;
+
+  /* Breakpoints */
+  --adc-bp-mobile: 480px;
+  --adc-bp-tablet: 768px;
+  --adc-bp-desktop: 1200px;
+}
+
+/* ============================================================
+   Optional: base reset for the look out of the box.
+   Keep or remove — your call.
+   ============================================================ */
+html {
+  font-family: var(--adc-font-mono);
+  color: var(--adc-fg);
+  background: var(--adc-bg-app);
+  font-size: 14px;
+}
+@media (min-width: 768px) {
+  html {
+    font-size: 15px;
+  }
+}
+@media (min-width: 1200px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+body {
+  font-family: var(--adc-font-mono);
+  line-height: var(--adc-lh-body);
+  margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+  font-family: var(--adc-font-mono);
+  font-weight: var(--adc-fw-bold);
+  line-height: var(--adc-lh-snug);
+  letter-spacing: -0.01em;
+}
+h1 {
+  font-size: var(--adc-fs-3xl);
+}
+@media (min-width: 768px) {
+  h1 {
+    font-size: var(--adc-fs-4xl);
+  }
+}
+h2 {
+  font-size: var(--adc-fs-2xl);
+}
+h3 {
+  font-size: var(--adc-fs-xl);
+}
+h4 {
+  font-size: var(--adc-fs-lg);
+}
+
+a {
+  color: var(--adc-link);
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 2px;
+  transition: color var(--adc-dur) var(--adc-ease);
+}
+a:hover {
+  color: var(--adc-accent-1);
+}
+
+:focus-visible {
+  outline: 2px solid var(--adc-accent-2);
+  outline-offset: 2px;
+}

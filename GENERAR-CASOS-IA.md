@@ -1,9 +1,8 @@
 # qastor — Referencia para generar casos de prueba con IA
 
-Documento autocontenido para pegar a un modelo (Claude, GPT, etc.) junto con la
-descripción de tu plataforma. La IA debe devolver casos de prueba **válidos
-contra el JSON Schema de qastor**, listos para guardar como archivos `.json`
-dentro del proyecto.
+Documento autocontenido para pegar a un modelo (Claude, GPT, etc.) junto con la descripción de tu
+plataforma. La IA debe devolver casos de prueba **válidos contra el JSON Schema de qastor**, listos
+para guardar como archivos `.json` dentro del proyecto.
 
 ---
 
@@ -11,18 +10,18 @@ dentro del proyecto.
 
 qastor opera sobre tres entidades en disco:
 
-| Entidad         | Archivo / ubicación                          | Propósito                                    |
-| --------------- | -------------------------------------------- | -------------------------------------------- |
-| Proyecto        | `qastor.json` en la raíz                     | Metadatos del proyecto, módulos, suites      |
-| Caso de prueba  | `<modulo>/TC-<MOD>-<NUM>.json` (uno por arch.) | Definición declarativa de un caso manual    |
-| Índice (opcional) | `index.json` en la raíz                    | Resumen agregado de todos los casos          |
+| Entidad           | Archivo / ubicación                            | Propósito                                |
+| ----------------- | ---------------------------------------------- | ---------------------------------------- |
+| Proyecto          | `qastor.json` en la raíz                       | Metadatos del proyecto, módulos, suites  |
+| Caso de prueba    | `<modulo>/TC-<MOD>-<NUM>.json` (uno por arch.) | Definición declarativa de un caso manual |
+| Índice (opcional) | `index.json` en la raíz                        | Resumen agregado de todos los casos      |
 
 ---
 
 ## 2. Esquema de un caso de prueba (fuente de verdad)
 
-JSON Schema 2020-12. **Todos los campos `required` deben estar presentes y
-ningún campo extra está permitido (`additionalProperties: false`).**
+JSON Schema 2020-12. **Todos los campos `required` deben estar presentes y ningún campo extra está
+permitido (`additionalProperties: false`).**
 
 ```json
 {
@@ -64,8 +63,8 @@ ningún campo extra está permitido (`additionalProperties: false`).**
         "required": ["step", "action", "expected"],
         "additionalProperties": false,
         "properties": {
-          "step":     { "type": "integer", "minimum": 1 },
-          "action":   { "type": "string" },
+          "step": { "type": "integer", "minimum": 1 },
+          "action": { "type": "string" },
           "expected": { "type": "string" },
           "evidence_hint": {
             "type": "string",
@@ -119,16 +118,15 @@ ningún campo extra está permitido (`additionalProperties: false`).**
 
 ### Convención de IDs
 
-`TC-{MODULO}-{NNN}` con `NNN` de 3 dígitos. Ejemplos: `TC-AUTH-001`,
-`TC-POS-014`, `TC-INV-007`. El prefijo `{MODULO}` se usa para enrutar el archivo
-a su carpeta (ver §4).
+`TC-{MODULO}-{NNN}` con `NNN` de 3 dígitos. Ejemplos: `TC-AUTH-001`, `TC-POS-014`, `TC-INV-007`. El
+prefijo `{MODULO}` se usa para enrutar el archivo a su carpeta (ver §4).
 
 ---
 
 ## 3. Esquema del proyecto (`qastor.json`)
 
-Se crea automáticamente al inicializar un proyecto desde la app, pero la IA
-puede sugerir su contenido si quiere proponer estructura.
+Se crea automáticamente al inicializar un proyecto desde la app, pero la IA puede sugerir su
+contenido si quiere proponer estructura.
 
 ```json
 {
@@ -137,25 +135,24 @@ puede sugerir su contenido si quiere proponer estructura.
   "created_at": "2026-05-06T10:00:00Z",
   "module_folders": {
     "AUTH": "auth",
-    "POS":  "ventas",
+    "POS": "ventas",
     "CAJA": "caja",
-    "INV":  "inventario"
+    "INV": "inventario"
   },
   "suites": {
-    "smoke":           ["TC-AUTH-003", "TC-CAJA-001", "TC-POS-001"],
+    "smoke": ["TC-AUTH-003", "TC-CAJA-001", "TC-POS-001"],
     "release-blocker": ["TC-POS-001", "TC-POS-004", "TC-CAJA-003"]
   },
   "default_session_dir": ".qastor-runs"
 }
 ```
 
-- `module_folders` mapea **prefijo de ID** → carpeta relativa. Si un caso tiene
-  `id: TC-POS-001` y `module_folders["POS"] = "ventas"`, el archivo debe ir en
-  `ventas/TC-POS-001-...json`.
-- `suites` agrupa IDs para correr juntos (ej. `smoke`, `release-blocker`,
-  `nightly`). Las suites son arrays de IDs, no de paths.
-- Si `module_folders` no contiene el prefijo, qastor cae a una carpeta derivada
-  del `module` del caso (la primera parte antes del punto).
+- `module_folders` mapea **prefijo de ID** → carpeta relativa. Si un caso tiene `id: TC-POS-001` y
+  `module_folders["POS"] = "ventas"`, el archivo debe ir en `ventas/TC-POS-001-...json`.
+- `suites` agrupa IDs para correr juntos (ej. `smoke`, `release-blocker`, `nightly`). Las suites son
+  arrays de IDs, no de paths.
+- Si `module_folders` no contiene el prefijo, qastor cae a una carpeta derivada del `module` del
+  caso (la primera parte antes del punto).
 
 ---
 
@@ -174,8 +171,7 @@ proyecto/
 └── .qastor-runs/            ← sesiones de ejecución (lo crea la app)
 ```
 
-Nombre de archivo recomendado: `<id>-<slug-corto>.json` en kebab-case, sin
-acentos.
+Nombre de archivo recomendado: `<id>-<slug-corto>.json` en kebab-case, sin acentos.
 
 ---
 

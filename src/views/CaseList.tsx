@@ -1,14 +1,10 @@
 import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Alert, Button, Checkbox, EmptyState, Pill, Table } from "@adc-ui/components";
-import { Plus, Play, Search } from "lucide-react";
+import { Play, Plus, Search } from "lucide-react";
 import { useCasesStore, useProjectStore, useSessionStore } from "@/lib/store";
 import { api } from "@/lib/tauri";
-import {
-  PRIORITY_LABEL,
-  TYPE_LABEL,
-  TYPE_LABEL_SHORT,
-} from "@/lib/labels";
+import { PRIORITY_LABEL, TYPE_LABEL, TYPE_LABEL_SHORT } from "@/lib/labels";
 import type { LoadedCase, Priority, TestType } from "@/lib/types";
 
 export default function CaseList() {
@@ -109,11 +105,18 @@ export default function CaseList() {
     }
   }
 
-  const allVisibleSelected =
-    filtered.length > 0 && filtered.every((lc) => selectedIds.has(lc.case.id));
+  const allVisibleSelected = filtered.length > 0 &&
+    filtered.every((lc) => selectedIds.has(lc.case.id));
 
   return (
-    <main style={{ padding: "var(--adc-space-6)", display: "flex", flexDirection: "column", gap: "var(--adc-space-5)" }}>
+    <main
+      style={{
+        padding: "var(--adc-space-6)",
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--adc-space-5)",
+      }}
+    >
       <header style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <h2 style={{ margin: 0, fontSize: "var(--adc-fs-2xl)" }}>Casos</h2>
         <div style={{ display: "flex", alignItems: "center", gap: "var(--adc-space-3)" }}>
@@ -242,6 +245,7 @@ export default function CaseList() {
           </select>
         )}
         <button
+          type="button"
           onClick={() => setSelectedIds(new Set())}
           disabled={selectedIds.size === 0}
           className="adc-btn adc-btn--ghost"
@@ -259,71 +263,73 @@ export default function CaseList() {
         </Button>
       </div>
 
-      {!loading && cases.length === 0 ? (
-        <EmptyState
-          glyph="∅"
-          title="Este proyecto no tiene casos todavía"
-          description="Crea uno desde el editor o agrega archivos JSON con prefijo TC-."
-        />
-      ) : (
-        <Table>
-          <thead>
-            <tr>
-              <th style={{ width: 32 }}>
-                <Checkbox
-                  checked={allVisibleSelected}
-                  onChange={() => toggleAllVisible()}
-                  aria-label="Seleccionar todos los visibles"
-                />
-              </th>
-              <th style={{ width: 130 }}>ID</th>
-              <th>Título</th>
-              <th style={{ width: 160 }}>Módulo</th>
-              <th style={{ width: 110 }}>Prioridad</th>
-              <th style={{ width: 100 }}>Tipo</th>
-              <th style={{ width: 60, textAlign: "right" }}>Min</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((lc) => (
-              <tr key={lc.case.id} style={{ cursor: "pointer" }}>
-                <td onClick={(e) => e.stopPropagation()}>
+      {!loading && cases.length === 0
+        ? (
+          <EmptyState
+            glyph="∅"
+            title="Este proyecto no tiene casos todavía"
+            description="Crea uno desde el editor o agrega archivos JSON con prefijo TC-."
+          />
+        )
+        : (
+          <Table>
+            <thead>
+              <tr>
+                <th style={{ width: 32 }}>
                   <Checkbox
-                    checked={selectedIds.has(lc.case.id)}
-                    onChange={() => toggleSelected(lc.case.id)}
-                    aria-label={`Seleccionar ${lc.case.id}`}
+                    checked={allVisibleSelected}
+                    onChange={() => toggleAllVisible()}
+                    aria-label="Seleccionar todos los visibles"
                   />
-                </td>
-                <td onClick={() => rowClick(lc)}>
-                  <code>{lc.case.id}</code>
-                </td>
-                <td onClick={() => rowClick(lc)}>{lc.case.title}</td>
-                <td
-                  onClick={() => rowClick(lc)}
-                  style={{ fontSize: "var(--adc-fs-xs)", color: "var(--adc-fg-muted-strong)" }}
-                >
-                  {lc.case.module}
-                </td>
-                <td onClick={() => rowClick(lc)}>
-                  <Pill tone={lc.case.priority === "critical" ? "err" : "default"}>
-                    {PRIORITY_LABEL[lc.case.priority]}
-                  </Pill>
-                </td>
-                <td onClick={() => rowClick(lc)}>
-                  <Pill>{TYPE_LABEL_SHORT[lc.case.type]}</Pill>
-                </td>
-                <td
-                  onClick={() => rowClick(lc)}
-                  className="adc-num"
-                  style={{ textAlign: "right" }}
-                >
-                  {lc.case.estimated_minutes ?? "—"}
-                </td>
+                </th>
+                <th style={{ width: 130 }}>ID</th>
+                <th>Título</th>
+                <th style={{ width: 160 }}>Módulo</th>
+                <th style={{ width: 110 }}>Prioridad</th>
+                <th style={{ width: 100 }}>Tipo</th>
+                <th style={{ width: 60, textAlign: "right" }}>Min</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
-      )}
+            </thead>
+            <tbody>
+              {filtered.map((lc) => (
+                <tr key={lc.case.id} style={{ cursor: "pointer" }}>
+                  <td onClick={(e) => e.stopPropagation()}>
+                    <Checkbox
+                      checked={selectedIds.has(lc.case.id)}
+                      onChange={() => toggleSelected(lc.case.id)}
+                      aria-label={`Seleccionar ${lc.case.id}`}
+                    />
+                  </td>
+                  <td onClick={() => rowClick(lc)}>
+                    <code>{lc.case.id}</code>
+                  </td>
+                  <td onClick={() => rowClick(lc)}>{lc.case.title}</td>
+                  <td
+                    onClick={() => rowClick(lc)}
+                    style={{ fontSize: "var(--adc-fs-xs)", color: "var(--adc-fg-muted-strong)" }}
+                  >
+                    {lc.case.module}
+                  </td>
+                  <td onClick={() => rowClick(lc)}>
+                    <Pill tone={lc.case.priority === "critical" ? "err" : "default"}>
+                      {PRIORITY_LABEL[lc.case.priority]}
+                    </Pill>
+                  </td>
+                  <td onClick={() => rowClick(lc)}>
+                    <Pill>{TYPE_LABEL_SHORT[lc.case.type]}</Pill>
+                  </td>
+                  <td
+                    onClick={() => rowClick(lc)}
+                    className="adc-num"
+                    style={{ textAlign: "right" }}
+                  >
+                    {lc.case.estimated_minutes ?? "—"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
     </main>
   );
 }

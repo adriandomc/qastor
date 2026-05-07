@@ -2,29 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { convertFileSrc } from "@tauri-apps/api/core";
 import { open as openDialog } from "@tauri-apps/plugin-dialog";
-import {
-  Alert,
-  Button,
-  Card,
-  Modal,
-  Pill,
-  StatusIndicator,
-} from "@adc-ui/components";
-import {
-  Camera,
-  Check,
-  ClipboardPaste,
-  FileText,
-  Paperclip,
-  Square,
-  X,
-} from "lucide-react";
-import {
-  useCasesStore,
-  useProjectStore,
-  useSessionStore,
-} from "@/lib/store";
-import { onHotkey, type HotkeyKind } from "@/lib/events";
+import { Alert, Button, Card, Modal, Pill, StatusIndicator } from "@adc-ui/components";
+import { Camera, Check, ClipboardPaste, FileText, Paperclip, Square, X } from "lucide-react";
+import { useCasesStore, useProjectStore, useSessionStore } from "@/lib/store";
+import { type HotkeyKind, onHotkey } from "@/lib/events";
 import { api } from "@/lib/tauri";
 import {
   CASE_STATUS_LABEL,
@@ -32,13 +13,7 @@ import {
   STEP_STATUS_LABEL,
   STEP_STATUS_VARIANT,
 } from "@/lib/labels";
-import type {
-  CaseStatus,
-  EvidenceItem,
-  Session,
-  StepResult,
-  StepStatus,
-} from "@/lib/types";
+import type { CaseStatus, EvidenceItem, Session, StepResult, StepStatus } from "@/lib/types";
 
 function caseDotColor(status: CaseStatus): string {
   switch (status) {
@@ -108,8 +83,8 @@ export default function SessionRunner() {
     return (
       <main style={{ padding: "var(--adc-space-6)" }}>
         <Alert tone="error" title="Estado inconsistente">
-          El cursor de sesión apunta a un caso/paso que ya no existe en el proyecto.
-          Cierra la sesión y vuelve a iniciar.
+          El cursor de sesión apunta a un caso/paso que ya no existe en el proyecto. Cierra la
+          sesión y vuelve a iniciar.
         </Alert>
         <Button
           variant="primary"
@@ -423,6 +398,7 @@ export default function SessionRunner() {
           const isCurrent = cr.case_id === cursorCaseId;
           return (
             <button
+              type="button"
               key={cr.case_id}
               onClick={() => {
                 const firstPending = cr.steps.find((s) => s.status === "pending");
@@ -453,7 +429,14 @@ export default function SessionRunner() {
                   flex: "0 0 8px",
                 }}
               />
-              <span style={{ flex: 1, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              <span
+                style={{
+                  flex: 1,
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                }}
+              >
                 {cr.case_id}
               </span>
               <span
@@ -485,7 +468,9 @@ export default function SessionRunner() {
           <code style={{ fontSize: "var(--adc-fs-xs)", color: "var(--adc-fg-muted-strong)" }}>
             {baseCase.id}
           </code>
-          <h2 style={{ margin: "0", fontSize: "var(--adc-fs-2xl)", lineHeight: "var(--adc-lh-snug)" }}>
+          <h2
+            style={{ margin: "0", fontSize: "var(--adc-fs-2xl)", lineHeight: "var(--adc-lh-snug)" }}
+          >
             {baseCase.title}
           </h2>
           <div
@@ -506,7 +491,15 @@ export default function SessionRunner() {
 
         {baseCase.preconditions && baseCase.preconditions.length > 0 && (
           <Card style={{ padding: "var(--adc-space-4)" }}>
-            <div style={{ fontSize: "var(--adc-fs-xs)", textTransform: "uppercase", letterSpacing: "0.04em", color: "var(--adc-fg-muted-strong)", marginBottom: 4 }}>
+            <div
+              style={{
+                fontSize: "var(--adc-fs-xs)",
+                textTransform: "uppercase",
+                letterSpacing: "0.04em",
+                color: "var(--adc-fg-muted-strong)",
+                marginBottom: 4,
+              }}
+            >
               Precondiciones
             </div>
             <ul style={{ margin: 0, paddingLeft: 18, fontSize: "var(--adc-fs-sm)" }}>
@@ -527,9 +520,7 @@ export default function SessionRunner() {
                 style={{
                   padding: "var(--adc-space-3)",
                   cursor: "pointer",
-                  border: isCurrent
-                    ? "2px solid var(--adc-accent-2)"
-                    : "var(--adc-border-1)",
+                  border: isCurrent ? "2px solid var(--adc-accent-2)" : "var(--adc-border-1)",
                   display: "flex",
                   gap: "var(--adc-space-3)",
                   alignItems: "flex-start",
@@ -548,7 +539,9 @@ export default function SessionRunner() {
                 </div>
                 <div style={{ flex: 1, fontSize: "var(--adc-fs-sm)" }}>
                   <div style={{ fontWeight: "var(--adc-fw-bold)" }}>{def.action}</div>
-                  <div style={{ color: "var(--adc-fg-muted-strong)", marginTop: 2 }}>{def.expected}</div>
+                  <div style={{ color: "var(--adc-fg-muted-strong)", marginTop: 2 }}>
+                    {def.expected}
+                  </div>
                   {sessionDir && (
                     <StepEvidenceStrip
                       step={sr}
@@ -558,7 +551,14 @@ export default function SessionRunner() {
                     />
                   )}
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "flex-end",
+                    gap: 4,
+                  }}
+                >
                   <StatusIndicator variant={STEP_STATUS_VARIANT[sr.status]}>
                     {STEP_STATUS_LABEL[sr.status]}
                   </StatusIndicator>
@@ -604,7 +604,9 @@ export default function SessionRunner() {
         >
           <Paperclip size={14} /> Adjuntar archivo
         </Button>
-        <span style={{ flex: 1, fontSize: "var(--adc-fs-xs)", color: "var(--adc-fg-muted-strong)" }}>
+        <span
+          style={{ flex: 1, fontSize: "var(--adc-fs-xs)", color: "var(--adc-fg-muted-strong)" }}
+        >
           Marca el paso actual:
         </span>
         <Button
@@ -681,10 +683,9 @@ function StepEvidenceStrip({
   return (
     <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 6 }}>
       {items.map((it, i) => {
-        const matchKey =
-          it.kind === "text"
-            ? ({ kind: "text", captured_at: it.captured_at } as const)
-            : ({ kind: "path", path: it.path } as const);
+        const matchKey = it.kind === "text"
+          ? ({ kind: "text", captured_at: it.captured_at } as const)
+          : ({ kind: "path", path: it.path } as const);
         const remove = (e: React.MouseEvent) => {
           e.stopPropagation();
           onDelete(caseId, step.step, matchKey);
@@ -783,6 +784,7 @@ function Removable({
     <div style={{ position: "relative", display: "inline-block" }}>
       {children}
       <button
+        type="button"
         onClick={onRemove}
         aria-label="Quitar evidencia"
         style={{
@@ -829,4 +831,3 @@ function mergedEvidence(sr: StepResult): EvidenceItem[] {
   }
   return out;
 }
-

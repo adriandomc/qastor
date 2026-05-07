@@ -11,10 +11,7 @@ const REPORT_FILE: &str = "report.html";
 const SESSION_FILE: &str = "session.json";
 
 #[tauri::command]
-pub fn export_html_report(
-    project_root: String,
-    session_dir: String,
-) -> CmdResult<String> {
+pub fn export_html_report(project_root: String, session_dir: String) -> CmdResult<String> {
     let project_path = PathBuf::from(&project_root);
     let session_path_dir = PathBuf::from(&session_dir);
     if !project_path.is_dir() {
@@ -24,10 +21,9 @@ pub fn export_html_report(
         return Err(format!("session_dir not a directory: {session_dir}"));
     }
     let session_json = session_path_dir.join(SESSION_FILE);
-    let bytes = std::fs::read(&session_json)
-        .map_err(|e| format!("read session.json: {e}"))?;
-    let session: Session = serde_json::from_slice(&bytes)
-        .map_err(|e| format!("parse session.json: {e}"))?;
+    let bytes = std::fs::read(&session_json).map_err(|e| format!("read session.json: {e}"))?;
+    let session: Session =
+        serde_json::from_slice(&bytes).map_err(|e| format!("parse session.json: {e}"))?;
 
     let case_ids: Vec<String> = session
         .case_results
@@ -43,8 +39,7 @@ pub fn export_html_report(
 
     let html = render(&project_name, &session, &cases);
     let target = session_path_dir.join(REPORT_FILE);
-    atomic_write(&target, html.as_bytes())
-        .map_err(|e| format!("write report.html: {e}"))?;
+    atomic_write(&target, html.as_bytes()).map_err(|e| format!("write report.html: {e}"))?;
     Ok(target.to_string_lossy().to_string())
 }
 
@@ -97,11 +92,7 @@ fn collect_cases_by_id(root: &Path, ids: &[String]) -> HashMap<String, TestCase>
 
 // ----- HTML rendering ------------------------------------------------------
 
-fn render(
-    project_name: &str,
-    session: &Session,
-    cases: &HashMap<String, TestCase>,
-) -> String {
+fn render(project_name: &str, session: &Session, cases: &HashMap<String, TestCase>) -> String {
     let total = session.case_results.len();
     let passed = session
         .case_results
@@ -123,34 +114,30 @@ fn render(
     let mut html = String::with_capacity(8192);
     html.push_str("<!doctype html>\n<html lang=\"es\">\n<head>\n");
     html.push_str("<meta charset=\"utf-8\">\n");
-    let _ = write!(
+    let _ = writeln!(
         html,
-        "<title>{} — Reporte de sesión</title>\n",
+        "<title>{} — Reporte de sesión</title>",
         escape(project_name)
     );
     html.push_str(STYLES);
     html.push_str("</head>\n<body>\n");
 
-    let _ = write!(
-        html,
-        "<header>\n<h1>{}</h1>\n",
-        escape(project_name)
-    );
+    let _ = write!(html, "<header>\n<h1>{}</h1>\n", escape(project_name));
     html.push_str("<div class=\"meta\">\n");
-    let _ = write!(
+    let _ = writeln!(
         html,
-        "<div>Sesión <code>{}</code></div>\n",
+        "<div>Sesión <code>{}</code></div>",
         escape(&session.session_id)
     );
-    let _ = write!(
+    let _ = writeln!(
         html,
-        "<div>Iniciada: {}</div>\n",
+        "<div>Iniciada: {}</div>",
         escape(&session.started_at.to_rfc3339())
     );
     if let Some(ended) = session.ended_at {
-        let _ = write!(
+        let _ = writeln!(
             html,
-            "<div>Terminada: {}</div>\n",
+            "<div>Terminada: {}</div>",
             escape(&ended.to_rfc3339())
         );
     }
@@ -178,7 +165,9 @@ fn render(
 }
 
 fn render_case(html: &mut String, cr: &CaseResult, case: Option<&TestCase>) {
-    let title = case.map(|c| c.title.as_str()).unwrap_or("(caso no disponible en el proyecto)");
+    let title = case
+        .map(|c| c.title.as_str())
+        .unwrap_or("(caso no disponible en el proyecto)");
     let module = case.map(|c| c.module.as_str()).unwrap_or("—");
     let case_status_class = case_status_class(&cr.status);
 
@@ -186,17 +175,13 @@ fn render_case(html: &mut String, cr: &CaseResult, case: Option<&TestCase>) {
         html,
         "<section class=\"case\">\n<div class=\"case__header\">\n<div>\n"
     );
-    let _ = write!(
+    let _ = writeln!(
         html,
-        "<div class=\"case__id\"><code>{}</code> · {}</div>\n",
+        "<div class=\"case__id\"><code>{}</code> · {}</div>",
         escape(&cr.case_id),
         escape(module)
     );
-    let _ = write!(
-        html,
-        "<div class=\"case__title\">{}</div>\n",
-        escape(title)
-    );
+    let _ = writeln!(html, "<div class=\"case__title\">{}</div>", escape(title));
     html.push_str("</div>\n");
     let _ = write!(
         html,
@@ -219,49 +204,44 @@ fn render_case(html: &mut String, cr: &CaseResult, case: Option<&TestCase>) {
             sr.step, step_class, step_label
         );
         if !action.is_empty() {
-            let _ = write!(
-                html,
-                "<div class=\"step__action\">{}</div>\n",
-                escape(action)
-            );
+            let _ = writeln!(html, "<div class=\"step__action\">{}</div>", escape(action));
         }
         if !expected.is_empty() {
-            let _ = write!(
+            let _ = writeln!(
                 html,
-                "<div class=\"step__expected\">{}</div>\n",
+                "<div class=\"step__expected\">{}</div>",
                 escape(expected)
             );
         }
         if let Some(notes) = &sr.notes {
-            let _ = write!(
+            let _ = writeln!(
                 html,
-                "<div class=\"step__notes\">Nota: {}</div>\n",
+                "<div class=\"step__notes\">Nota: {}</div>",
                 escape(notes)
             );
         }
         // Combine legacy evidence_paths (treated as screenshots) with the new
         // typed evidence_items. Legacy ones first to preserve old reports.
-        let mut emitted_paths: std::collections::HashSet<&str> =
-            std::collections::HashSet::new();
+        let mut emitted_paths: std::collections::HashSet<&str> = std::collections::HashSet::new();
         if !sr.evidence_paths.is_empty() || !sr.evidence_items.is_empty() {
             html.push_str("<div class=\"evidence\">\n");
             for item in &sr.evidence_items {
                 match item {
                     EvidenceItem::Screenshot { path, .. } => {
                         emitted_paths.insert(path.as_str());
-                        let _ = write!(
+                        let _ = writeln!(
                             html,
-                            "<a class=\"evidence-shot\" href=\"{rel}\" target=\"_blank\"><img src=\"{rel}\" alt=\"evidencia paso {step}\"></a>\n",
+                            "<a class=\"evidence-shot\" href=\"{rel}\" target=\"_blank\"><img src=\"{rel}\" alt=\"evidencia paso {step}\"></a>",
                             rel = escape(path),
                             step = sr.step
                         );
                     }
                     EvidenceItem::Text { content, label, .. } => {
-                        let _ = write!(html, "<div class=\"evidence-text\">\n");
+                        let _ = writeln!(html, "<div class=\"evidence-text\">");
                         if let Some(l) = label {
-                            let _ = write!(
+                            let _ = writeln!(
                                 html,
-                                "<div class=\"evidence-text__label\">{}</div>\n",
+                                "<div class=\"evidence-text__label\">{}</div>",
                                 escape(l)
                             );
                         }
@@ -279,9 +259,9 @@ fn render_case(html: &mut String, cr: &CaseResult, case: Option<&TestCase>) {
                             .map(|b| format!(" · {}", human_bytes(b)))
                             .unwrap_or_default();
                         let mime_str = mime.as_deref().unwrap_or("archivo");
-                        let _ = write!(
+                        let _ = writeln!(
                             html,
-                            "<a class=\"evidence-file\" href=\"{rel}\" target=\"_blank\">📎 {name} <span>{mime}{size}</span></a>\n",
+                            "<a class=\"evidence-file\" href=\"{rel}\" target=\"_blank\">📎 {name} <span>{mime}{size}</span></a>",
                             rel = escape(path),
                             name = escape(filename),
                             mime = escape(mime_str),
@@ -294,9 +274,9 @@ fn render_case(html: &mut String, cr: &CaseResult, case: Option<&TestCase>) {
                 if emitted_paths.contains(rel.as_str()) {
                     continue;
                 }
-                let _ = write!(
+                let _ = writeln!(
                     html,
-                    "<a class=\"evidence-shot\" href=\"{rel}\" target=\"_blank\"><img src=\"{rel}\" alt=\"evidencia paso {step}\"></a>\n",
+                    "<a class=\"evidence-shot\" href=\"{rel}\" target=\"_blank\"><img src=\"{rel}\" alt=\"evidencia paso {step}\"></a>",
                     rel = escape(rel),
                     step = sr.step
                 );

@@ -1,0 +1,92 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    name: build (${{ matrix.label }})
+    runs-on: ${{ matrix.platform }}
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - label: macos-arm64
+            platform: macos-latest
+            rustTarget: aarch64-apple-darwin
+            args: --target aarch64-apple-darwin --ci --no-sign --bundles dmg
+          - label: macos-x64
+            platform: macos-latest
+            rustTarget: x86_64-apple-darwin
+            args: --target x86_64-apple-darwin --ci --no-sign --bundles dmg
+          - label: linux-x64
+            platform: ubuntu-22.04
+            rustTarget: ""
+            args: --ci --no-sign --bundles deb,appimage
+          - label: windows-x64
+            platform: windows-latest
+            rustTarget: ""
+            args: --ci --no-sign --bundles msi
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Add Rust target
+        if: matrix.rustTarget != ''
+        run: rustup target add ${{ matrix.rustTarget }}
+
+      - name: Install Linux system dependencies
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libwebkit2gtk-4.1-dev \
+            libappindicator3-dev \
+            librsvg2-dev \
+            patchelf \
+            libgtk-3-dev \
+            libxdo-dev \
+            libssl-dev \
+            pkg-config
+
+      - name: Cache Cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            src-tauri/target
+          key: ${{ runner.os }}-${{ matrix.label }}-cargo-${{ hashFiles('src-tauri/Cargo.lock') }}
+
+      - name: Install frontend dependencies
+        run: deno install --frozen=true --allow-scripts=npm:esbuild,npm:@tauri-apps/cli
+
+      - name: Build and upload Tauri bundles
+        uses: tauri-apps/tauri-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: Qastor ${{ github.ref_name }}
+          releaseBody: Unsigned Qastor installers. macOS and Windows may show normal first-install warnings.
+          releaseDraft: true
+          prerelease: false
+          tauriScript: deno task tauri
+          args: ${{ matrix.args }}
+          uploadUpdaterJson: false
+          releaseAssetNamePattern: qastor-v[version]-[platform]-[arch]-[bundle][ext]

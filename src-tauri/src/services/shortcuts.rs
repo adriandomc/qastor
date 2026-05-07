@@ -14,9 +14,7 @@ pub const DEFAULT_BINDINGS: &[(&str, &str)] = &[
     ("CmdOrCtrl+Shift+Q", "toggle-window"),
 ];
 
-pub fn register_defaults<R: Runtime>(
-    app: &AppHandle<R>,
-) -> Result<(), Box<dyn std::error::Error>> {
+pub fn register_defaults<R: Runtime>(app: &AppHandle<R>) -> Result<(), Box<dyn std::error::Error>> {
     let gs = app.global_shortcut();
 
     // Build a map from parsed shortcut → kind so the handler can dispatch
@@ -32,7 +30,7 @@ pub fn register_defaults<R: Runtime>(
     let app_clone = app.clone();
     let lookup = shortcuts.clone();
     gs.on_shortcuts(
-        shortcuts.iter().map(|(s, _)| s.clone()).collect::<Vec<_>>(),
+        shortcuts.iter().map(|(s, _)| *s).collect::<Vec<_>>(),
         move |_app, shortcut, event| {
             if event.state() != ShortcutState::Pressed {
                 return;

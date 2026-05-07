@@ -15,7 +15,9 @@ src-tauri/gen/
 # Author-private artifacts (live in this repo locally, not in version control)
 MASTER-PLAN.md
 AGENTS.md
-design-system/
+design-system/*
+!design-system/adc-ui/
+!design-system/adc-ui/**
 
 # IDE
 .vscode/
