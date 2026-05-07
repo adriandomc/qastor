@@ -88,5 +88,5 @@ jobs:
           prerelease: false
           tauriScript: deno task tauri
           args: ${{ matrix.args }}
-          uploadUpdaterJson: false
-          releaseAssetNamePattern: qastor-v[version]-[platform]-[arch]-[bundle][ext]
+          includeUpdaterJson: false
+          assetNamePattern: qastor-v[version]-[platform]-[arch]-[bundle][ext]
