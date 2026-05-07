@@ -9,12 +9,21 @@
 [![License: MIT](https://img.shields.io/github/license/adriandomc/qastor)](./LICENSE)
 
 ## What is this?
-Qastor is a multi-platform desktop application that allows you to create manual test cases from an easy to use interface and gather evidence with just a few clicks/keystrokes, allowing developers to focus on the actual testing rather than copying-and-pasting screenshots or debug logs.
 
-**WARNING: This tool is an early alpha version and hasn't been fully tested in all operating systems. Proceed with caution.**
+Qastor is a multi-platform desktop application that allows you to create manual test cases from an
+easy to use interface and gather evidence with just a few clicks/keystrokes, allowing developers to
+focus on the actual testing rather than copying-and-pasting screenshots or debug logs.
+
+**WARNING: This tool is an early alpha version and hasn't been fully tested in all operating
+systems. Proceed with caution.**
 
 ## Why does this exist?
-The 
+
+The
 
 ## Install
-There are readily available releases [here]([https://www.example.com](https://github.com/adriandomc/qastor/releases)) for the major operating systems (macOS, Windows, Linux), but I recommend you to build it from source, as it is still in development.
+
+There are readily available releases
+[here]([https://www.example.com](https://github.com/adriandomc/qastor/releases)) for the major
+operating systems (macOS, Windows, Linux), but I recommend you to build it from source, as it is
+still in development.
