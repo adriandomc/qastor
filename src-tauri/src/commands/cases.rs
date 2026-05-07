@@ -71,8 +71,8 @@ pub fn list_cases(project_root: String) -> CmdResult<ListCasesResult> {
     }
 
     // Stable order: by id ascending.
-    cases.sort_by(|a, b| a.case.id.cmp(&b.case.id));
-    errors.sort_by(|a, b| a.path.cmp(&b.path));
+    cases.sort_by_key(|c| c.case.id.clone());
+    errors.sort_by_key(|e| e.path.clone());
 
     Ok(ListCasesResult { cases, errors })
 }
@@ -257,7 +257,7 @@ fn regenerate_index_inner(root: &Path, config: &ProjectConfig) -> CmdResult<Stri
         .iter()
         .map(|(folder, cs)| {
             let mut sorted = cs.clone();
-            sorted.sort_by(|a, b| a.case.id.cmp(&b.case.id));
+            sorted.sort_by_key(|c| c.case.id.clone());
             let directory = if folder == "_root" {
                 "./".into()
             } else {
