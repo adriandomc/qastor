@@ -52,9 +52,21 @@ export default function ProjectShell() {
   }
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "260px 1fr", minHeight: "100vh" }}>
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "260px minmax(0, 1fr)",
+        height: "100dvh",
+        overflow: "hidden",
+      }}
+    >
       <aside
         style={{
+          height: "100dvh",
+          boxSizing: "border-box",
+          position: "sticky",
+          top: 0,
+          alignSelf: "start",
           padding: "var(--adc-space-5)",
           borderRight: "var(--adc-border-1)",
           display: "flex",
@@ -110,7 +122,7 @@ export default function ProjectShell() {
         </Button>
       </aside>
 
-      <div style={{ overflow: "auto" }}>
+      <div style={{ minWidth: 0, minHeight: 0, overflow: "auto" }}>
         <Outlet />
       </div>
     </div>
