@@ -157,4 +157,4 @@ jobs:
           tauriScript: deno task tauri
           args: ${{ matrix.args }}
           includeUpdaterJson: false
-          assetNamePattern: qastor-v[version]-[platform]-[arch]-[bundle][ext]
+          assetNamePattern: qastor-v[version]-[platform]-[arch][ext]
