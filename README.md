@@ -37,12 +37,13 @@ focus on the actual testing rather than copying-and-pasting screenshots or debug
 systems. Proceed with caution.**
 
 ## Why does this exist?
-
-The
+Qastor was created out of the necessity to have a self-contained tool that allows to create and manage manual QA test cases, as well as their evidence. While this is not a new idea, and there are other tools that make a better job out of it, I wanted to create this tool as in my current job, we make extensive use of spreadsheet files to keep track of test cases statuses (both manual and automatic), however what I find the most time consuming is linking the evidences, that are stored on the cloud and then referenced using their URL. When working with hundreds of cases, this becomes a nightmare, and it's a considerable amount of time spent doing this repetitive work, so this is what Qastor is designed for, to reduce that repetive screenshot/upload/link motion and keep everything stored within a single place and at the reach of only a few keystrokes.
 
 ## Install
-
 There are readily available releases
 [here]([https://www.example.com](https://github.com/adriandomc/qastor/releases)) for the major
 operating systems (macOS, Windows, Linux), but I recommend you to build it from source, as it is
 still in development.
+
+### macOS
+Work in Progress :D
