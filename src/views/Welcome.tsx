@@ -145,7 +145,7 @@ export default function Welcome() {
           <ADCMark size={56} label="Q" />
           <div>
             <h1 style={{ margin: 0, fontSize: "var(--adc-fs-3xl)", letterSpacing: "-0.01em" }}>
-              qastor
+              Qastor
             </h1>
             <p
               style={{
