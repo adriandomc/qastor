@@ -14,6 +14,12 @@ Qastor is a multi-platform desktop application that allows you to create manual 
 easy to use interface and gather evidence with just a few clicks/keystrokes, allowing developers to
 focus on the actual testing rather than copying-and-pasting screenshots or debug logs.
 
+| Welcome                                                                          | Cases                                                                              |
+| -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------- |
+| <img src="assets/img/README/welcome-screen.png" alt="Qastor welcome screen" />   | <img src="assets/img/README/cases-screen.png" alt="Qastor cases screen" />         |
+| Settings                                                                         | Test case                                                                          |
+| <img src="assets/img/README/settings-screen.png" alt="Qastor settings screen" /> | <img src="assets/img/README/test-case-screen.png" alt="Qastor test case screen" /> |
+
 **WARNING: This tool is an early alpha version and hasn't been fully tested in all operating
 systems. Proceed with caution.**
 
