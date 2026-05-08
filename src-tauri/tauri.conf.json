@@ -12,11 +12,11 @@
   "app": {
     "windows": [
       {
-        "title": "qastor",
+        "title": "Qastor",
         "width": 1280,
         "height": 820,
-        "minWidth": 880,
-        "minHeight": 560,
+        "minWidth": 680,
+        "minHeight": 360,
         "resizable": true,
         "fullscreen": false
       }
