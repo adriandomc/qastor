@@ -7,6 +7,7 @@ import { api } from "@/lib/tauri";
 import { validateCase } from "@/lib/schema";
 import { EVIDENCE_HINT_LABEL, PRIORITY_LABEL, TYPE_LABEL } from "@/lib/labels";
 import type { EvidenceHint, Priority, TestCase, TestStep, TestType } from "@/lib/types";
+import { useTranslation } from "react-i18next";
 
 type TabKey = "Form" | "JSON";
 
@@ -39,6 +40,7 @@ function renumber(steps: TestStep[]): TestStep[] {
 
 export default function CaseEditor() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { caseId } = useParams<{ caseId: string }>();
   const { current: project, currentPath, updateConfig } = useProjectStore();
   const allCases = useCasesStore((s) => s.cases);
@@ -80,7 +82,7 @@ export default function CaseEditor() {
   if (!project || !currentPath) {
     return (
       <main style={{ padding: "var(--adc-space-6)" }}>
-        <p>No hay proyecto activo.</p>
+        <p>{t("settings.noActiveProject", "No hay proyecto activo.")}</p>
       </main>
     );
   }
@@ -88,7 +90,7 @@ export default function CaseEditor() {
   if (isEdit && !existing) {
     return (
       <main style={{ padding: "var(--adc-space-6)" }}>
-        <p>Cargando caso…</p>
+        <p>{t("caseEditor.loadingCase", "Cargando caso…")}</p>
       </main>
     );
   }
@@ -104,7 +106,7 @@ export default function CaseEditor() {
         setDraft(parsed);
         setJsonParseError(null);
       } catch (e) {
-        setJsonParseError(`JSON inválido: ${String(e)}. Corrige antes de cambiar a Form.`);
+        setJsonParseError(t("caseEditor.invalidJsonToForm", "JSON inválido: {{error}}. Corrige antes de cambiar a Form.", { error: String(e) }));
         return;
       }
     }
@@ -118,16 +120,14 @@ export default function CaseEditor() {
       try {
         toSave = JSON.parse(jsonText) as TestCase;
       } catch (e) {
-        setActionError(`JSON inválido: ${String(e)}`);
+        setActionError(t("caseEditor.invalidJson", "JSON inválido: {{error}}", { error: String(e) }));
         return;
       }
     }
     const v = validateCase(toSave);
     if (!v.ok) {
       setActionError(
-        `El caso no valida contra el schema (${v.errors.length} error${
-          v.errors.length === 1 ? "" : "es"
-        }).`,
+        t("caseEditor.validationError", "El caso no valida contra el schema ({{count}} errores).", { count: v.errors.length })
       );
       return;
     }
@@ -174,7 +174,7 @@ export default function CaseEditor() {
           navigate(isEdit ? `/project/cases/${encodeURIComponent(decoded)}` : "/project/cases")}
         style={{ alignSelf: "flex-start", display: "flex", alignItems: "center", gap: 4 }}
       >
-        <ChevronLeft size={14} /> {isEdit ? "Volver al caso" : "Casos"}
+        <ChevronLeft size={14} /> {isEdit ? t("caseEditor.backToCase", "Volver al caso") : t("caseList.title", "Casos")}
       </Button>
 
       <header
@@ -186,7 +186,7 @@ export default function CaseEditor() {
         }}
       >
         <h2 style={{ margin: 0, fontSize: "var(--adc-fs-2xl)" }}>
-          {isEdit ? "Editar caso" : "Nuevo caso"}
+          {isEdit ? t("caseEditor.editCase", "Editar caso") : t("caseEditor.newCase", "Nuevo caso")}
         </h2>
         <div style={{ display: "flex", gap: "var(--adc-space-2)" }}>
           {isEdit && (
@@ -196,7 +196,7 @@ export default function CaseEditor() {
               disabled={busy}
               style={{ display: "flex", alignItems: "center", gap: 6 }}
             >
-              <Trash2 size={14} /> Borrar
+              <Trash2 size={14} /> {t("common.delete", "Borrar")}
             </Button>
           )}
           <Button
@@ -205,14 +205,14 @@ export default function CaseEditor() {
             disabled={busy}
             style={{ display: "flex", alignItems: "center", gap: 6 }}
           >
-            <Save size={14} /> Guardar
+            <Save size={14} /> {t("common.save", "Guardar")}
           </Button>
         </div>
       </header>
 
       <Tabs<TabKey> tabs={["Form", "JSON"]} active={tab} onChange={handleTabChange} />
 
-      {actionError && <Alert tone="error" title="Error">{actionError}</Alert>}
+      {actionError && <Alert tone="error" title={t("common.error", "Error")}>{actionError}</Alert>}
 
       {tab === "Form" && (
         <FormView
@@ -242,21 +242,20 @@ export default function CaseEditor() {
       <Modal
         open={confirmDelete}
         onClose={() => setConfirmDelete(false)}
-        title="Borrar caso"
+        title={t("caseEditor.deleteCase", "Borrar caso")}
         footer={
           <>
             <Button variant="ghost" onClick={() => setConfirmDelete(false)}>
-              Cancelar
+              {t("common.cancel", "Cancelar")}
             </Button>
             <Button variant="danger" onClick={handleDelete} disabled={busy}>
-              Borrar
+              {t("common.delete", "Borrar")}
             </Button>
           </>
         }
       >
         <p>
-          Vas a borrar <code>{draft.id}</code>{" "}
-          del disco. Esta acción no se puede deshacer desde la app.
+          {t("caseEditor.deleteCaseDesc", "Vas a borrar {{id}} del disco. Esta acción no se puede deshacer desde la app.", { id: draft.id })}
         </p>
       </Modal>
     </main>
@@ -276,6 +275,8 @@ function FormView({
   knownModules: string[];
   validationErrors: { path: string; message: string }[];
 }) {
+  const { t } = useTranslation();
+  
   function patch<K extends keyof TestCase>(key: K, value: TestCase[K]) {
     setDraft({ ...draft, [key]: value });
   }
@@ -312,21 +313,21 @@ function FormView({
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "var(--adc-space-5)" }}>
       {validationErrors.length > 0 && (
-        <Alert tone="warn" title={`${validationErrors.length} problema(s) de schema`}>
+        <Alert tone="warn" title={t("caseEditor.schemaProblems", "{{count}} problema(s) de schema", { count: validationErrors.length })}>
           <ul style={{ margin: 0, paddingLeft: 18, fontSize: "var(--adc-fs-xs)" }}>
             {validationErrors.slice(0, 6).map((e, i) => (
               <li key={i}>
                 <code>{e.path}</code>: {e.message}
               </li>
             ))}
-            {validationErrors.length > 6 && <li>… y {validationErrors.length - 6} más</li>}
+            {validationErrors.length > 6 && <li>{t("caseEditor.andMore", "… y {{more}} más", { more: validationErrors.length - 6 })}</li>}
           </ul>
         </Alert>
       )}
 
-      <Section title="Identidad">
+      <Section title={t("caseEditor.identity", "Identidad")}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "var(--adc-space-3)" }}>
-          <Field label="ID">
+          <Field label={t("common.id", "ID")}>
             <input
               className="adc-input"
               value={draft.id}
@@ -334,25 +335,25 @@ function FormView({
               placeholder="TC-AUTH-009"
             />
           </Field>
-          <Field label="Module">
+          <Field label={t("common.module", "Module")}>
             <input
               className="adc-input"
               list="known-modules"
               value={draft.module}
               onChange={(e) => patch("module", e.target.value)}
-              placeholder="ej. ventas.pos"
+              placeholder={t("caseEditor.modulePlaceholder", "ej. ventas.pos")}
             />
             <datalist id="known-modules">
               {knownModules.map((m) => <option key={m} value={m} />)}
             </datalist>
           </Field>
         </div>
-        <Field label="Título">
+        <Field label={t("common.title", "Título")}>
           <input
             className="adc-input"
             value={draft.title}
             onChange={(e) => patch("title", e.target.value)}
-            placeholder="Una línea descriptiva del caso"
+            placeholder={t("caseEditor.titlePlaceholder", "Una línea descriptiva del caso")}
           />
         </Field>
         <div
@@ -362,20 +363,20 @@ function FormView({
             gap: "var(--adc-space-3)",
           }}
         >
-          <Field label="Tipo">
+          <Field label={t("common.type", "Tipo")}>
             <select
               className="adc-select"
               value={draft.type}
               onChange={(e) => patch("type", e.target.value as TestType)}
             >
-              {TYPES.map((t) => (
-                <option key={t} value={t}>
-                  {TYPE_LABEL[t]}
+              {TYPES.map((t_key) => (
+                <option key={t_key} value={t_key}>
+                  {t(TYPE_LABEL[t_key])}
                 </option>
               ))}
             </select>
           </Field>
-          <Field label="Prioridad">
+          <Field label={t("common.priority", "Prioridad")}>
             <select
               className="adc-select"
               value={draft.priority}
@@ -383,12 +384,12 @@ function FormView({
             >
               {PRIORITIES.map((p) => (
                 <option key={p} value={p}>
-                  {PRIORITY_LABEL[p]}
+                  {t(PRIORITY_LABEL[p])}
                 </option>
               ))}
             </select>
           </Field>
-          <Field label="Minutos estimados">
+          <Field label={t("caseEditor.estimatedMinutes", "Minutos estimados")}>
             <input
               className="adc-input"
               type="number"
@@ -404,23 +405,23 @@ function FormView({
         </div>
       </Section>
 
-      <Section title="Etiquetas">
+      <Section title={t("caseEditor.tags", "Etiquetas")}>
         <ChipInput
           values={draft.tags ?? []}
           setValues={(v) => patch("tags", v)}
-          placeholder="agregar etiqueta…"
+          placeholder={t("caseEditor.addTag", "agregar etiqueta…")}
         />
       </Section>
 
-      <Section title="Precondiciones">
+      <Section title={t("caseEditor.preconditions", "Precondiciones")}>
         <StringList
           items={draft.preconditions ?? []}
           setItems={(v) => patch("preconditions", v)}
-          placeholder="ej. Hay caja abierta"
+          placeholder={t("caseEditor.preconditionPlaceholder", "ej. Hay caja abierta")}
         />
       </Section>
 
-      <Section title={`Pasos (${draft.steps.length})`}>
+      <Section title={t("caseEditor.steps", "Pasos ({{count}})", { count: draft.steps.length })}>
         <div style={{ display: "flex", flexDirection: "column", gap: "var(--adc-space-3)" }}>
           {draft.steps.map((step, idx) => (
             <Card
@@ -450,7 +451,7 @@ function FormView({
                   gap: "var(--adc-space-2)",
                 }}
               >
-                <Field label="Acción">
+                <Field label={t("caseEditor.action", "Acción")}>
                   <textarea
                     className="adc-textarea"
                     value={step.action}
@@ -458,7 +459,7 @@ function FormView({
                     rows={2}
                   />
                 </Field>
-                <Field label="Esperado">
+                <Field label={t("caseEditor.expected", "Esperado")}>
                   <textarea
                     className="adc-textarea"
                     value={step.expected}
@@ -473,7 +474,7 @@ function FormView({
                     gap: "var(--adc-space-3)",
                   }}
                 >
-                  <Field label="Evidencia sugerida">
+                  <Field label={t("caseEditor.suggestedEvidence", "Evidencia sugerida")}>
                     <select
                       className="adc-select"
                       value={step.evidence_hint ?? "none"}
@@ -484,12 +485,12 @@ function FormView({
                     >
                       {EVIDENCE_HINTS.map((h) => (
                         <option key={h} value={h}>
-                          {EVIDENCE_HINT_LABEL[h]}
+                          {t(EVIDENCE_HINT_LABEL[h])}
                         </option>
                       ))}
                     </select>
                   </Field>
-                  <Field label="Datos (JSON, opcional)">
+                  <Field label={t("caseEditor.dataField", "Datos (JSON, opcional)")}>
                     <DataField
                       value={step.data}
                       onChange={(v) => patchStep(idx, { data: v })}
@@ -501,18 +502,18 @@ function FormView({
                 <IconButton
                   onClick={() => moveStep(idx, -1)}
                   disabled={idx === 0}
-                  aria-label="Subir"
+                  aria-label={t("caseEditor.moveUp", "Subir")}
                 >
                   <ChevronUp size={14} />
                 </IconButton>
                 <IconButton
                   onClick={() => moveStep(idx, 1)}
                   disabled={idx === draft.steps.length - 1}
-                  aria-label="Bajar"
+                  aria-label={t("caseEditor.moveDown", "Bajar")}
                 >
                   <ChevronDown size={14} />
                 </IconButton>
-                <IconButton onClick={() => removeStep(idx)} aria-label="Borrar paso">
+                <IconButton onClick={() => removeStep(idx)} aria-label={t("caseEditor.deleteStep", "Borrar paso")}>
                   <X size={14} />
                 </IconButton>
               </div>
@@ -523,24 +524,24 @@ function FormView({
             onClick={addStep}
             style={{ alignSelf: "flex-start", display: "flex", alignItems: "center", gap: 6 }}
           >
-            <Plus size={14} /> Agregar paso
+            <Plus size={14} /> {t("caseEditor.addStep", "Agregar paso")}
           </Button>
         </div>
       </Section>
 
-      <Section title="Criterios de aceptación">
+      <Section title={t("caseEditor.acceptanceCriteria", "Criterios de aceptación")}>
         <StringList
           items={draft.acceptance_criteria}
           setItems={(v) => patch("acceptance_criteria", v)}
-          placeholder="ej. La venta queda registrada con estado 'completada'"
+          placeholder={t("caseEditor.acPlaceholder", "ej. La venta queda registrada con estado 'completada'")}
         />
       </Section>
 
-      <Section title="Archivos relacionados">
+      <Section title={t("caseEditor.relatedFiles", "Archivos relacionados")}>
         <StringList
           items={draft.related_files ?? []}
           setItems={(v) => patch("related_files", v)}
-          placeholder="ej. apps/desktop/src/routes/_app/ventas/pos.tsx"
+          placeholder={t("caseEditor.relatedFilesPlaceholder", "ej. apps/desktop/src/routes/_app/ventas/pos.tsx")}
         />
       </Section>
     </div>
@@ -558,6 +559,7 @@ function JSONView({
   setText: (t: string) => void;
   parseError: string | null;
 }) {
+  const { t } = useTranslation();
   let schemaErrors: { path: string; message: string }[] = [];
   if (!parseError) {
     try {
@@ -573,25 +575,25 @@ function JSONView({
     <div style={{ display: "flex", flexDirection: "column", gap: "var(--adc-space-3)" }}>
       {parseError
         ? (
-          <Alert tone="error" title="JSON inválido">
+          <Alert tone="error" title={t("caseEditor.invalidJsonTitle", "JSON inválido")}>
             {parseError}
           </Alert>
         )
         : schemaErrors.length === 0
         ? (
           <Alert tone="success" title="OK">
-            El JSON valida contra el schema.
+            {t("caseEditor.jsonOk", "El JSON valida contra el schema.")}
           </Alert>
         )
         : (
-          <Alert tone="warn" title={`${schemaErrors.length} problema(s) de schema`}>
+          <Alert tone="warn" title={t("caseEditor.schemaProblems", "{{count}} problema(s) de schema", { count: schemaErrors.length })}>
             <ul style={{ margin: 0, paddingLeft: 18, fontSize: "var(--adc-fs-xs)" }}>
               {schemaErrors.slice(0, 8).map((e, i) => (
                 <li key={i}>
                   <code>{e.path}</code>: {e.message}
                 </li>
               ))}
-              {schemaErrors.length > 8 && <li>… y {schemaErrors.length - 8} más</li>}
+              {schemaErrors.length > 8 && <li>{t("caseEditor.andMore", "… y {{more}} más", { more: schemaErrors.length - 8 })}</li>}
             </ul>
           </Alert>
         )}
@@ -659,6 +661,7 @@ function StringList({
   setItems: (v: string[]) => void;
   placeholder: string;
 }) {
+  const { t } = useTranslation();
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
       {items.map((s, i) => (
@@ -670,7 +673,7 @@ function StringList({
             placeholder={placeholder}
             style={{ flex: 1 }}
           />
-          <IconButton onClick={() => setItems(items.filter((_, j) => j !== i))} aria-label="Borrar">
+          <IconButton onClick={() => setItems(items.filter((_, j) => j !== i))} aria-label={t("common.delete", "Borrar")}>
             <X size={14} />
           </IconButton>
         </div>
@@ -680,7 +683,7 @@ function StringList({
         onClick={() => setItems([...items, ""])}
         style={{ alignSelf: "flex-start", display: "flex", alignItems: "center", gap: 6 }}
       >
-        <Plus size={14} /> Agregar
+        <Plus size={14} /> {t("common.add", "Agregar")}
       </Button>
     </div>
   );
@@ -695,15 +698,16 @@ function ChipInput({
   setValues: (v: string[]) => void;
   placeholder: string;
 }) {
+  const { t } = useTranslation();
   const [text, setText] = useState("");
   function commit() {
-    const t = text.trim();
-    if (!t) return;
-    if (values.includes(t)) {
+    const t_val = text.trim();
+    if (!t_val) return;
+    if (values.includes(t_val)) {
       setText("");
       return;
     }
-    setValues([...values, t]);
+    setValues([...values, t_val]);
     setText("");
   }
   return (
@@ -715,7 +719,7 @@ function ChipInput({
             type="button"
             className="adc-chip__x"
             onClick={() => setValues(values.filter((_, j) => j !== i))}
-            aria-label={`Quitar ${v}`}
+            aria-label={t("common.remove", { id: v, defaultValue: "Quitar {{id}}" })}
           >
             ×
           </button>
@@ -755,6 +759,7 @@ function DataField({
   value: Record<string, unknown> | undefined;
   onChange: (v: Record<string, unknown> | undefined) => void;
 }) {
+  const { t } = useTranslation();
   const initial = value ? JSON.stringify(value, null, 0) : "";
   const [text, setText] = useState(initial);
   const [err, setErr] = useState<string | null>(null);
@@ -768,7 +773,7 @@ function DataField({
     try {
       const parsed = JSON.parse(text);
       if (typeof parsed !== "object" || Array.isArray(parsed) || parsed === null) {
-        setErr("Debe ser un objeto JSON.");
+        setErr(t("caseEditor.jsonMustBeObject", "Debe ser un objeto JSON."));
         return;
       }
       onChange(parsed as Record<string, unknown>);

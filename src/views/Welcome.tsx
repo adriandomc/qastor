@@ -6,6 +6,7 @@ import { FolderOpen, FolderPlus, History, X } from "lucide-react";
 import { api } from "@/lib/tauri";
 import { useProjectStore } from "@/lib/store";
 import type { ProjectConfig, ProjectRef, ValidationResult } from "@/lib/types";
+import { useTranslation } from "react-i18next";
 
 type CreateModalState = { open: boolean; name: string };
 type InitModalState = {
@@ -17,6 +18,7 @@ type InitModalState = {
 
 export default function Welcome() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { recent, setRecent, openProject } = useProjectStore();
 
   const [error, setError] = useState<string | null>(null);
@@ -39,7 +41,7 @@ export default function Welcome() {
   async function handleCreate() {
     setError(null);
     if (createModal.name.trim().length === 0) {
-      setError("Nombre del proyecto requerido.");
+      setError(t("welcome.projectNameRequired", "Nombre del proyecto requerido."));
       return;
     }
     const parent = await openDialog({ directory: true, multiple: false });
@@ -81,10 +83,10 @@ export default function Welcome() {
           });
           break;
         case "invalid":
-          setError(`qastor.json inválido: ${result.error}`);
+          setError(t("welcome.invalidQastorJson", "qastor.json inválido: {{error}}", { error: result.error }));
           break;
         case "not_a_project":
-          setError(`No es un proyecto qastor: ${result.reason}`);
+          setError(t("welcome.notAQastorProject", "No es un proyecto qastor: {{reason}}", { reason: result.reason }));
           break;
       }
     } catch (e) {
@@ -145,7 +147,7 @@ export default function Welcome() {
           <ADCMark size={56} label="Q" />
           <div>
             <h1 style={{ margin: 0, fontSize: "var(--adc-fs-3xl)", letterSpacing: "-0.01em" }}>
-              Qastor
+              {t("welcome.title", "Qastor")}
             </h1>
             <p
               style={{
@@ -154,12 +156,12 @@ export default function Welcome() {
                 fontSize: "var(--adc-fs-sm)",
               }}
             >
-              Gestor de casos de prueba manuales con captura de evidencia.
+              {t("welcome.subtitle", "Gestor de casos de prueba manuales con captura de evidencia.")}
             </p>
           </div>
         </header>
 
-        {error && <Alert tone="error" title="Algo salió mal">{error}</Alert>}
+        {error && <Alert tone="error" title={t("welcome.errorTitle", "Algo salió mal")}>{error}</Alert>}
 
         <section style={{ display: "flex", gap: "var(--adc-space-4)" }}>
           <Button
@@ -177,7 +179,7 @@ export default function Welcome() {
               gap: 8,
             }}
           >
-            <FolderPlus size={16} /> Crear nuevo proyecto
+            <FolderPlus size={16} /> {t("welcome.createProject", "Crear nuevo proyecto")}
           </Button>
           <Button
             variant="secondary"
@@ -191,7 +193,7 @@ export default function Welcome() {
               gap: 8,
             }}
           >
-            <FolderOpen size={16} /> Abrir proyecto existente
+            <FolderOpen size={16} /> {t("welcome.openProject", "Abrir proyecto existente")}
           </Button>
         </section>
 
@@ -208,14 +210,14 @@ export default function Welcome() {
               gap: 8,
             }}
           >
-            <History size={14} /> Recientes
+            <History size={14} /> {t("welcome.recent", "Recientes")}
           </h2>
           {recent.length === 0
             ? (
               <EmptyState
                 glyph="∅"
-                title="Sin proyectos recientes"
-                description="Cuando crees o abras un proyecto, aparecerá aquí."
+                title={t("welcome.noRecentTitle", "Sin proyectos recientes")}
+                description={t("welcome.noRecentDesc", "Cuando crees o abras un proyecto, aparecerá aquí.")}
               />
             )
             : (
@@ -254,7 +256,7 @@ export default function Welcome() {
                     <button
                       type="button"
                       onClick={(ev) => handleForget(p, ev)}
-                      aria-label="Olvidar proyecto"
+                      aria-label={t("welcome.forgetProject", "Olvidar proyecto")}
                       style={{
                         background: "transparent",
                         border: 0,
@@ -279,14 +281,14 @@ export default function Welcome() {
       <Modal
         open={createModal.open}
         onClose={() => setCreateModal({ open: false, name: "" })}
-        title="Nuevo proyecto qastor"
+        title={t("welcome.newProjectModalTitle", "Nuevo proyecto qastor")}
         footer={
           <>
             <Button variant="ghost" onClick={() => setCreateModal({ open: false, name: "" })}>
-              Cancelar
+              {t("common.cancel", "Cancelar")}
             </Button>
             <Button variant="primary" onClick={handleCreate} disabled={busy}>
-              Continuar
+              {t("welcome.continue", "Continuar")}
             </Button>
           </>
         }
@@ -295,16 +297,16 @@ export default function Welcome() {
           <p
             style={{ margin: 0, fontSize: "var(--adc-fs-sm)", color: "var(--adc-fg-muted-strong)" }}
           >
-            Después de elegir nombre, te pediré una carpeta padre donde crear el proyecto.
+            {t("welcome.createProjectDesc", "Después de elegir nombre, te pediré una carpeta padre donde crear el proyecto.")}
           </p>
           <div className="adc-field">
-            <label className="adc-label">Nombre del proyecto</label>
+            <label className="adc-label">{t("welcome.projectNameLabel", "Nombre del proyecto")}</label>
             <input
               autoFocus
               className="adc-input"
               value={createModal.name}
               onChange={(e) => setCreateModal({ open: true, name: e.target.value })}
-              placeholder="ej. mi-app-pos"
+              placeholder={t("welcome.projectNamePlaceholder", "ej. mi-app-pos")}
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleCreate();
               }}
@@ -316,14 +318,14 @@ export default function Welcome() {
       <Modal
         open={!!initModal}
         onClose={() => setInitModal(null)}
-        title="Inicializar carpeta existente"
+        title={t("welcome.initModalTitle", "Inicializar carpeta existente")}
         footer={
           <>
             <Button variant="ghost" onClick={() => setInitModal(null)}>
-              Cancelar
+              {t("common.cancel", "Cancelar")}
             </Button>
             <Button variant="primary" onClick={handleInitialize} disabled={busy}>
-              Inicializar aquí
+              {t("welcome.initHere", "Inicializar aquí")}
             </Button>
           </>
         }
@@ -331,21 +333,19 @@ export default function Welcome() {
         {initModal && (
           <div style={{ display: "flex", flexDirection: "column", gap: "var(--adc-space-3)" }}>
             <p style={{ margin: 0 }}>
-              Esta carpeta tiene casos de prueba pero no es un proyecto qastor todavía. Voy a crear
-              <code style={{ marginLeft: 4, marginRight: 4 }}>qastor.json</code> aquí
-              {!initModal.detectedModules.length ? "" : " con los módulos detectados"}
-              {initModal.hasIndexJson ? " y a importar las suites de index.json" : ""}. No toco tus
-              archivos existentes.
+              {t("welcome.initDesc", "Esta carpeta tiene casos de prueba pero no es un proyecto qastor todavía. Voy a crear qastor.json aquí")}
+              {!initModal.detectedModules.length ? "" : t("welcome.initDescModules", " con los módulos detectados")}
+              {initModal.hasIndexJson ? t("welcome.initDescIndex", " y a importar las suites de index.json") : ""}{t("welcome.initDescEnd", ". No toco tus archivos existentes.")}
             </p>
             <ul style={{ margin: 0, paddingLeft: 18, fontSize: "var(--adc-fs-sm)" }}>
               <li>
-                Carpeta: <code>{initModal.dir}</code>
+                {t("welcome.initFolder", "Carpeta:")} <code>{initModal.dir}</code>
               </li>
-              <li>Casos detectados: {initModal.caseCount}</li>
+              <li>{t("welcome.initCasesDetected", "Casos detectados:")} {initModal.caseCount}</li>
               {initModal.detectedModules.length > 0 && (
-                <li>Módulos: {initModal.detectedModules.join(", ")}</li>
+                <li>{t("welcome.initModules", "Módulos:")} {initModal.detectedModules.join(", ")}</li>
               )}
-              {initModal.hasIndexJson && <li>Detecté index.json — copiaré las suites.</li>}
+              {initModal.hasIndexJson && <li>{t("welcome.initIndexDetected", "Detecté index.json — copiaré las suites.")}</li>}
             </ul>
           </div>
         )}

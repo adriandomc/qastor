@@ -5,6 +5,7 @@ import { useProjectStore } from "@/lib/store";
 import { api } from "@/lib/tauri";
 import { formatPercent, sessionOutcome, type SessionOverall } from "@/lib/labels";
 import type { SessionRef } from "@/lib/types";
+import { useTranslation } from "react-i18next";
 
 function formatDateTime(iso: string): string {
   try {
@@ -42,21 +43,24 @@ function formatDuration(startIso: string, endIso: string): string {
   }
 }
 
-function formatRelative(iso: string): string {
-  try {
-    const ms = Date.now() - new Date(iso).getTime();
-    if (ms < 0) return "ahora";
-    const sec = Math.round(ms / 1000);
-    if (sec < 60) return `hace ${sec}s`;
-    const min = Math.floor(sec / 60);
-    if (min < 60) return `hace ${min}m`;
-    const h = Math.floor(min / 60);
-    if (h < 24) return `hace ${h}h`;
-    const d = Math.floor(h / 24);
-    return `hace ${d}d`;
-  } catch {
-    return "";
-  }
+function useFormatRelative() {
+  const { t } = useTranslation();
+  return useCallback((iso: string): string => {
+    try {
+      const ms = Date.now() - new Date(iso).getTime();
+      if (ms < 0) return t("sessionsHistory.now", "ahora");
+      const sec = Math.round(ms / 1000);
+      if (sec < 60) return t("sessionsHistory.agoSec", "hace {{sec}}s", { sec });
+      const min = Math.floor(sec / 60);
+      if (min < 60) return t("sessionsHistory.agoMin", "hace {{min}}m", { min });
+      const h = Math.floor(min / 60);
+      if (h < 24) return t("sessionsHistory.agoHour", "hace {{h}}h", { h });
+      const d = Math.floor(h / 24);
+      return t("sessionsHistory.agoDay", "hace {{d}}d", { d });
+    } catch {
+      return "";
+    }
+  }, [t]);
 }
 
 function statusBorderColor(overall: SessionOverall): string {
@@ -75,6 +79,8 @@ function statusBorderColor(overall: SessionOverall): string {
 }
 
 export default function SessionsHistory() {
+  const { t } = useTranslation();
+  const formatRelative = useFormatRelative();
   const projectPath = useProjectStore((s) => s.currentPath);
   const [sessions, setSessions] = useState<SessionRef[]>([]);
   const [loading, setLoading] = useState(false);
@@ -149,11 +155,11 @@ export default function SessionsHistory() {
       <header
         style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}
       >
-        <h2 style={{ margin: 0, fontSize: "var(--adc-fs-2xl)" }}>Sesiones</h2>
+        <h2 style={{ margin: 0, fontSize: "var(--adc-fs-2xl)" }}>{t("sessionsHistory.title", "Sesiones")}</h2>
         <span style={{ fontSize: "var(--adc-fs-sm)", color: "var(--adc-fg-muted-strong)" }}>
           {loading
-            ? "cargando…"
-            : `${sessions.length} ${sessions.length === 1 ? "sesión" : "sesiones"}`}
+            ? t("common.loading", "cargando…")
+            : t("sessionsHistory.sessionCount", "{{count}} sesión(es)", { count: sessions.length })}
         </span>
       </header>
 
@@ -172,34 +178,34 @@ export default function SessionsHistory() {
         >
           {aggregate.successful > 0 && (
             <StatusIndicator variant="passed">
-              {aggregate.successful} exitosas
+              {t("sessionsHistory.successful", "{{count}} exitosas", { count: aggregate.successful })}
             </StatusIndicator>
           )}
           {aggregate.failed > 0 && (
             <StatusIndicator variant="failed">
-              {aggregate.failed} con fallas
+              {t("sessionsHistory.failed", "{{count}} con fallas", { count: aggregate.failed })}
             </StatusIndicator>
           )}
           {aggregate.blocked > 0 && (
             <StatusIndicator variant="blocked">
-              {aggregate.blocked} con bloqueos
+              {t("sessionsHistory.blocked", "{{count}} con bloqueos", { count: aggregate.blocked })}
             </StatusIndicator>
           )}
           {aggregate.inProgress > 0 && (
             <StatusIndicator variant="running">
-              {aggregate.inProgress} en curso
+              {t("sessionsHistory.inProgress", "{{count}} en curso", { count: aggregate.inProgress })}
             </StatusIndicator>
           )}
           {aggregate.other > 0 && (
             <StatusIndicator variant="pending">
-              {aggregate.other} incompletas
+              {t("sessionsHistory.other", "{{count}} incompletas", { count: aggregate.other })}
             </StatusIndicator>
           )}
         </div>
       )}
 
       {error && (
-        <Alert tone="error" title="Error">
+        <Alert tone="error" title={t("common.error", "Error")}>
           {error}
         </Alert>
       )}
@@ -208,8 +214,8 @@ export default function SessionsHistory() {
         ? (
           <EmptyState
             glyph="∅"
-            title="Sin sesiones todavía"
-            description="Cuando ejecutes una sesión, aparecerá aquí con su reporte y evidencia."
+            title={t("sessionsHistory.noSessionsTitle", "Sin sesiones todavía")}
+            description={t("sessionsHistory.noSessionsDesc", "Cuando ejecutes una sesión, aparecerá aquí con su reporte y evidencia.")}
           />
         )
         : (
@@ -255,7 +261,7 @@ export default function SessionsHistory() {
                         }}
                       >
                         <StatusIndicator variant={outcome.variant}>
-                          {outcome.label}
+                          {t(outcome.label)}
                         </StatusIndicator>
                         <span
                           style={{
@@ -280,19 +286,19 @@ export default function SessionsHistory() {
                           ? (
                             <>
                               <span>
-                                <span style={{ opacity: 0.7 }}>terminó</span>{" "}
+                                <span style={{ opacity: 0.7 }}>{t("sessionsHistory.finished", "terminó")}</span>{" "}
                                 {formatTime(sess.ended_at)}
                               </span>
                               <span style={{ opacity: 0.45 }}>·</span>
                               <span>
-                                <span style={{ opacity: 0.7 }}>duró</span>{" "}
+                                <span style={{ opacity: 0.7 }}>{t("sessionsHistory.duration", "duró")}</span>{" "}
                                 {formatDuration(sess.started_at, sess.ended_at) || "—"}
                               </span>
                             </>
                           )
                           : (
                             <span>
-                              <span style={{ opacity: 0.7 }}>iniciada</span>{" "}
+                              <span style={{ opacity: 0.7 }}>{t("sessionsHistory.started", "iniciada")}</span>{" "}
                               {formatRelative(sess.started_at)}
                             </span>
                           )}
@@ -316,7 +322,7 @@ export default function SessionsHistory() {
                           marginTop: 2,
                         }}
                       >
-                        pasaron
+                        {t("sessionsHistory.passedLabel", "pasaron")}
                       </div>
                     </div>
                   </div>
@@ -372,17 +378,17 @@ export default function SessionsHistory() {
                       }}
                     >
                       <StatusIndicator variant="passed">
-                        {sess.passed} pasaron
+                        {t("sessionsHistory.countPassed", "{{count}} pasaron", { count: sess.passed })}
                       </StatusIndicator>
                       <StatusIndicator variant="failed">
-                        {sess.failed} fallaron
+                        {t("sessionsHistory.countFailed", "{{count}} fallaron", { count: sess.failed })}
                       </StatusIndicator>
                       <StatusIndicator variant="blocked">
-                        {sess.blocked} bloqueados
+                        {t("sessionsHistory.countBlocked", "{{count}} bloqueados", { count: sess.blocked })}
                       </StatusIndicator>
                       {pending > 0 && (
                         <StatusIndicator variant="pending">
-                          {pending} pendientes
+                          {t("sessionsHistory.countPending", "{{count}} pendientes", { count: pending })}
                         </StatusIndicator>
                       )}
                       <span
@@ -391,8 +397,7 @@ export default function SessionsHistory() {
                           color: "var(--adc-fg-muted-strong)",
                         }}
                       >
-                        {total} caso{total === 1 ? "" : "s"} · completado{" "}
-                        {formatPercent(outcome.completion)}
+                        {t("sessionsHistory.completionLabel", "{{count}} caso(s) · completado {{percent}}", { count: total, percent: formatPercent(outcome.completion) })}
                       </span>
                     </div>
                   </div>
@@ -411,7 +416,7 @@ export default function SessionsHistory() {
                       disabled={busyId === sess.session_id}
                       style={{ display: "flex", alignItems: "center", gap: 6 }}
                     >
-                      <Folder size={14} /> Abrir carpeta
+                      <Folder size={14} /> {t("sessionsHistory.openFolder", "Abrir carpeta")}
                     </Button>
                     <Button
                       variant="primary"
@@ -420,7 +425,7 @@ export default function SessionsHistory() {
                       style={{ display: "flex", alignItems: "center", gap: 6 }}
                     >
                       <FileText size={14} />
-                      {busyId === sess.session_id ? "Generando…" : "Ver reporte"}
+                      {busyId === sess.session_id ? t("sessionsHistory.generating", "Generando…") : t("sessionsHistory.viewReport", "Ver reporte")}
                     </Button>
                   </div>
                 </Card>

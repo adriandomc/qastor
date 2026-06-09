@@ -14,6 +14,7 @@ import {
   STEP_STATUS_VARIANT,
 } from "@/lib/labels";
 import type { CaseStatus, EvidenceItem, Session, StepResult, StepStatus } from "@/lib/types";
+import { useTranslation } from "react-i18next";
 
 function caseDotColor(status: CaseStatus): string {
   switch (status) {
@@ -33,6 +34,7 @@ function caseDotColor(status: CaseStatus): string {
 
 export default function SessionRunner() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { current: project, currentPath: projectPath } = useProjectStore();
   const cases = useCasesStore((s) => s.cases);
   const {
@@ -82,16 +84,15 @@ export default function SessionRunner() {
   if (!currentCase || !baseCase || !currentStepResult || !currentStepDef) {
     return (
       <main style={{ padding: "var(--adc-space-6)" }}>
-        <Alert tone="error" title="Estado inconsistente">
-          El cursor de sesión apunta a un caso/paso que ya no existe en el proyecto. Cierra la
-          sesión y vuelve a iniciar.
+        <Alert tone="error" title={t("sessionRunner.inconsistentStateTitle", "Estado inconsistente")}>
+          {t("sessionRunner.inconsistentState", "El cursor de sesión apunta a un caso/paso que ya no existe en el proyecto. Cierra la sesión y vuelve a iniciar.")}
         </Alert>
         <Button
           variant="primary"
           onClick={() => setConfirmEnd(true)}
           style={{ marginTop: "var(--adc-space-4)" }}
         >
-          Terminar sesión
+          {t("sessionRunner.endSession", "Terminar sesión")}
         </Button>
       </main>
     );
@@ -174,7 +175,7 @@ export default function SessionRunner() {
       const picked = await openDialog({
         directory: false,
         multiple: false,
-        title: "Adjuntar archivo como evidencia",
+        title: t("sessionRunner.attachFileTitle", "Adjuntar archivo como evidencia"),
       });
       if (!picked || typeof picked !== "string") {
         setBusy(false);
@@ -236,7 +237,7 @@ export default function SessionRunner() {
             console.warn("openPath failed, report saved at:", reportPath, openErr);
           }
         } catch (e) {
-          setError(`No se pudo generar el reporte HTML: ${e}`);
+          setError(t("sessionRunner.reportError", "No se pudo generar el reporte HTML: {{error}}", { error: e }));
         }
       }
       setActiveSession(null, null);
@@ -350,7 +351,7 @@ export default function SessionRunner() {
             {project.project_name}
           </strong>
           <code style={{ fontSize: "var(--adc-fs-sm)", opacity: 0.9 }}>
-            {currentCase.case_id} · {caseProgressLabel} · paso {stepCountLabel}
+            {currentCase.case_id} · {caseProgressLabel} · {t("common.step", "paso")} {stepCountLabel}
           </code>
         </div>
         <div
@@ -362,7 +363,7 @@ export default function SessionRunner() {
           }}
         >
           <span>
-            {doneSteps}/{totalSteps} pasos
+            {doneSteps}/{totalSteps} {t("common.steps", "pasos")}
           </span>
           <span style={{ opacity: 0.6 }}>·</span>
           <StatusIndicator variant="passed">{passed}</StatusIndicator>
@@ -378,7 +379,7 @@ export default function SessionRunner() {
               color: "var(--adc-fg-on-bar)",
             }}
           >
-            Terminar sesión
+            {t("sessionRunner.endSession", "Terminar sesión")}
           </Button>
         </div>
       </header>
@@ -462,7 +463,7 @@ export default function SessionRunner() {
           gap: "var(--adc-space-4)",
         }}
       >
-        {error && <Alert tone="error" title="Error">{error}</Alert>}
+        {error && <Alert tone="error" title={t("common.error", "Error")}>{error}</Alert>}
 
         <div>
           <code style={{ fontSize: "var(--adc-fs-xs)", color: "var(--adc-fg-muted-strong)" }}>
@@ -484,7 +485,7 @@ export default function SessionRunner() {
           >
             <Pill tone="muted">{baseCase.module}</Pill>
             <StatusIndicator variant={CASE_STATUS_VARIANT[currentCase.status]}>
-              {CASE_STATUS_LABEL[currentCase.status]}
+              {t(CASE_STATUS_LABEL[currentCase.status])}
             </StatusIndicator>
           </div>
         </div>
@@ -500,7 +501,7 @@ export default function SessionRunner() {
                 marginBottom: 4,
               }}
             >
-              Precondiciones
+              {t("caseEditor.preconditions", "Precondiciones")}
             </div>
             <ul style={{ margin: 0, paddingLeft: 18, fontSize: "var(--adc-fs-sm)" }}>
               {baseCase.preconditions.map((p, i) => <li key={i}>{p}</li>)}
@@ -560,7 +561,7 @@ export default function SessionRunner() {
                   }}
                 >
                   <StatusIndicator variant={STEP_STATUS_VARIANT[sr.status]}>
-                    {STEP_STATUS_LABEL[sr.status]}
+                    {t(STEP_STATUS_LABEL[sr.status])}
                   </StatusIndicator>
                 </div>
               </Card>
@@ -586,7 +587,7 @@ export default function SessionRunner() {
           disabled={busy}
           style={{ display: "flex", alignItems: "center", gap: 6 }}
         >
-          <Camera size={14} /> Capturar
+          <Camera size={14} /> {t("caseDetail.capture", "Capturar")}
         </Button>
         <Button
           variant="secondary"
@@ -594,7 +595,7 @@ export default function SessionRunner() {
           disabled={busy}
           style={{ display: "flex", alignItems: "center", gap: 6 }}
         >
-          <ClipboardPaste size={14} /> Pegar texto
+          <ClipboardPaste size={14} /> {t("sessionRunner.pasteText", "Pegar texto")}
         </Button>
         <Button
           variant="secondary"
@@ -602,12 +603,12 @@ export default function SessionRunner() {
           disabled={busy}
           style={{ display: "flex", alignItems: "center", gap: 6 }}
         >
-          <Paperclip size={14} /> Adjuntar archivo
+          <Paperclip size={14} /> {t("sessionRunner.attachFile", "Adjuntar archivo")}
         </Button>
         <span
           style={{ flex: 1, fontSize: "var(--adc-fs-xs)", color: "var(--adc-fg-muted-strong)" }}
         >
-          Marca el paso actual:
+          {t("sessionRunner.markCurrentStep", "Marca el paso actual:")}
         </span>
         <Button
           variant="secondary"
@@ -638,22 +639,19 @@ export default function SessionRunner() {
       <Modal
         open={confirmEnd}
         onClose={() => setConfirmEnd(false)}
-        title="Terminar sesión"
+        title={t("sessionRunner.endSession", "Terminar sesión")}
         footer={
           <>
             <Button variant="ghost" onClick={() => setConfirmEnd(false)}>
-              Cancelar
+              {t("common.cancel", "Cancelar")}
             </Button>
             <Button variant="danger" onClick={handleEnd} disabled={busy}>
-              Terminar
+              {t("sessionRunner.finish", "Terminar")}
             </Button>
           </>
         }
       >
-        <p>
-          {doneSteps} de {totalSteps} pasos completados. Los pasos sin marcar quedarán como{" "}
-          <code>pending</code> en session.json.
-        </p>
+        <p dangerouslySetInnerHTML={{ __html: t("sessionRunner.endSessionDesc", "{{done}} de {{total}} pasos completados. Los pasos sin marcar quedarán como <code>pending</code> en session.json.", { done: doneSteps, total: totalSteps }) }} />
       </Modal>
     </div>
   );
@@ -678,6 +676,7 @@ function StepEvidenceStrip({
       | { kind: "text"; captured_at: string },
   ) => void;
 }) {
+  const { t } = useTranslation();
   const items = mergedEvidence(step);
   if (items.length === 0) return null;
   return (
@@ -696,7 +695,7 @@ function StepEvidenceStrip({
               <Removable key={`s-${i}`} onRemove={remove}>
                 <img
                   src={convertFileSrc(`${sessionDir}/${it.path}`, "asset")}
-                  alt={`paso ${step.step} captura`}
+                  alt={t("sessionRunner.screenshotAlt", "paso {{step}} captura", { step: step.step })}
                   style={{
                     width: 110,
                     height: 70,
@@ -780,13 +779,14 @@ function Removable({
   onRemove: (e: React.MouseEvent) => void;
   children: React.ReactNode;
 }) {
+  const { t } = useTranslation();
   return (
     <div style={{ position: "relative", display: "inline-block" }}>
       {children}
       <button
         type="button"
         onClick={onRemove}
-        aria-label="Quitar evidencia"
+        aria-label={t("caseDetail.removeEvidence", "Quitar evidencia")}
         style={{
           position: "absolute",
           top: 2,

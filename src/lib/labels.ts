@@ -1,53 +1,53 @@
 import type { CaseStatus, EvidenceHint, Priority, SessionRef, StepStatus, TestType } from "./types";
 
 export const PRIORITY_LABEL: Record<Priority, string> = {
-  critical: "Crítica",
-  high: "Alta",
-  medium: "Media",
-  low: "Baja",
+  critical: "labels.priority.critical",
+  high: "labels.priority.high",
+  medium: "labels.priority.medium",
+  low: "labels.priority.low",
 };
 
 export const TYPE_LABEL: Record<TestType, string> = {
-  happy_path: "Flujo feliz",
-  error: "Error",
-  edge_case: "Caso límite",
+  happy_path: "labels.type.happy_path",
+  error: "labels.type.error",
+  edge_case: "labels.type.edge_case",
 };
 
 export const TYPE_LABEL_SHORT: Record<TestType, string> = {
-  happy_path: "Feliz",
-  error: "Error",
-  edge_case: "Límite",
+  happy_path: "labels.typeShort.happy_path",
+  error: "labels.typeShort.error",
+  edge_case: "labels.typeShort.edge_case",
 };
 
 export const EVIDENCE_HINT_LABEL: Record<EvidenceHint, string> = {
-  none: "Sin evidencia",
-  screenshot: "Captura de pantalla",
-  text_excerpt: "Extracto de texto",
-  db_query: "Consulta a base de datos",
-  file_attachment: "Archivo adjunto",
+  none: "labels.evidenceHint.none",
+  screenshot: "labels.evidenceHint.screenshot",
+  text_excerpt: "labels.evidenceHint.text_excerpt",
+  db_query: "labels.evidenceHint.db_query",
+  file_attachment: "labels.evidenceHint.file_attachment",
 };
 
 export const EVIDENCE_HINT_LABEL_SHORT: Record<EvidenceHint, string> = {
-  none: "—",
-  screenshot: "Captura",
-  text_excerpt: "Texto",
-  db_query: "BD",
-  file_attachment: "Archivo",
+  none: "labels.evidenceHintShort.none",
+  screenshot: "labels.evidenceHintShort.screenshot",
+  text_excerpt: "labels.evidenceHintShort.text_excerpt",
+  db_query: "labels.evidenceHintShort.db_query",
+  file_attachment: "labels.evidenceHintShort.file_attachment",
 };
 
 export const STEP_STATUS_LABEL: Record<StepStatus, string> = {
-  pending: "Pendiente",
-  passed: "Pasó",
-  failed: "Falló",
-  blocked: "Bloqueado",
+  pending: "labels.stepStatus.pending",
+  passed: "labels.stepStatus.passed",
+  failed: "labels.stepStatus.failed",
+  blocked: "labels.stepStatus.blocked",
 };
 
 export const CASE_STATUS_LABEL: Record<CaseStatus, string> = {
-  pending: "Pendiente",
-  running: "En curso",
-  passed: "Pasó",
-  failed: "Falló",
-  blocked: "Bloqueado",
+  pending: "labels.caseStatus.pending",
+  running: "labels.caseStatus.running",
+  passed: "labels.caseStatus.passed",
+  failed: "labels.caseStatus.failed",
+  blocked: "labels.caseStatus.blocked",
 };
 
 export type StatusTone = "ok" | "err" | "warn" | "default" | "muted";
@@ -136,7 +136,7 @@ export function sessionOutcome(s: SessionRef): SessionOutcome {
       overall: "empty",
       passRate: 0,
       completion: 0,
-      label: "Sin casos",
+      label: "labels.sessionOutcome.empty",
       tone: "muted",
       variant: "pending",
     };
@@ -150,7 +150,7 @@ export function sessionOutcome(s: SessionRef): SessionOutcome {
       overall: "in_progress",
       passRate,
       completion,
-      label: "En curso",
+      label: "labels.sessionOutcome.inProgress",
       tone: "default",
       variant: "running",
     };
@@ -160,7 +160,7 @@ export function sessionOutcome(s: SessionRef): SessionOutcome {
       overall: "failed",
       passRate,
       completion,
-      label: "Con fallas",
+      label: "labels.sessionOutcome.failed",
       tone: "err",
       variant: "failed",
     };
@@ -170,7 +170,7 @@ export function sessionOutcome(s: SessionRef): SessionOutcome {
       overall: "blocked",
       passRate,
       completion,
-      label: "Con bloqueos",
+      label: "labels.sessionOutcome.blocked",
       tone: "warn",
       variant: "blocked",
     };
@@ -180,7 +180,7 @@ export function sessionOutcome(s: SessionRef): SessionOutcome {
       overall: "incomplete",
       passRate,
       completion,
-      label: "Incompleta",
+      label: "labels.sessionOutcome.incomplete",
       tone: "muted",
       variant: "pending",
     };
@@ -189,7 +189,7 @@ export function sessionOutcome(s: SessionRef): SessionOutcome {
     overall: "successful",
     passRate,
     completion,
-    label: "Exitosa",
+    label: "labels.sessionOutcome.successful",
     tone: "ok",
     variant: "passed",
   };

@@ -22,6 +22,7 @@ import {
   TYPE_LABEL,
 } from "@/lib/labels";
 import type { CaseEvidenceFromSession, ResolvedEvidence, StepStatus } from "@/lib/types";
+import { useTranslation } from "react-i18next";
 
 interface EvidenceWithContext {
   item: ResolvedEvidence;
@@ -47,6 +48,7 @@ function formatDateTime(iso: string | undefined): string {
 
 export default function CaseDetail() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { caseId } = useParams<{ caseId: string }>();
   const cases = useCasesStore((s) => s.cases);
   const projectPath = useProjectStore((s) => s.currentPath);
@@ -247,12 +249,12 @@ export default function CaseDetail() {
             gap: 4,
           }}
         >
-          <ChevronLeft size={14} /> Casos
+          <ChevronLeft size={14} /> {t("caseList.title", "Casos")}
         </Button>
         <EmptyState
           glyph="∅"
-          title="Caso no encontrado"
-          description={decoded ? `No hay un caso con id ${decoded}` : "ID inválido"}
+          title={t("caseDetail.notFound", "Caso no encontrado")}
+          description={decoded ? t("caseDetail.notFoundDesc", "No hay un caso con id {{id}}", { id: decoded }) : t("caseDetail.invalidId", "ID inválido")}
         />
       </main>
     );
@@ -276,14 +278,14 @@ export default function CaseDetail() {
           onClick={() => navigate("/project/cases")}
           style={{ display: "flex", alignItems: "center", gap: 4 }}
         >
-          <ChevronLeft size={14} /> Casos
+          <ChevronLeft size={14} /> {t("caseList.title", "Casos")}
         </Button>
         <Button
           variant="secondary"
           onClick={() => navigate(`/project/cases/${encodeURIComponent(c.id)}/edit`)}
           style={{ display: "flex", alignItems: "center", gap: 6 }}
         >
-          <Pencil size={14} /> Editar
+          <Pencil size={14} /> {t("common.edit", "Editar")}
         </Button>
       </div>
 
@@ -302,12 +304,12 @@ export default function CaseDetail() {
         </h2>
         <div style={{ display: "flex", flexWrap: "wrap", gap: "var(--adc-space-2)" }}>
           <Pill tone="muted">{c.module}</Pill>
-          <Pill>{TYPE_LABEL[c.type]}</Pill>
+          <Pill>{t(TYPE_LABEL[c.type])}</Pill>
           <Pill tone={c.priority === "critical" ? "err" : "default"}>
-            {PRIORITY_LABEL[c.priority]}
+            {t(PRIORITY_LABEL[c.priority])}
           </Pill>
           {typeof c.estimated_minutes === "number" && (
-            <Pill tone="count">{c.estimated_minutes} min</Pill>
+            <Pill tone="count">{t("caseDetail.minutes", "{{count}} min", { count: c.estimated_minutes })}</Pill>
           )}
         </div>
         {(c.tags?.length ?? 0) > 0 && (
@@ -323,7 +325,7 @@ export default function CaseDetail() {
 
       {c.preconditions && c.preconditions.length > 0 && (
         <section>
-          <SectionTitle>Precondiciones</SectionTitle>
+          <SectionTitle>{t("caseEditor.preconditions", "Precondiciones")}</SectionTitle>
           <Card style={{ padding: "var(--adc-space-4)" }}>
             <ul
               style={{
@@ -341,9 +343,9 @@ export default function CaseDetail() {
       )}
 
       <section>
-        <SectionTitle>Pasos</SectionTitle>
+        <SectionTitle>{t("common.steps", "Pasos")}</SectionTitle>
         {captureError && (
-          <Alert tone="error" title="Captura falló">
+          <Alert tone="error" title={t("caseDetail.captureFailed", "Captura falló")}>
             {captureError}
           </Alert>
         )}
@@ -382,13 +384,13 @@ export default function CaseDetail() {
                 >
                   <div>
                     <div style={{ fontWeight: "var(--adc-fw-bold)", fontSize: "var(--adc-fs-sm)" }}>
-                      Acción
+                      {t("caseEditor.action", "Acción")}
                     </div>
                     <div style={{ fontSize: "var(--adc-fs-sm)" }}>{step.action}</div>
                   </div>
                   <div>
                     <div style={{ fontWeight: "var(--adc-fw-bold)", fontSize: "var(--adc-fs-sm)" }}>
-                      Esperado
+                      {t("caseEditor.expected", "Esperado")}
                     </div>
                     <div
                       style={{ fontSize: "var(--adc-fs-sm)", color: "var(--adc-fg-muted-strong)" }}
@@ -405,7 +407,7 @@ export default function CaseDetail() {
                           cursor: "pointer",
                         }}
                       >
-                        Datos
+                        {t("caseDetail.data", "Datos")}
                       </summary>
                       <pre
                         className="adc-code"
@@ -427,12 +429,12 @@ export default function CaseDetail() {
                     >
                       {stepEvidence.map((ev) => {
                         const matchKeyForItem = matchKeyOf(ev.item);
-                        const itemLabel = labelOf(ev.item);
+                        const itemLabel = t(labelOf(ev.item));
                         return (
                           <EvidenceCard
                             key={`${ev.sessionId}-${ev.index}`}
                             ev={ev}
-                            caption={`${c.id} · paso ${step.step} · ${
+                            caption={`${c.id} · ${t("common.step", "paso")} ${step.step} · ${
                               formatDateTime(
                                 ev.item.captured_at ?? ev.sessionStartedAt,
                               )
@@ -481,7 +483,7 @@ export default function CaseDetail() {
                   }}
                 >
                   <Pill tone="muted">
-                    {EVIDENCE_HINT_LABEL[step.evidence_hint ?? "none"]}
+                    {t(EVIDENCE_HINT_LABEL[step.evidence_hint ?? "none"])}
                   </Pill>
                   <Button
                     variant="secondary"
@@ -490,7 +492,7 @@ export default function CaseDetail() {
                     style={{ display: "flex", alignItems: "center", gap: 6 }}
                   >
                     <Camera size={14} />
-                    {capturing === step.step ? "…" : "Capturar"}
+                    {capturing === step.step ? "…" : t("caseDetail.capture", "Capturar")}
                   </Button>
                 </div>
               </Card>
@@ -505,13 +507,13 @@ export default function CaseDetail() {
           }}
         >
           {sessionHasThisCase
-            ? "Hay una sesión activa con este caso — capturar aquí persiste en .qastor-runs/."
-            : "Sin sesión activa, las capturas son provisionales (tempdir). Inicia una sesión desde Casos para persistirlas."}
+            ? t("caseDetail.activeSessionHint", "Hay una sesión activa con este caso — capturar aquí persiste en .qastor-runs/.")
+            : t("caseDetail.noSessionHint", "Sin sesión activa, las capturas son provisionales (tempdir). Inicia una sesión desde Casos para persistirlas.")}
         </p>
       </section>
 
       <section>
-        <SectionTitle>Acceptance criteria</SectionTitle>
+        <SectionTitle>{t("caseEditor.acceptanceCriteria", "Criterios de aceptación")}</SectionTitle>
         <Card style={{ padding: "var(--adc-space-4)" }}>
           <ul
             style={{
@@ -529,7 +531,7 @@ export default function CaseDetail() {
 
       {(c.related_files?.length ?? 0) > 0 && (
         <section>
-          <SectionTitle>Archivos relacionados</SectionTitle>
+          <SectionTitle>{t("caseEditor.relatedFiles", "Archivos relacionados")}</SectionTitle>
           <Card style={{ padding: "var(--adc-space-4)" }}>
             <ul
               style={{
@@ -552,8 +554,8 @@ export default function CaseDetail() {
       )}
 
       <section>
-        <SectionTitle>Origen</SectionTitle>
-        <Alert tone="info" title="Path en disco">
+        <SectionTitle>{t("caseDetail.origin", "Origen")}</SectionTitle>
+        <Alert tone="info" title={t("caseDetail.diskPath", "Path en disco")}>
           <code style={{ wordBreak: "break-all" }}>{found.path}</code>
         </Alert>
       </section>
@@ -563,21 +565,21 @@ export default function CaseDetail() {
       <Modal
         open={!!confirmDelete}
         onClose={() => setConfirmDelete(null)}
-        title="Quitar evidencia"
+        title={t("caseDetail.removeEvidence", "Quitar evidencia")}
         footer={
           <>
             <Button variant="ghost" onClick={() => setConfirmDelete(null)}>
-              Cancelar
+              {t("common.cancel", "Cancelar")}
             </Button>
             <Button variant="danger" onClick={performDelete} disabled={busyEvidence}>
-              Quitar
+              {t("common.remove", "Quitar")}
             </Button>
           </>
         }
       >
         <p>
           {confirmDelete
-            ? `Vas a quitar la ${confirmDelete.label} del paso ${confirmDelete.step}. Si es captura o archivo, también se borra del disco.`
+            ? t("caseDetail.removeEvidenceDesc", "Vas a quitar la {{label}} del paso {{step}}. Si es captura o archivo, también se borra del disco.", { label: confirmDelete.label, step: confirmDelete.step })
             : ""}
         </p>
       </Modal>
@@ -585,14 +587,14 @@ export default function CaseDetail() {
       <Modal
         open={!!editText}
         onClose={() => setEditText(null)}
-        title="Editar texto"
+        title={t("caseDetail.editText", "Editar texto")}
         footer={
           <>
             <Button variant="ghost" onClick={() => setEditText(null)}>
-              Cancelar
+              {t("common.cancel", "Cancelar")}
             </Button>
             <Button variant="primary" onClick={saveEditText} disabled={busyEvidence}>
-              Guardar
+              {t("common.save", "Guardar")}
             </Button>
           </>
         }
@@ -647,6 +649,7 @@ function EvidenceCard({
   onDelete: () => void;
   onEdit?: () => void;
 }) {
+  const { t } = useTranslation();
   switch (ev.item.kind) {
     case "screenshot": {
       const src = convertFileSrc(ev.item.path, "asset");
@@ -669,7 +672,7 @@ function EvidenceCard({
       return (
         <CardFrame
           status={ev.stepStatus}
-          captionTop={ev.item.label ?? "Texto"}
+          captionTop={ev.item.label ?? t("caseDetail.text", "Texto")}
           onClick={() =>
             openLightbox({
               kind: "text",
@@ -717,7 +720,7 @@ function EvidenceCard({
               color: "var(--adc-fg-muted-strong)",
             }}
           >
-            {ev.item.mime ?? "archivo"}
+            {ev.item.mime ?? t("caseDetail.file", "archivo")}
             {ev.item.size_bytes ? ` · ${humanBytes(ev.item.size_bytes)}` : ""}
           </div>
         </CardFrame>
@@ -742,11 +745,11 @@ function matchKeyOf(
 function labelOf(item: ResolvedEvidence): string {
   switch (item.kind) {
     case "screenshot":
-      return "captura de pantalla";
+      return "caseDetail.labelScreenshot";
     case "text":
-      return "extracto de texto";
+      return "caseDetail.labelTextSnippet";
     case "file":
-      return `archivo ${item.filename}`;
+      return `caseDetail.labelFile`; // We'll pass it to t() like t("caseDetail.labelFile", { name: item.filename }) later. Wait, this returns a string. Let's return just the key and handle it in the caller.
   }
 }
 
@@ -763,12 +766,13 @@ function ProvisionalThumb({
   openLightbox: (s: LightboxState) => void;
   onRemove: () => void;
 }) {
+  const { t } = useTranslation();
   const src = convertFileSrc(path, "asset");
-  const caption = `${caseId} · paso ${stepNumber} · provisional`;
+  const caption = `${caseId} · ${t("common.step", "paso")} ${stepNumber} · ${t("caseDetail.provisional", "provisional")}`;
   return (
     <ThumbFrame
       status="pending"
-      captionTop="provisional"
+      captionTop={t("caseDetail.provisional", "provisional")}
       onClick={() => openLightbox({ kind: "image", src, caption })}
       onRemove={onRemove}
     >
@@ -796,6 +800,7 @@ function ThumbFrame({
   onRemove?: () => void;
   children: React.ReactNode;
 }) {
+  const { t } = useTranslation();
   return (
     <div
       style={{
@@ -810,7 +815,7 @@ function ThumbFrame({
       }}
       onClick={onClick}
       role="button"
-      aria-label="Ver captura completa"
+      aria-label={t("caseDetail.viewFullImage", "Ver captura completa")}
     >
       {children}
       <div
@@ -836,7 +841,7 @@ function ThumbFrame({
           {captionTop}
         </span>
         <StatusIndicator variant={STEP_STATUS_VARIANT[status]}>
-          {STEP_STATUS_LABEL[status]}
+          {t(STEP_STATUS_LABEL[status])}
         </StatusIndicator>
       </div>
       {(onRemove || onDelete) && (
@@ -846,7 +851,7 @@ function ThumbFrame({
             e.stopPropagation();
             (onRemove ?? onDelete)?.();
           }}
-          aria-label="Quitar"
+          aria-label={t("common.remove", "Quitar")}
           style={{
             position: "absolute",
             top: 4,
@@ -885,6 +890,7 @@ function CardFrame({
   icon: React.ReactNode;
   children: React.ReactNode;
 }) {
+  const { t } = useTranslation();
   return (
     <div
       role="group"
@@ -921,7 +927,7 @@ function CardFrame({
           {captionTop}
         </span>
         <StatusIndicator variant={STEP_STATUS_VARIANT[status]}>
-          {STEP_STATUS_LABEL[status]}
+          {t(STEP_STATUS_LABEL[status])}
         </StatusIndicator>
       </div>
       <button
@@ -938,7 +944,7 @@ function CardFrame({
           color: "inherit",
           font: "inherit",
         }}
-        aria-label="Ver evidencia"
+        aria-label={t("caseDetail.viewEvidence", "Ver evidencia")}
       >
         {children}
       </button>
@@ -957,22 +963,22 @@ function CardFrame({
             <button
               type="button"
               onClick={onEdit}
-              aria-label="Editar"
+              aria-label={t("common.edit", "Editar")}
               className="adc-btn adc-btn--ghost"
               style={{ height: "var(--adc-h-sm)", fontSize: 11, padding: "0 8px" }}
             >
-              Editar
+              {t("common.edit", "Editar")}
             </button>
           )}
           {onDelete && (
             <button
               type="button"
               onClick={onDelete}
-              aria-label="Quitar"
+              aria-label={t("common.remove", "Quitar")}
               className="adc-btn adc-btn--ghost"
               style={{ height: "var(--adc-h-sm)", fontSize: 11, padding: "0 8px" }}
             >
-              Quitar
+              {t("common.remove", "Quitar")}
             </button>
           )}
         </div>
@@ -995,6 +1001,7 @@ function Lightbox({
   state: LightboxState;
   onClose: () => void;
 }) {
+  const { t } = useTranslation();
   return (
     <div
       onClick={onClose}
@@ -1018,7 +1025,7 @@ function Lightbox({
           e.stopPropagation();
           onClose();
         }}
-        aria-label="Cerrar"
+        aria-label={t("common.close", "Cerrar")}
         className="adc-btn adc-btn--ghost"
         style={{
           position: "absolute",
@@ -1079,7 +1086,7 @@ function Lightbox({
                 marginLeft: 8,
               }}
             >
-              <ClipboardCopy size={14} /> Copiar
+              <ClipboardCopy size={14} /> {t("common.copy", "Copiar")}
             </button>
             <pre
               style={{

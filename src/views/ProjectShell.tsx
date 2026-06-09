@@ -5,19 +5,21 @@ import { ListChecks, LogOut, Settings as SettingsIcon, Workflow } from "lucide-r
 import { useCasesStore, useProjectStore } from "@/lib/store";
 import { onCasesChanged } from "@/lib/events";
 import { api } from "@/lib/tauri";
-
-const NAV_ITEMS: Array<{ to: string; label: string; icon: React.ReactNode }> = [
-  { to: "cases", label: "Casos", icon: <ListChecks size={14} /> },
-  { to: "sessions", label: "Sesiones", icon: <Workflow size={14} /> },
-  { to: "settings", label: "Settings", icon: <SettingsIcon size={14} /> },
-];
+import { useTranslation } from "react-i18next";
 
 export default function ProjectShell() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { current, currentPath, closeProject } = useProjectStore();
   const refresh = useCasesStore((s) => s.refresh);
   const clearCases = useCasesStore((s) => s.clear);
   const caseCount = useCasesStore((s) => s.cases.length);
+
+  const NAV_ITEMS: Array<{ to: string; label: string; icon: React.ReactNode }> = [
+    { to: "cases", label: t("projectShell.cases", "Casos"), icon: <ListChecks size={14} /> },
+    { to: "sessions", label: t("projectShell.sessions", "Sesiones"), icon: <Workflow size={14} /> },
+    { to: "settings", label: t("projectShell.settings", "Settings"), icon: <SettingsIcon size={14} /> },
+  ];
 
   useEffect(() => {
     if (!current) navigate("/", { replace: true });
@@ -118,7 +120,7 @@ export default function ProjectShell() {
             justifyContent: "center",
           }}
         >
-          <LogOut size={14} /> Cerrar proyecto
+          <LogOut size={14} /> {t("projectShell.closeProject", "Cerrar proyecto")}
         </Button>
       </aside>
 
